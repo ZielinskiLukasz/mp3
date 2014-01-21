@@ -661,5 +661,3 @@ class Calculate
         return sprintf("%d:%02d", ($duration / 60), $duration % 60);
     }
 }
-
-?>
