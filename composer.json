@@ -1,9 +1,12 @@
 {
     "name": "diemuzi/mp3",
     "description": "MP3 Player",
-    "type": "library",
+    "type": "zf-module",
+    "license": "MIT",
     "keywords": [
-        "zf2"
+        "zf2",
+        "module",
+        "mp3"
     ],
     "homepage": "https://github.com/diemuzi/mp3",
     "authors": [
