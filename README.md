@@ -27,12 +27,19 @@ Requirements
 
 * [Zend Framework 2](https://github.com/zendframework/zf2) (latest master)
 
-Features / Goals
-----------------
+Features
+--------
 
 * Play music from your library
 * Play Single Songs or Full Albums
 * Download Songs from your library
+
+Coming Soon!
+------------
+
+* Searchable
+* Randomize Play Lists
+* Download Folders
 
 Installation
 ------------
