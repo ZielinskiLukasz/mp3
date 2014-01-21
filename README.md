@@ -4,6 +4,9 @@ Version 1.0.0 Created by Sammie S. Taunton
 
 [![Build Status](https://travis-ci.org/diemuzi/mp3.png?branch=master)](https://travis-ci.org/diemuzi/mp3)
 [![Coverage Status](https://coveralls.io/repos/diemuzi/mp3/badge.png)](https://coveralls.io/r/diemuzi/mp3)
+[![Latest Stable Version](https://poser.pugx.org/diemuzi/mp3/v/stable.png)](https://packagist.org/packages/diemuzi/mp3)
+[![Total Downloads](https://poser.pugx.org/diemuzi/mp3/downloads.png)](https://packagist.org/packages/diemuzi/mp3)
+[![License](https://poser.pugx.org/diemuzi/mp3/license.png)](https://packagist.org/packages/diemuzi/mp3)
 
 Introduction
 ------------
@@ -14,6 +17,11 @@ Supported formats are currently:
 
   * PLS (Winamp)
   * M3U (Windows Media Player)
+
+Support
+-------
+
+We can be found on the Freenode IRC Network in #otwebsoft
 
 Requirements
 ------------
