@@ -27,7 +27,8 @@ class Mp3Controller extends AbstractActionController
      */
     public function searchAction()
     {
-        $service = $this->getServiceSearch()->Search($this->params()->fromRoute());
+        $service = $this->getServiceSearch()
+            ->Search($this->params()->fromRoute());
 
         $viewModel = new ViewModel();
         $viewModel
