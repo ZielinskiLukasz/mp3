@@ -20,9 +20,6 @@
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.*"
     },
-    "require-dev": {
-        "satooshi/php-coveralls": "dev-master"
-    },
     "autoload": {
         "psr-0": {
             "Mp3": "src/"
