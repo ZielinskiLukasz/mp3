@@ -43,7 +43,7 @@ Installation
 
     ```json
     "require": {
-        "diemuzi/mp3": "dev-master"
+        "diemuzi/mp3": "master"
     }
     ```
 
