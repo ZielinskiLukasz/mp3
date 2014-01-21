@@ -82,10 +82,10 @@ class Calculate
         $iscbrmp3 = true;
         if ($this->startswithid3())
             $this->skipid3tag();
-        else if ($this->containsvbrxing()) {
+        elseif ($this->containsvbrxing()) {
             $this->mp3data['Encoding'] = 'VBR';
             $iscbrmp3 = false;
-        } else if ($this->startswithpk()) {
+        } elseif ($this->startswithpk()) {
             $this->mp3data['Encoding'] = 'Unknown';
             $iscbrmp3 = false;
         }
@@ -296,7 +296,7 @@ class Calculate
             if ($this->blockpos == $this->blockmax) //end of block reached
             {
                 $this->prefetchblock();
-            } else if ($this->blockpos == $this->blocksize) { //end of short block reached (shorter than blockmax)
+            } elseif ($this->blockpos == $this->blocksize) { //end of short block reached (shorter than blockmax)
                 return; //eof
             }
 
@@ -550,13 +550,13 @@ class Calculate
         $whichcolumn = -1;
         if (self::is_mpeg10($mp3) && self::is_layer1($mp3)) //V1,L1
             $whichcolumn = 0;
-        else if (self::is_mpeg10($mp3) && self::is_layer2($mp3)) //V1,L2
+        elseif (self::is_mpeg10($mp3) && self::is_layer2($mp3)) //V1,L2
             $whichcolumn = 1;
-        else if (self::is_mpeg10($mp3) && self::is_layer3($mp3)) //V1,L3
+        elseif (self::is_mpeg10($mp3) && self::is_layer3($mp3)) //V1,L3
             $whichcolumn = 2;
-        else if (self::is_mpeg20or25($mp3) && self::is_layer1($mp3)) //V2,L1
+        elseif (self::is_mpeg20or25($mp3) && self::is_layer1($mp3)) //V2,L1
             $whichcolumn = 3;
-        else if (self::is_mpeg20or25($mp3) && (self::is_layer2($mp3) || self::is_layer3($mp3)))
+        elseif (self::is_mpeg20or25($mp3) && (self::is_layer2($mp3) || self::is_layer3($mp3)))
             $whichcolumn = 4;
         //V2,   L2||L3
 
@@ -601,9 +601,9 @@ class Calculate
         $whichcolumn = -1;
         if (self::is_mpeg10($mp3))
             $whichcolumn = 0;
-        else if (self::is_mpeg20($mp3))
+        elseif (self::is_mpeg20($mp3))
             $whichcolumn = 1;
-        else if (self::is_mpeg25($mp3))
+        elseif (self::is_mpeg25($mp3))
             $whichcolumn = 2;
 
         if (isset($array[$mp3['Sampling Freq Idx']][$whichcolumn]))
