@@ -293,10 +293,10 @@ class Calculate
         if ($this->bitpos == 8) {
             $this->blockpos++;
 
-            if ($this->blockpos == $this->blockmax) //end of block reached
-            {
+            if ($this->blockpos == $this->blockmax) { //end of block reached
                 $this->prefetchblock();
             } elseif ($this->blockpos == $this->blocksize) { //end of short block reached (shorter than blockmax)
+
                 return; //eof
             }
 
