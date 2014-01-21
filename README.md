@@ -2,6 +2,8 @@ MP3 Player
 =======
 Version 1.0.0 Created by Sammie S. Taunton
 
+[![Build Status](https://travis-ci.org/diemuzi/mp3.png?branch=master)](https://travis-ci.org/diemuzi/mp3)
+
 Introduction
 ------------
 
