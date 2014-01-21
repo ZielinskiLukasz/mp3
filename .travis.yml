@@ -15,6 +15,6 @@ script:
 notifications:
   irc:
     channels:
-      - "chat.freenode.org#otwebsoft"
+      - "chat.freenode.net#otwebsoft"
   email:
     - diemuzi@gmail.com
