@@ -3,6 +3,7 @@ MP3 Player
 Version 1.0.0 Created by Sammie S. Taunton
 
 [![Build Status](https://travis-ci.org/diemuzi/mp3.png?branch=master)](https://travis-ci.org/diemuzi/mp3)
+[![Coverage Status](https://coveralls.io/repos/diemuzi/mp3/badge.png)](https://coveralls.io/r/diemuzi/mp3)
 
 Introduction
 ------------
@@ -65,5 +66,26 @@ Installation
             'Mp3',
         ),
         // ...
+    );
+    ```
+2. Edit config/autoload/mp3.global.php
+    ```php
+    <?php
+    return array(
+        'mp3' => array(
+            /**
+             * Base Directory
+             * Must be Web Accessible
+             *
+             * Example: http://example.com/music
+             */
+            'base_dir' => '/music',
+
+            /**
+             * Format
+             * Support types are; pls, m3u
+             */
+            'format'   => 'pls'
+        )
     );
     ```

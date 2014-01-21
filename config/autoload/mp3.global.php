@@ -13,6 +13,8 @@ return array(
         /**
          * Base Directory
          * Must be Web Accessible
+         *
+         * Example: http://example.com/music
          */
         'base_dir' => '/music',
 
