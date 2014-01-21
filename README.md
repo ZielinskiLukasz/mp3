@@ -82,8 +82,8 @@ Screenshots
 
 Main Screen
 
-![](https://github.com/diemuzi/mp3/search.png)
+![](https://raw2.github.com/diemuzi/mp3/master/search.png)
 
 Play Lists
 
-![](https://github.com/diemuzi/mp3/songs.png)
+![](https://raw2.github.com/diemuzi/mp3/master/songs.png)
