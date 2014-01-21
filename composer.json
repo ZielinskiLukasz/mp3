@@ -1,0 +1,25 @@
+{
+    "name": "diemuzi/mp3",
+    "description": "MP3 Player",
+    "type": "library",
+    "keywords": [
+        "zf2"
+    ],
+    "homepage": "https://github.com/diemuzi/mp3",
+    "authors": [
+        {
+            "name": "Sammie S. Taunton",
+            "email": "diemuzi@gmail.com",
+            "homepage": "http://otwebsoft.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Mp3": "src/"
+        }
+    }
+}

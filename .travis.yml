@@ -16,5 +16,4 @@ notifications:
   irc:
     channels:
       - "chat.freenode.net#otwebsoft"
-  email:
-    - diemuzi@gmail.com
+  email: false
