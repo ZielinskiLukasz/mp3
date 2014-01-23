@@ -2,10 +2,9 @@ MP3 Player
 =======
 Version 1.0.1 Created by Sammie S. Taunton
 
-Review the latest changes from the CHANGELOG
+Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
 [![Build Status](https://travis-ci.org/diemuzi/mp3.png?branch=master)](https://travis-ci.org/diemuzi/mp3)
-[![Latest Stable Version](https://poser.pugx.org/diemuzi/mp3/v/stable.png)](https://packagist.org/packages/diemuzi/mp3)
 
 Introduction
 ------------
@@ -90,8 +89,8 @@ Screenshots
 
 Main Screen
 
-![](https://raw2.github.com/diemuzi/mp3/master/search.png)
+![](search.png)
 
 Play Lists
 
-![](https://raw2.github.com/diemuzi/mp3/master/songs.png)
+![](songs.png)
