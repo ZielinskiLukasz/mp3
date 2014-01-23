@@ -1,6 +1,6 @@
 MP3 Player
-=======
-**Version 1.0.1** Created by Sammie S. Taunton
+==========
+**Version 1.0.1**
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
@@ -33,64 +33,28 @@ Features
 * Play Single Songs or Full Albums
 * Download Songs from your library
 * Translatable
-
-Coming Soon!
-------------
-
-* Searchable
-* Randomize Play Lists
-* Download Folders
+* More coming soon, see [TODO.md](TODO.md).
 
 Installation
 ------------
 
-### Main Setup
+1. Install the module via composer by running:
 
-#### By cloning project
-
-1. Install the [mp3](https://github.com/diemuzi/mp3) ZF2 module
-   by cloning it into `./vendor/`.
-2. Clone this project into your `./vendor/` directory.
-
-#### With composer
-
-1. Add this project in your composer.json:
-
-    ```json
-    "require": {
-        "diemuzi/mp3": "master"
-    }
+   ```sh
+   php composer.phar require diemuzi/mp3:dev-master
+   ```
+   or download it directly from github and place it in your application's `module/` directory.
+2. Add the `Mp3` module to the module section of your `config/application.config.php`.
+3. Edit `config/autoload/mp3.global.php` and change the settings per your configuration.
     ```
-
-2. Now tell composer to download mp3 by running the command:
-
-    ```bash
-    $ php composer.phar update
-    ```
-
-#### Post installation
-
-1. Enabling it in your `application.config.php`file.
-
-    ```php
-    <?php
-    return array(
-        'modules' => array(
-            // ...
-            'Mp3',
-        ),
-        // ...
-    );
-    ```
-2. Edit config/autoload/mp3.global.php and change the settings per your configuration
 
 Screenshots
 -----------
 
 Main Screen
 
-![](search.png)
+![](docs/search.png)
 
 Play Lists
 
-![](songs.png)
+![](docs/songs.png)
