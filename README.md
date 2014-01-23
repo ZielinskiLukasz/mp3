@@ -1,6 +1,6 @@
 MP3 Player
 =======
-Version 1.0.1 Created by Sammie S. Taunton
+**Version 1.0.1** Created by Sammie S. Taunton
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
