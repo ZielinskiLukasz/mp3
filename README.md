@@ -1,7 +1,7 @@
 MP3 Player
 ==========
 
-**Version 1.0.1**
+**Version 1.0.2**
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
