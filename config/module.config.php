@@ -9,7 +9,7 @@
  */
 
 return array(
-    'router'          => array(
+    'router'              => array(
         'routes' => array(
             'mp3-search'          => array(
                 'type'    => 'segment',
@@ -54,7 +54,7 @@ return array(
             )
         )
     ),
-    'translator'      => array(
+    'translator'          => array(
         'translation_file_patterns' => array(
             array(
                 'type'        => 'gettext',
@@ -64,21 +64,21 @@ return array(
             )
         )
     ),
-    'controllers'     => array(
+    'controllers'         => array(
         'invokables' => array(
             'Mp3\Controller\Mp3' => 'Mp3\Controller\Mp3Controller'
         )
     ),
-    'view_manager'    => array(
-        'template_map' => include_once __DIR__ . '/template_map.php'
+    'template_path_stack' => array(
+        __DIR__ . '/../view'
     ),
-    'view_helpers'    => array(
+    'view_helpers'        => array(
         'invokables' => array(
             'convert'  => 'Mp3\View\Helper\Convert',
             'navigate' => 'Mp3\View\Helper\Navigate'
         )
     ),
-    'service_manager' => array(
+    'service_manager'     => array(
         'invokables' => array(
             'Mp3\Service\Calculate' => 'Mp3\Service\Calculate',
             'Mp3\Service\Search'    => 'Mp3\Service\Search'
