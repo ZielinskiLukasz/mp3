@@ -1,11 +1,11 @@
 MP3 Player
 =======
-Version 1.0.0 Created by Sammie S. Taunton
+Version 1.0.1 Created by Sammie S. Taunton
+
+Review the latest changes from the CHANGELOG
 
 [![Build Status](https://travis-ci.org/diemuzi/mp3.png?branch=master)](https://travis-ci.org/diemuzi/mp3)
 [![Latest Stable Version](https://poser.pugx.org/diemuzi/mp3/v/stable.png)](https://packagist.org/packages/diemuzi/mp3)
-[![Total Downloads](https://poser.pugx.org/diemuzi/mp3/downloads.png)](https://packagist.org/packages/diemuzi/mp3)
-[![License](https://poser.pugx.org/diemuzi/mp3/license.png)](https://packagist.org/packages/diemuzi/mp3)
 
 Introduction
 ------------
@@ -33,6 +33,7 @@ Features
 * Play music from your library
 * Play Single Songs or Full Albums
 * Download Songs from your library
+* Translatable
 
 Coming Soon!
 ------------

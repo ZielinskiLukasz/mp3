@@ -32,6 +32,7 @@ class Mp3Controller extends AbstractActionController
 
         $viewModel = new ViewModel();
         $viewModel
+            ->setTerminal(true)
             ->setTemplate('mp3/mp3/search')
             ->setVariables(array(
                 'paginator'    => $service['paginator'],
@@ -39,8 +40,7 @@ class Mp3Controller extends AbstractActionController
                 'total_length' => $service['total_length'],
                 'total_size'   => $service['total_size'],
                 'dir'          => $this->params()->fromRoute('dir')
-            ))
-            ->setTerminal(true);
+            ));
 
         return $viewModel;
     }

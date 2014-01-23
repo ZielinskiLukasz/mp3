@@ -33,23 +33,21 @@ interface SearchInterface
      * Play All
      *
      * @param string $dir
-     * @param null   $playlist
      *
      * @return null|string
      * @throws \Exception
      */
-    public function PlayAll($dir, $playlist = null);
+    public function PlayAll($dir);
 
     /**
      * Play Single Song
      *
      * @param string $dir
-     * @param null   $playlist
      *
      * @return null|string
      * @throws \Exception
      */
-    public function PlaySingle($dir, $playlist = null);
+    public function PlaySingle($dir);
 
     /**
      * Download Single
@@ -60,14 +58,4 @@ interface SearchInterface
      * @throws \Exception
      */
     public function DownloadSingle($dir);
-
-    /**
-     * Directory Array
-     *
-     * @param string $dir
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function DirectoryArray($dir);
 }

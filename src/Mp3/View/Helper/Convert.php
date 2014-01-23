@@ -33,35 +33,36 @@ class Convert extends AbstractHelper
         $bytes = floatval($bytes);
 
         $arBytes = array(
-            0 => array(
-                "UNIT"  => "TB",
-                "VALUE" => pow(1024, 4)
+            array(
+                'unit'  => 'TB',
+                'value' => pow(1024, 4)
             ),
-            1 => array(
-                "UNIT"  => "GB",
-                "VALUE" => pow(1024, 3)
+            array(
+                'unit'  => 'GB',
+                'value' => pow(1024, 3)
             ),
-            2 => array(
-                "UNIT"  => "MB",
-                "VALUE" => pow(1024, 2)
+            array(
+                'unit'  => 'MB',
+                'value' => pow(1024, 2)
             ),
-            3 => array(
-                "UNIT"  => "KB",
-                "VALUE" => 1024
+            array(
+                'unit'  => 'KB',
+                'value' => 1024
             ),
-            4 => array(
-                "UNIT"  => "B",
-                "VALUE" => 1
-            ),
+            array(
+                'unit'  => 'B',
+                'value' => 1
+            )
         );
 
         foreach ($arBytes as $arItem) {
-            if ($bytes >= $arItem["VALUE"]) {
-                $result = $bytes / $arItem["VALUE"];
-                if ($arItem["VALUE"] != 'B' || $arItem["VALUE"] != 'KB') {
-                    $result = strval(round($result, 2)) . " " . $arItem["UNIT"];
+            if ($bytes >= $arItem['value']) {
+                $result = $bytes / $arItem['value'];
+
+                if ($arItem['value'] != 'B' || $arItem['value'] != 'KB') {
+                    $result = strval(round($result, 2)) . ' ' . $arItem['unit'];
                 } else {
-                    $result = str_replace(".", ",", strval(round($result, 2))) . " " . $arItem["UNIT"];
+                    $result = str_replace('.', ',', strval(round($result, 2))) . ' ' . $arItem['unit'];
                 }
 
                 break;

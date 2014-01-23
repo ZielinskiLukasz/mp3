@@ -26,10 +26,15 @@ class Search extends ServiceProvider implements SearchInterface
     public function Search(array $params)
     {
         try {
-            $config = $this->getServiceManager()
-                ->get('config');
+            if (array_key_exists('dir', $params)) {
+                $base_dir = preg_replace('/(\/+)/', '/', $this->getBasePath() . rawurldecode($params['dir']));
 
-            $base_dir = (isset($params['dir'])) ? $_SERVER['DOCUMENT_ROOT'] . $config['mp3']['base_dir'] . '/' . rawurldecode($params['dir']) : $_SERVER['DOCUMENT_ROOT'] . $config['mp3']['base_dir'];
+                $dir = preg_replace('/(\/+)/', '/', rawurldecode($params['dir']));
+            } else {
+                $base_dir = preg_replace('/(\/+)/', '/', $this->getBasePath());
+
+                $dir = null;
+            }
 
             $array = array();
 
@@ -37,29 +42,39 @@ class Search extends ServiceProvider implements SearchInterface
             $total_size = '0';
 
             foreach ($this->DirectoryArray($base_dir) as $location) {
-                if ($location['type'] == 'dir') {
+                clearstatcache();
+
+                /**
+                 * Directory
+                 */
+                if (is_dir($base_dir . $location)) {
                     $array[] = array(
-                        'name'     => ltrim($location['path'], '/'),
-                        'location' => (isset($params['dir'])) ? $params['dir'] . $location['path'] : $location['path'],
-                        'type'     => $location['type']
+                        'name'     => ltrim($location, '/'),
+                        'location' => ($dir != null) ? $dir . $location : $location,
+                        'type'     => 'dir'
                     );
-                } else {
-                    $path = (isset($params['dir'])) ? $base_dir . $location['path'] : $location['path'];
+                }
 
-                    $mp3_file = new Calculate($path);
-                    $convert = $mp3_file->get_metadata();
+                /**
+                 * File
+                 */
+                if (is_file($base_dir . '/' . $location)) {
+                    $path = ($dir != null) ? $base_dir . $location : $location;
+
+                    $calculate = new Calculate($path);
+                    $meta = $calculate->get_metadata();
 
                     $array[] = array(
-                        'name'     => ltrim($location['path'], '/'),
-                        'location' => $params['dir'] . $location['path'],
-                        'type'     => $location['type'],
-                        'bit_rate' => (isset($convert['Bitrate'])) ? $convert['Bitrate'] : '-',
-                        'length'   => (isset($convert['Length mm:ss'])) ? $convert['Length mm:ss'] : '-',
-                        'size'     => (isset($convert['Filesize'])) ? $convert['Filesize'] : '-'
+                        'name'     => ltrim($location, '/'),
+                        'location' => ($dir != null) ? $dir . $location : $location,
+                        'type'     => 'file',
+                        'bit_rate' => (isset($meta['Bitrate'])) ? $meta['Bitrate'] : '-',
+                        'length'   => (isset($meta['Length mm:ss'])) ? $meta['Length mm:ss'] : '-',
+                        'size'     => (isset($meta['Filesize'])) ? $meta['Filesize'] : '-'
                     );
 
-                    $total_length += (isset($convert['Length'])) ? $convert['Length'] : '0';
-                    $total_size += (isset($convert['Filesize'])) ? $convert['Filesize'] : '0';
+                    $total_length += (isset($meta['Length'])) ? $meta['Length'] : '0';
+                    $total_size += (isset($meta['Filesize'])) ? $meta['Filesize'] : '0';
                 }
             }
 
@@ -68,7 +83,7 @@ class Search extends ServiceProvider implements SearchInterface
 
             return array(
                 'paginator'    => $paginator,
-                'path'         => (isset($params['dir'])) ? rawurldecode($params['dir']) : null,
+                'path'         => ($dir != null) ? $dir : null,
                 'total_length' => sprintf("%d:%02d", ($total_length / 60), $total_length % 60),
                 'total_size'   => $total_size
             );
@@ -80,17 +95,14 @@ class Search extends ServiceProvider implements SearchInterface
     /**
      * {@inheritdoc}
      */
-    public function PlayAll($dir, $playlist = null)
+    public function PlayAll($dir)
     {
         try {
-            $config = $this->getServiceManager()
-                ->get('config');
+            $path = $this->getConfig()['base_dir'] . rawurldecode($dir);
 
-            $dir = $config['mp3']['base_dir'] . $dir;
+            $array = $this->DirectoryArray($this->getBasePath() . rawurldecode($dir));
 
-            $array = $this->DirectoryArray($_SERVER['DOCUMENT_ROOT'] . $dir);
-
-            if ($config['mp3']['format'] == 'm3u') {
+            if ($this->getConfig()['format'] == 'm3u') {
                 /**
                  * Windows Media Player
                  */
@@ -98,8 +110,8 @@ class Search extends ServiceProvider implements SearchInterface
                     $playlist = '#EXTM3U' . "\n";
 
                     foreach ($array as $value) {
-                        $playlist .= '#EXTINF: ' . ltrim($value['path'], '/') . "\n";
-                        $playlist .= 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($dir . $value['path']) . "\n";
+                        $playlist .= '#EXTINF: ' . ltrim($value, '/') . "\n";
+                        $playlist .= 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path . $value) . "\n";
                         $playlist .= "\n";
                     }
 
@@ -108,7 +120,7 @@ class Search extends ServiceProvider implements SearchInterface
 
                     return $playlist;
                 }
-            } elseif ($config['mp3']['format'] == 'pls') {
+            } elseif ($this->getConfig()['format'] == 'pls') {
                 /**
                  * Winamp
                  */
@@ -116,28 +128,28 @@ class Search extends ServiceProvider implements SearchInterface
                     $playlist = '[Playlist]' . "\n";
 
                     foreach ($array as $key => $value) {
-                        $mp3_file = new Calculate($_SERVER['DOCUMENT_ROOT'] . $dir . $value['path']);
-                        $convert = $mp3_file->get_metadata();
+                        $calculate = new Calculate($this->getBasePath() . rawurldecode($dir) . $value);
+                        $meta = $calculate->get_metadata();
 
-                        if (array_key_exists('Length', $convert)) {
-                            $length = $convert['Length'];
+                        if (array_key_exists('Length', $meta)) {
+                            $length = $meta['Length'];
                         } else {
                             $length = '-1';
                         }
 
-                        $playlist .= 'File' . ($key + '1') . '=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($dir . $value['path']) . "\n";
-                        $playlist .= 'Title' . ($key + '1') . '=' . ltrim($value['path'], '/') . "\n";
+                        $playlist .= 'File' . ($key + '1') . '=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path . $value) . "\n";
+                        $playlist .= 'Title' . ($key + '1') . '=' . ltrim($value, '/') . "\n";
                         $playlist .= 'Length' . ($key + '1') . '=' . $length . "\n";
                     }
 
                     $playlist .= 'Numberofentries=' . count($array) . "\n";
                     $playlist .= 'Version=2' . "\n";
+
+                    header("Content-Type: audio/x-scpls");
+                    header("Content-Disposition: attachment; filename=playlist.pls");
+
+                    return $playlist;
                 }
-
-                header("Content-Type: audio/x-scpls");
-                header("Content-Disposition: attachment; filename=playlist.pls");
-
-                return $playlist;
             } else {
                 throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
             }
@@ -149,23 +161,20 @@ class Search extends ServiceProvider implements SearchInterface
     /**
      * {@inheritdoc}
      */
-    public function PlaySingle($dir, $playlist = null)
+    public function PlaySingle($dir)
     {
         try {
-            $config = $this->getServiceManager()
-                ->get('config');
+            $path = $this->getConfig()['base_dir'] . rawurldecode($dir);
 
-            $dir = $config['mp3']['base_dir'] . $dir;
-
-            if ($config['mp3']['format'] == 'm3u') {
+            if ($this->getConfig()['format'] == 'm3u') {
                 /**
                  * Windows Media Player
                  */
                 header("Content-Type: audio/mpegurl");
                 header("Content-Disposition: attachment; filename=playlist.m3u");
 
-                return 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($dir);
-            } elseif ($config['mp3']['format'] == 'pls') {
+                return 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path);
+            } elseif ($this->getConfig()['format'] == 'pls') {
                 /**
                  * Winamp
                  */
@@ -173,8 +182,8 @@ class Search extends ServiceProvider implements SearchInterface
                 header("Content-Disposition: attachment; filename=playlist.pls");
 
                 $playlist = '[Playlist]' . "\n";
-                $playlist .= 'File1=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($dir) . "\n";
-                $playlist .= 'Title1=' . rawurlencode($dir) . "\n";
+                $playlist .= 'File1=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path) . "\n";
+                $playlist .= 'Title1=' . basename($path) . "\n";
                 $playlist .= 'Length1=-1' . "\n";
                 $playlist .= 'Numberofentries=1' . "\n";
                 $playlist .= 'Version=2' . "\n";
@@ -194,18 +203,15 @@ class Search extends ServiceProvider implements SearchInterface
     public function DownloadSingle($dir)
     {
         try {
-            $config = $this->getServiceManager()
-                ->get('config');
-
-            $dir = $_SERVER['DOCUMENT_ROOT'] . $config['mp3']['base_dir'] . rawurldecode($dir);
+            $path = $this->getBasePath() . rawurldecode($dir);
 
             header("Content-Type: audio/mpeg");
-            header("Content-Disposition: attachment; filename=" . basename($dir));
-            header("Content-Length: " . filesize($dir));
+            header("Content-Disposition: attachment; filename=" . basename($path));
+            header("Content-Length: " . filesize($path));
 
-            $handle = fopen($dir, "rb");
+            $handle = fopen($path, "rb");
 
-            $contents = fread($handle, filesize($dir));
+            $contents = fread($handle, filesize($path));
 
             while ($contents) {
                 echo $contents;
@@ -218,9 +224,14 @@ class Search extends ServiceProvider implements SearchInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Directory Array
+     *
+     * @param string $dir
+     *
+     * @return array
+     * @throws \Exception
      */
-    public function DirectoryArray($dir)
+    private function DirectoryArray($dir)
     {
         try {
             $result_array = array();
@@ -230,6 +241,8 @@ class Search extends ServiceProvider implements SearchInterface
             if ($handle) {
                 while (false !== ($file = readdir($handle))) {
                     if ($file != '.' && $file != '..') {
+                        clearstatcache();
+
                         if (is_dir($dir . '/' . $file) && false) {
                             $list = $this->DirectoryArray($dir . '/' . $file, '/' . $file);
 
@@ -240,18 +253,17 @@ class Search extends ServiceProvider implements SearchInterface
                                 $i++;
                             }
                         } else {
-                            $path = '/' . $file;
+                            clearstatcache();
 
-                            if (is_file($dir . $path) && substr($dir . $path, -3) == 'mp3') {
-                                $result_array[] = array(
-                                    'path' => $path,
-                                    'type' => 'file'
-                                );
-                            } elseif (is_dir($dir . $path)) {
-                                $result_array[] = array(
-                                    'path' => $path,
-                                    'type' => 'dir'
-                                );
+                            if (is_dir($dir . '/' . $file)) {
+                                $result_array[] = '/' . $file;
+                            }
+
+                            /**
+                             * Currently only supporting .mp3 format
+                             */
+                            if (is_file($dir . '/' . $file) && substr($file, -4) == '.mp3') {
+                                $result_array[] = '/' . $file;
                             }
                         }
                     }
@@ -266,5 +278,34 @@ class Search extends ServiceProvider implements SearchInterface
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    /**
+     * Get Base Path
+     *
+     * @return string
+     */
+    private function getBasePath()
+    {
+        $config = $this->getServiceManager()
+            ->get('config');
+
+        return $_SERVER['DOCUMENT_ROOT'] . $config['mp3']['base_dir'];
+    }
+
+    /**
+     * Get Config
+     *
+     * @return array
+     */
+    private function getConfig()
+    {
+        $config = $this->getServiceManager()
+            ->get('config');
+
+        return array(
+            'base_dir' => $config['mp3']['base_dir'],
+            'format'   => $config['mp3']['format']
+        );
     }
 }

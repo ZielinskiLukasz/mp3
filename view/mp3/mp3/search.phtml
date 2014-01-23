@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php echo $this->headTitle('MP3 Player')->setAutoEscape(true); ?>
+    <?php echo $this->headTitle($this->translate('MP3 Player', 'mp3'))->setAutoEscape(true); ?>
 
     <?php echo $this->headMeta()
         ->appendName('viewport', 'width=device-width, initial-scale=1.0')
@@ -89,14 +89,10 @@
 <table class="mp3_table">
     <thead class="mp3_thead">
     <tr class="mp3_nagivation">
-        <th>:: <a href="<?php echo $this->url('mp3-search'); ?>">Home</a>
+        <th>:: <a href="<?php echo $this->url('mp3-search'); ?>"><?php echo $this->translate('Home', 'mp3'); ?></a>
             <?php
             foreach ($this->navigate(rawurldecode($this->dir)) as $key => $value):
-                if ($value['url'] !== null) {
-                    echo '<a href="' . $this->url('mp3-search', array('dir' => $value['url'])) . '">' . $value['text'] . '</a> :: ';
-                } else {
-                    echo $value['text'];
-                }
+                echo ' :: <a href="' . $this->url('mp3-search', array('dir' => $value['url'])) . '">' . $value['text'] . '</a>';
             endforeach;
             ?> ::
         </th>
@@ -108,19 +104,19 @@
     <thead class="mp3_thead">
     <tr>
         <th class="mp3_border mp3_center"
-            style="width: 50%;">Name
+            style="width: 50%;"><?php echo $this->translate('Name', 'mp3'); ?>
         </th>
         <th class="mp3_border mp3_center"
-            style="width: 10%;">Bit Rate
+            style="width: 10%;"><?php echo $this->translate('Bit Rate', 'mp3'); ?>
         </th>
         <th class="mp3_border mp3_center"
-            style="width: 10%;">Length
+            style="width: 10%;"><?php echo $this->translate('Length', 'mp3'); ?>
         </th>
         <th class="mp3_border mp3_center"
-            style="width: 10%;">Size
+            style="width: 10%;"><?php echo $this->translate('Size', 'mp3'); ?>
         </th>
         <th class="mp3_border mp3_center"
-            style="width: 20%;">Play
+            style="width: 20%;"><?php echo $this->translate('Play', 'mp3'); ?>
         </th>
     </tr>
     </thead>
@@ -141,13 +137,13 @@
                 else: ?>-<?php endif; ?></td>
             <td class="mp3_border mp3_center mp3_padding">
                 <?php if ($item['type'] == 'dir'): ?>
-                    <a href="<?php echo $this->url('mp3-search', array('dir' => $item['location'])); ?>">Open</a>
+                    <a href="<?php echo $this->url('mp3-search', array('dir' => $item['location'])); ?>"><?php echo $this->translate('Open', 'mp3'); ?></a>
                 <?php endif; ?>
 
                 <?php if ($item['type'] == 'file'): ?>
-                    <a href="<?php echo $this->url('mp3-play-single', array('dir' => $item['location'])); ?>">Play</a>
+                    <a href="<?php echo $this->url('mp3-play-single', array('dir' => $item['location'])); ?>"><?php echo $this->translate('Play', 'mp3'); ?></a>
                     <span> | </span>
-                    <a href="<?php echo $this->url('mp3-download-single', array('dir' => $item['location'])); ?>">Download</a>
+                    <a href="<?php echo $this->url('mp3-download-single', array('dir' => $item['location'])); ?>"><?php echo $this->translate('Download', 'mp3'); ?></a>
                 <?php endif; ?>
             </td>
         </tr>
@@ -155,12 +151,12 @@
 
     <?php if (!$dir): ?>
         <tr class="mp3_footer">
-            <td>Total Results: <?php echo $this->paginator->getCurrentItemCount(); ?></td>
+            <td><?php echo $this->translate('Total Results', 'mp3'); ?>: <?php echo $this->paginator->getCurrentItemCount(); ?></td>
             <td>&nbsp;</td>
             <td class="mp3_border mp3_center"><?php echo $this->total_length; ?></td>
             <td class="mp3_border mp3_center"><?php echo $this->convert($this->total_size); ?></td>
             <td class="mp3_border mp3_center">
-                <a href="<?php echo $this->url('mp3-play-all', array('dir' => $this->path)); ?>">Play All</a>
+                <a href="<?php echo $this->url('mp3-play-all', array('dir' => $this->path)); ?>"><?php echo $this->translate('Play All', 'mp3'); ?></a>
             </td>
         </tr>
     <?php endif; ?>

@@ -25,46 +25,23 @@ class Navigate extends AbstractHelper
      * @param string $path
      *
      * @return array
-     *
-     * @TODO Bug when the final and previous directory names are the same
      */
     public function __invoke($path)
     {
-        $array = array();
-
-        $explode = explode('/', preg_replace('/(\/+)/', '/', $path));
-
-        foreach (array_filter($explode) as $value) {
-            $explode2 = explode($value, $path);
-
-            $array[] = current($explode2) . prev($explode);
-        }
-
         $navigate = array();
 
-        foreach ($array as $dir) {
-            $text1 = str_replace(current($array), '', $dir);
-            $text2 = str_replace('/', '', $dir);
+        $explode = explode('/', $path);
 
-            $dir = preg_replace('/(\/+)/', '/', $dir);
+        $res = null;
 
-            if ($text1 == '') {
-                $navigate[] = array(
-                    'url'  => rawurlencode($dir),
-                    'text' => $text2
-                );
-            } else {
-                $navigate[] = array(
-                    'url'  => rawurlencode($dir),
-                    'text' => str_replace('/', '', $text1)
-                );
-            }
+        for ($i = 1; $i < count($explode); $i++) {
+            $res .= '/' . $explode[$i];
+
+            $navigate[] = array(
+                'url'  => $res,
+                'text' => $explode[$i]
+            );
         }
-
-        $navigate[] = array(
-            'url'  => null,
-            'text' => end($explode)
-        );
 
         return $navigate;
     }
