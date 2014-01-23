@@ -1,5 +1,6 @@
 MP3 Player
 ==========
+
 **Version 1.0.1**
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
@@ -19,12 +20,13 @@ Supported formats are currently:
 Support
 -------
 
-We can be found on the Freenode IRC Network in #otwebsoft
+* We can be found on the Freenode IRC Network in #otwebsoft
+* More information is always available in the [Wiki](../../wiki)
 
 Requirements
 ------------
 
-* [Zend Framework 2](https://github.com/zendframework/zf2) (latest master)
+* [Zend Framework 2](https://github.com/zendframework/zf2)
 
 Features
 --------
@@ -33,7 +35,7 @@ Features
 * Play Single Songs or Full Albums
 * Download Songs from your library
 * Translatable
-* More coming soon, see [TODO.md](TODO.md).
+* More coming soon, see [TODO.md](TODO.md)
 
 Installation
 ------------
@@ -46,7 +48,6 @@ Installation
    or download it directly from github and place it in your application's `module/` directory.
 2. Add the `Mp3` module to the module section of your `config/application.config.php`.
 3. Edit `config/autoload/mp3.global.php` and change the settings per your configuration.
-    ```
 
 Screenshots
 -----------
