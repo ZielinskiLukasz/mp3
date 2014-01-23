@@ -141,7 +141,7 @@ class Search extends ServiceProvider implements SearchInterface
                         }
 
                         $playlist .= 'File' . ($key + '1') . '=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path . $value) . "\n";
-                        $playlist .= 'Title' . ($key + '1') . '=' . ltrim($value, '/') . "\n";
+                        $playlist .= 'Title' . ($key + '1') . '=' . basename($value) . "\n";
                         $playlist .= 'Length' . ($key + '1') . '=' . $length . "\n";
                     }
 
