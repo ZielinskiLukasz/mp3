@@ -50,10 +50,8 @@ class Mp3Controller extends AbstractActionController
      */
     public function playallAction()
     {
-        echo $this->getServiceSearch()
+        $this->getServiceSearch()
             ->PlayAll($this->params()->fromRoute('dir'));
-
-        exit;
     }
 
     /**
@@ -61,20 +59,16 @@ class Mp3Controller extends AbstractActionController
      */
     public function playsingleAction()
     {
-        echo $this->getServiceSearch()
+        $this->getServiceSearch()
             ->PlaySingle($this->params()->fromRoute('dir'));
-
-        exit;
     }
 
     /**
      * Download Single
-     *
-     * @return null|string|void
      */
     public function downloadsingleAction()
     {
-        return $this->getServiceSearch()
+        $this->getServiceSearch()
             ->DownloadSingle($this->params()->fromRoute('dir'));
     }
 

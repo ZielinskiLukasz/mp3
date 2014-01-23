@@ -118,7 +118,10 @@ class Search extends ServiceProvider implements SearchInterface
                     header("Content-Type: audio/mpegurl");
                     header("Content-Disposition: attachment; filename=playlist.m3u");
 
-                    return $playlist;
+                    echo $playlist;
+                    exit;
+                } else {
+                    throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
                 }
             } elseif ($this->getConfig()['format'] == 'pls') {
                 /**
@@ -148,7 +151,10 @@ class Search extends ServiceProvider implements SearchInterface
                     header("Content-Type: audio/x-scpls");
                     header("Content-Disposition: attachment; filename=playlist.pls");
 
-                    return $playlist;
+                    echo $playlist;
+                    exit;
+                } else {
+                    throw new \Exception('Something went wrong and we cannot play this folder.');
                 }
             } else {
                 throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
@@ -173,7 +179,8 @@ class Search extends ServiceProvider implements SearchInterface
                 header("Content-Type: audio/mpegurl");
                 header("Content-Disposition: attachment; filename=playlist.m3u");
 
-                return 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path);
+                echo 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path);
+                exit;
             } elseif ($this->getConfig()['format'] == 'pls') {
                 /**
                  * Winamp
@@ -188,7 +195,8 @@ class Search extends ServiceProvider implements SearchInterface
                 $playlist .= 'Numberofentries=1' . "\n";
                 $playlist .= 'Version=2' . "\n";
 
-                return $playlist;
+                echo $playlist;
+                exit;
             } else {
                 throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
             }

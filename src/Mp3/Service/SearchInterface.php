@@ -34,7 +34,7 @@ interface SearchInterface
      *
      * @param string $dir
      *
-     * @return null|string
+     * @return null|string|void
      * @throws \Exception
      */
     public function PlayAll($dir);
@@ -44,7 +44,7 @@ interface SearchInterface
      *
      * @param string $dir
      *
-     * @return null|string
+     * @return null|string|void
      * @throws \Exception
      */
     public function PlaySingle($dir);
