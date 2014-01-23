@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MP3 Player\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-22 18:46-0600\n"
-"PO-Revision-Date: 2014-01-22 18:46-0600\n"
+"POT-Creation-Date: 2014-01-23 15:11-0600\n"
+"PO-Revision-Date: 2014-01-23 15:11-0600\n"
 "Last-Translator: Sammie S. Taunton <diemuzi@gmail.com>\n"
 "Language-Team: OTWebsoft <diemuzi@gmail.com>\n"
 "Language: en\n"
@@ -16,38 +16,42 @@ msgstr ""
 "X-Generator: Poedit 1.6.3\n"
 "X-Poedit-SearchPath-0: D:\\Translation\\Mp3\n"
 
-#: D:\Translation\Mp3/mp3.php:5
+#: D:\Translation\Mp3/mp3.php:2
 msgid "Open"
 msgstr "Open"
 
-#: D:\Translation\Mp3/mp3.php:6
+#: D:\Translation\Mp3/mp3.php:3
 msgid "Name"
 msgstr "Name"
 
-#: D:\Translation\Mp3/mp3.php:7
+#: D:\Translation\Mp3/mp3.php:4
 msgid "Bit Rate"
 msgstr "Bit Rate"
 
-#: D:\Translation\Mp3/mp3.php:8
+#: D:\Translation\Mp3/mp3.php:5
 msgid "Length"
 msgstr "Length"
 
-#: D:\Translation\Mp3/mp3.php:9
+#: D:\Translation\Mp3/mp3.php:6
 msgid "Size"
 msgstr "Size"
 
-#: D:\Translation\Mp3/mp3.php:10
+#: D:\Translation\Mp3/mp3.php:7
 msgid "Play"
 msgstr "Play"
 
-#: D:\Translation\Mp3/mp3.php:11
+#: D:\Translation\Mp3/mp3.php:8
 msgid "Play All"
 msgstr "Play All"
 
-#: D:\Translation\Mp3/mp3.php:12
+#: D:\Translation\Mp3/mp3.php:9
 msgid "Download"
 msgstr "Download"
 
-#: D:\Translation\Mp3/mp3.php:13
+#: D:\Translation\Mp3/mp3.php:10
 msgid "Total Results"
 msgstr "Total Results"
+
+#: D:\Translation\Mp3/mp3.php:11
+msgid "MP3 Player"
+msgstr "MP3 Player"
