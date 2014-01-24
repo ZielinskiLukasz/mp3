@@ -63,7 +63,7 @@ class Search extends ServiceProvider implements SearchInterface
                         }
 
                         if (is_file($this->getBasePath() . $search)) {
-                            $calculate = @new Calculate($this->getBasePath() . $dir);
+                            $calculate = new Calculate($this->getBasePath() . $dir);
                             $meta = $calculate->get_metadata();
 
                             $array[] = array(
