@@ -58,13 +58,10 @@ class ServiceProvider implements ServiceManagerAwareInterface
      */
     public function getBasePath()
     {
-        $config = $this->getServiceManager()
-            ->get('config');
-
         if (php_sapi_name() == 'cli') {
             return $this->getConfig()['search_path'];
         } else {
-            return $_SERVER['DOCUMENT_ROOT'] . $config['mp3']['base_dir'];
+            return $_SERVER['DOCUMENT_ROOT'] . $this->getConfig()['base_dir'];
         }
     }
 
@@ -78,11 +75,50 @@ class ServiceProvider implements ServiceManagerAwareInterface
         $config = $this->getServiceManager()
             ->get('config');
 
+        if (!isset($config['mp3']['base_dir'])) {
+            echo $this->getTranslator()
+                ->translate('base_dir is not currently set', 'mp3');
+
+            exit;
+        }
+
+        if (!isset($config['mp3']['format'])) {
+            echo $this->getTranslator()
+                ->translate('format is not currently set', 'mp3');
+
+            exit;
+        }
+
+        if (!isset($config['mp3']['search_file'])) {
+            echo $this->getTranslator()
+                ->translate('search_file is not currently set', 'mp3');
+
+            exit;
+        }
+
+        if (!isset($config['mp3']['search_path'])) {
+            echo $this->getTranslator()
+                ->translate('search_path is not currently set', 'mp3');
+
+            exit;
+        }
+
         return array(
             'base_dir'    => $config['mp3']['base_dir'],
             'format'      => $config['mp3']['format'],
             'search_file' => $config['mp3']['search_file'],
             'search_path' => $config['mp3']['search_path']
         );
+    }
+
+    /**
+     * Get Translator
+     *
+     * @return \Zend\I18n\Translator\Translator
+     */
+    public function getTranslator()
+    {
+        return $this->getServiceManager()
+            ->get('translator');
     }
 }
