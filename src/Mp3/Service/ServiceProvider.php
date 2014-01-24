@@ -50,4 +50,39 @@ class ServiceProvider implements ServiceManagerAwareInterface
 
         return $this;
     }
+
+    /**
+     * Get Base Path
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+        $config = $this->getServiceManager()
+            ->get('config');
+
+        if (php_sapi_name() == 'cli') {
+            return $this->getConfig()['search_path'];
+        } else {
+            return $_SERVER['DOCUMENT_ROOT'] . $config['mp3']['base_dir'];
+        }
+    }
+
+    /**
+     * Get Config
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        $config = $this->getServiceManager()
+            ->get('config');
+
+        return array(
+            'base_dir'    => $config['mp3']['base_dir'],
+            'format'      => $config['mp3']['format'],
+            'search_file' => $config['mp3']['search_file'],
+            'search_path' => $config['mp3']['search_path']
+        );
+    }
 }

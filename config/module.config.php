@@ -14,29 +14,19 @@ return array(
             'mp3-index'           => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/mp3/index[/:dir]',
+                    'route'    => '/mp3/index[:dir]',
                     'defaults' => array(
-                        'controller' => 'Mp3\Controller\Mp3',
+                        'controller' => 'Mp3\Controller\Index',
                         'action'     => 'index'
-                    )
-                )
-            ),
-            'mp3-search'          => array(
-                'type'    => 'segment',
-                'options' => array(
-                    'route'    => '/mp3/search[/name/:name]',
-                    'defaults' => array(
-                        'controller' => 'Mp3\Controller\Mp3',
-                        'action'     => 'search'
                     )
                 )
             ),
             'mp3-play-all'        => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/mp3/play/all[/:dir]',
+                    'route'    => '/mp3/play/all[:dir]',
                     'defaults' => array(
-                        'controller' => 'Mp3\Controller\Mp3',
+                        'controller' => 'Mp3\Controller\Index',
                         'action'     => 'playall'
                     )
                 )
@@ -44,9 +34,9 @@ return array(
             'mp3-play-single'     => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/mp3/play/single[/:dir]',
+                    'route'    => '/mp3/play/single[:dir]',
                     'defaults' => array(
-                        'controller' => 'Mp3\Controller\Mp3',
+                        'controller' => 'Mp3\Controller\Index',
                         'action'     => 'playsingle'
                     )
                 )
@@ -54,10 +44,21 @@ return array(
             'mp3-download-single' => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/mp3/download/single[/:dir]',
+                    'route'    => '/mp3/download/single[:dir]',
                     'defaults' => array(
-                        'controller' => 'Mp3\Controller\Mp3',
+                        'controller' => 'Mp3\Controller\Index',
                         'action'     => 'downloadsingle'
+                    )
+                )
+            ),
+            'mp3-search'          => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/mp3/search[/name/:name][/flash/:flash]',
+                    'defaults' => array(
+                        'controller' => 'Mp3\Controller\Search',
+                        'action'     => 'search',
+                        'name'       => null
                     )
                 )
             )
@@ -70,7 +71,7 @@ return array(
                     'options' => array(
                         'route'    => 'mp3 import [--help] [--confirm=]',
                         'defaults' => array(
-                            'controller' => 'Mp3\Controller\Mp3',
+                            'controller' => 'Mp3\Controller\Search',
                             'action'     => 'import',
                             'confirm'    => 'yes'
                         )
@@ -91,7 +92,8 @@ return array(
     ),
     'controllers'     => array(
         'invokables' => array(
-            'Mp3\Controller\Mp3' => 'Mp3\Controller\Mp3Controller'
+            'Mp3\Controller\Index'  => 'Mp3\Controller\IndexController',
+            'Mp3\Controller\Search' => 'Mp3\Controller\SearchController'
         )
     ),
     'view_manager'    => array(
@@ -108,6 +110,7 @@ return array(
     'service_manager' => array(
         'invokables' => array(
             'Mp3\Service\Calculate' => 'Mp3\Service\Calculate',
+            'Mp3\Service\Index'     => 'Mp3\Service\Index',
             'Mp3\Service\Search'    => 'Mp3\Service\Search'
         )
     ),

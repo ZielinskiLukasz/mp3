@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 1.1.0 (TBD)
+
+- New Search Feature!
+    - Console Support for importing Search Results
+
+
+- Fixed Routes
+    - Changed Default Route from search to index
+- Fixed View Template Stack
+- Updated Translations
+
+- Out of Memory issues can be expected if you have a large amount of songs in your library
+    - To resolve this you can increse your PHP's memory_limit setting
+    - Or, reduce the files in your library into different folders
+
 ## 1.0.2 (2014-01-23)
 
 - Code Comments have been updated

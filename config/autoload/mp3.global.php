@@ -37,6 +37,6 @@ return array(
          *
          * Define the base search_path for your library
          */
-        'search_path' => '/backup/domains/mp3'
+        'search_path' => '/backup/domains/mp3-devel/public/music'
     )
 );

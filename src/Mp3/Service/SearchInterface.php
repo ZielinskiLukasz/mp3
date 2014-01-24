@@ -20,16 +20,6 @@ use Zend\Paginator\Paginator;
 interface SearchInterface
 {
     /**
-     * Index
-     *
-     * @param array $params
-     *
-     * @return array|Paginator
-     * @throws \Exception
-     */
-    public function Index(array $params);
-
-    /**
      * Search
      *
      * @param string $name
@@ -38,36 +28,6 @@ interface SearchInterface
      * @throws \Exception
      */
     public function Search($name);
-
-    /**
-     * Play All
-     *
-     * @param string $dir
-     *
-     * @return null|string|void
-     * @throws \Exception
-     */
-    public function PlayAll($dir);
-
-    /**
-     * Play Single Song
-     *
-     * @param string $dir
-     *
-     * @return null|string|void
-     * @throws \Exception
-     */
-    public function PlaySingle($dir);
-
-    /**
-     * Download Single
-     *
-     * @param string $dir
-     *
-     * @return null|string|void
-     * @throws \Exception
-     */
-    public function DownloadSingle($dir);
 
     /**
      * Import Search Results
