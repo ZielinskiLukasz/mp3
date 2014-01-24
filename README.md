@@ -6,6 +6,9 @@ MP3 Player
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
 [![Build Status](https://travis-ci.org/diemuzi/mp3.png?branch=master)](https://travis-ci.org/diemuzi/mp3)
+[![Total Downloads](https://poser.pugx.org/diemuzi/mp3/downloads.png)](https://packagist.org/packages/diemuzi/mp3)
+[![Latest Stable Version](https://poser.pugx.org/diemuzi/mp3/v/stable.png)](https://packagist.org/packages/diemuzi/mp3)
+[![Dependency Status](https://www.versioneye.com/user/projects/52e2d329ec1375da4b00001a/badge.png)](https://www.versioneye.com/user/projects/52e2d329ec1375da4b00001a)
 
 Introduction
 ------------
