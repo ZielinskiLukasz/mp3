@@ -38,7 +38,7 @@ class SearchController extends AbstractActionController
 
             if ($form->isValid()) {
                 return $this->redirect()->toRoute('mp3-search', array(
-                    'name' => $this->getRequest()->getPost('name')
+                    'name' => $this->params()->fromPost('name')
                 ));
             }
         }
