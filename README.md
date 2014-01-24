@@ -1,7 +1,7 @@
 MP3 Player
 ==========
 
-**Version 1.0.2**
+**Version 1.1.0**
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
@@ -31,6 +31,7 @@ Requirements
 Features
 --------
 
+* Searchable
 * Play music from your library
 * Play Single Songs or Full Albums
 * Download Songs from your library
