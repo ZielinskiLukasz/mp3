@@ -61,6 +61,16 @@ return array(
                     )
                 )
             ),
+            'mp3-download-folder-tar' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/mp3/download/folder/tar[:dir]',
+                    'defaults' => array(
+                        'controller' => 'Mp3\Controller\Index',
+                        'action'     => 'downloadfoldertar'
+                    )
+                )
+            ),
             'mp3-search'              => array(
                 'type'    => 'segment',
                 'options' => array(

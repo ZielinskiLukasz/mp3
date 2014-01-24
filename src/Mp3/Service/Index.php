@@ -262,7 +262,45 @@ class Index extends ServiceProvider implements IndexInterface
                 header('Content-Length: ' . filesize($filename));
 
                 readfile($filename);
+
                 unlink($filename);
+
+                exit;
+            } else {
+                throw new \Exception('Something went wrong and we cannot download this folder.');
+            }
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function DownloadFolderTar($dir)
+    {
+        try {
+            $array = $this->DirectoryArray($this->getBasePath() . rawurldecode($dir));
+
+            if (is_array($array) && count($array) > '0') {
+                $filename = basename($dir) . '.tar';
+
+                $tar = new \PharData($filename);
+
+                foreach ($array as $value) {
+                    $tar->addFile($this->getBasePath() . rawurldecode($dir) . $value, basename($value));
+                }
+
+                $tar->compress(\Phar::GZ);
+
+                header('Content-Type: application/x-tar');
+                header('Content-disposition: attachment; filename=' . $filename);
+                header('Content-Length: ' . filesize($filename));
+
+                readfile($filename);
+
+                unlink($filename);
+                unlink($filename . '.gz');
 
                 exit;
             } else {

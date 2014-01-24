@@ -68,4 +68,14 @@ interface IndexInterface
      * @throws \Exception
      */
     public function DownloadFolderZip($dir);
+
+    /**
+     * Download Folder in TAR Format
+     *
+     * @param string $dir
+     *
+     * @return null|string|void
+     * @throws \Exception
+     */
+    public function DownloadFolderTar($dir);
 }

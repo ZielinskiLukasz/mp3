@@ -207,6 +207,8 @@ if ($this->search):
                 <a href="<?php echo $this->url('mp3-play-all', array('dir' => $this->path)); ?>"><?php echo $this->translate('Play All', 'mp3'); ?></a>
                 <span> | </span>
                 <a href="<?php echo $this->url('mp3-download-folder-zip', array('dir' => $this->path)); ?>"><?php echo $this->translate('Download All (Zip)', 'mp3'); ?></a>
+                <span> | </span>
+                <a href="<?php echo $this->url('mp3-download-folder-tar', array('dir' => $this->path)); ?>"><?php echo $this->translate('Download All (Tar)', 'mp3'); ?></a>
             </td>
         <?php else: ?>
             <td>&nbsp;</td>

@@ -100,6 +100,17 @@ class IndexController extends AbstractActionController
     }
 
     /**
+     * Download Folder
+     *
+     * Format: Tar
+     */
+    public function downloadfoldertarAction()
+    {
+        $this->getServiceIndex()
+            ->DownloadFolderTar($this->params()->fromRoute('dir'));
+    }
+
+    /**
      * Form Search
      *
      * @return \Mp3\Form\Search
