@@ -12,7 +12,8 @@ return array(
     'mp3' => array(
         /**
          * Base Directory
-         * Must be Web Accessible
+         *
+         * Must be Web Accessible and only contain the location without a full URL
          *
          * Example: http://example.com/music
          */
@@ -20,6 +21,7 @@ return array(
 
         /**
          * Format
+         *
          * Support types are; pls, m3u
          */
         'format'      => 'pls',
@@ -33,7 +35,7 @@ return array(
         'search_file' => '/backup/domains/mp3-devel/public/search.txt',
 
         /**
-         * Search Path
+         * Full Path to Search
          *
          * Define the base search_path for your library
          */
