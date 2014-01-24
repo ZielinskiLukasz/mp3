@@ -301,6 +301,8 @@ class Search extends ServiceProvider implements SearchInterface
     public function Import()
     {
         try {
+            ini_set('max_execution_time', '0');
+
             $directory = new \RecursiveDirectoryIterator($this->getBasePath(), \FilesystemIterator::FOLLOW_SYMLINKS);
 
             $filename = $this->getConfig()['search_file'];
