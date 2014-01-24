@@ -76,7 +76,7 @@ class SearchController extends AbstractActionController
         $filter = $this->getFilterSearch();
         $filter->setData($this->params()->fromRoute());
 
-        if ($filter->isValid()) {
+        if ($filter->isValid() && $filter->getValue('help') == null) {
             if ($filter->getValue('confirm') == 'yes') {
                 $confirm = new Confirm('Are you sure you want to Import Search Results? [y/n]', 'y', 'n');
 

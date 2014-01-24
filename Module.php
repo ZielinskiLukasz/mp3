@@ -34,7 +34,7 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Co
         $e->getApplication()
             ->getEventManager()
             ->getSharedManager()
-            ->attach('Mp3\Controller\Mp3Controller', 'Mp3', function ($event) use ($e) {
+            ->attach('Mp3\Controller\SearchController', 'Mp3Help', function ($event) use ($e) {
                 /**
                  * @var MvcEvent $event
                  */
