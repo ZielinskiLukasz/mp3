@@ -20,14 +20,24 @@ use Zend\Paginator\Paginator;
 interface SearchInterface
 {
     /**
-     * Search
+     * Index
      *
      * @param array $params
      *
      * @return array|Paginator
      * @throws \Exception
      */
-    public function Search(array $params);
+    public function Index(array $params);
+
+    /**
+     * Search
+     *
+     * @param string $name
+     *
+     * @return array|Paginator
+     * @throws \Exception
+     */
+    public function Search($name);
 
     /**
      * Play All
@@ -58,4 +68,20 @@ interface SearchInterface
      * @throws \Exception
      */
     public function DownloadSingle($dir);
+
+    /**
+     * Import Search Results
+     *
+     * @throws \Exception
+     */
+    public function Import();
+
+    /**
+     * Parse Help
+     *
+     * @param string $help
+     *
+     * @return string
+     */
+    public function Help($help);
 }

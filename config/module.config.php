@@ -9,18 +9,27 @@
  */
 
 return array(
-    'router'              => array(
+    'router'          => array(
         'routes' => array(
+            'mp3-index'           => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/mp3/index[/:dir]',
+                    'defaults' => array(
+                        'controller' => 'Mp3\Controller\Mp3',
+                        'action'     => 'index'
+                    )
+                )
+            ),
             'mp3-search'          => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/mp3/search[/:dir]',
+                    'route'    => '/mp3/search[/name/:name]',
                     'defaults' => array(
                         'controller' => 'Mp3\Controller\Mp3',
                         'action'     => 'search'
                     )
-                ),
-
+                )
             ),
             'mp3-play-all'        => array(
                 'type'    => 'segment',
@@ -54,7 +63,23 @@ return array(
             )
         )
     ),
-    'translator'          => array(
+    'console'         => array(
+        'router' => array(
+            'routes' => array(
+                'mp3-import' => array(
+                    'options' => array(
+                        'route'    => 'mp3 import [--help] [--confirm=]',
+                        'defaults' => array(
+                            'controller' => 'Mp3\Controller\Mp3',
+                            'action'     => 'import',
+                            'confirm'    => 'yes'
+                        )
+                    )
+                )
+            )
+        )
+    ),
+    'translator'      => array(
         'translation_file_patterns' => array(
             array(
                 'type'        => 'gettext',
@@ -64,24 +89,36 @@ return array(
             )
         )
     ),
-    'controllers'         => array(
+    'controllers'     => array(
         'invokables' => array(
             'Mp3\Controller\Mp3' => 'Mp3\Controller\Mp3Controller'
         )
     ),
-    'template_path_stack' => array(
-        __DIR__ . '/../view'
+    'view_manager'    => array(
+        'template_path_stack' => array(
+            'mp3' => __DIR__ . '/../view'
+        )
     ),
-    'view_helpers'        => array(
+    'view_helpers'    => array(
         'invokables' => array(
             'convert'  => 'Mp3\View\Helper\Convert',
             'navigate' => 'Mp3\View\Helper\Navigate'
         )
     ),
-    'service_manager'     => array(
+    'service_manager' => array(
         'invokables' => array(
             'Mp3\Service\Calculate' => 'Mp3\Service\Calculate',
             'Mp3\Service\Search'    => 'Mp3\Service\Search'
+        )
+    ),
+    'form_elements'   => array(
+        'invokables' => array(
+            'Mp3\Form\Search' => 'Mp3\Form\Search'
+        )
+    ),
+    'input_filters'   => array(
+        'invokables' => array(
+            'Mp3\InputFilter\Search' => 'Mp3\InputFilter\Search'
         )
     )
 );

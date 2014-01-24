@@ -23,7 +23,7 @@ class Search extends ServiceProvider implements SearchInterface
     /**
      * {@inheritdoc}
      */
-    public function Search(array $params)
+    public function Index(array $params)
     {
         try {
             if (array_key_exists('dir', $params)) {
@@ -84,6 +84,70 @@ class Search extends ServiceProvider implements SearchInterface
             return array(
                 'paginator'    => $paginator,
                 'path'         => ($dir != null) ? $dir : null,
+                'total_length' => sprintf("%d:%02d", ($total_length / 60), $total_length % 60),
+                'total_size'   => $total_size
+            );
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function Search($name)
+    {
+        try {
+            $filename = $this->getConfig()['search_file'];
+            $handle = fopen($filename, 'r');
+            $contents = fread($handle, filesize($filename));
+
+            $unserialize = preg_grep("/" . $name . "/i", unserialize($contents));
+
+            fclose($handle);
+
+            $array = array();
+
+            $total_length = '0';
+            $total_size = '0';
+
+            foreach ($unserialize as $search) {
+                clearstatcache();
+
+                $dir = preg_replace('/(\/+)/', '/', $search);
+
+                if (is_dir($this->getBasePath() . $search)) {
+                    $array[] = array(
+                        'name'     => ltrim($dir, '/'),
+                        'location' => $dir,
+                        'type'     => 'dir'
+                    );
+                }
+
+                if (is_file($this->getBasePath() . $search)) {
+                    $calculate = new Calculate($this->getBasePath() . $dir);
+                    $meta = $calculate->get_metadata();
+
+                    $array[] = array(
+                        'name'     => ltrim($dir, '/'),
+                        'location' => $dir,
+                        'type'     => 'file',
+                        'bit_rate' => (isset($meta['Bitrate'])) ? $meta['Bitrate'] : '-',
+                        'length'   => (isset($meta['Length mm:ss'])) ? $meta['Length mm:ss'] : '-',
+                        'size'     => (isset($meta['Filesize'])) ? $meta['Filesize'] : '-'
+                    );
+
+                    $total_length += (isset($meta['Length'])) ? $meta['Length'] : '0';
+                    $total_size += (isset($meta['Filesize'])) ? $meta['Filesize'] : '0';
+                }
+            }
+
+            $paginator = new Paginator(new ArrayAdapter($array));
+            $paginator->setDefaultItemCountPerPage((count($array) > '0') ? count($array) : '1');
+
+            return array(
+                'paginator'    => $paginator,
+                'path'         => null,
                 'total_length' => sprintf("%d:%02d", ($total_length / 60), $total_length % 60),
                 'total_size'   => $total_size
             );
@@ -232,6 +296,77 @@ class Search extends ServiceProvider implements SearchInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function Import()
+    {
+        try {
+            $directory = new \RecursiveDirectoryIterator($this->getBasePath(), \FilesystemIterator::FOLLOW_SYMLINKS);
+
+            $filename = $this->getConfig()['search_file'];
+
+            $handle = fopen($filename, 'w');
+
+            if (is_writable($filename)) {
+                if (!$handle) {
+                    throw new \Exception('Cannot Open File: ' . $filename);
+                }
+            } else {
+                throw new \Exception('File Is Not Writable: ' . $filename);
+            }
+
+            $array = array();
+
+            /**
+             * @var \RecursiveDirectoryIterator $current
+             */
+            foreach (new \RecursiveIteratorIterator($directory) as $current) {
+                /**
+                 * Do not index the main folder
+                 */
+                if (substr($current->getPathName(), 0, -2) != $this->getBasePath()) {
+                    /**
+                     * Remove . and .. but translate the path into the base folder name
+                     */
+                    if (basename($current->getPathName()) == '.') {
+                        $array[] = str_replace($this->getBasePath(), '', substr($current->getPathName(), 0, -2));
+                    } elseif (basename($current->getPathName()) != '..' && substr($current->getPathName(), -4) == '.mp3') {
+                        $array[] = str_replace($this->getBasePath(), '', $current->getPathName());
+                    }
+                }
+            }
+
+            sort($array);
+
+            fwrite($handle, serialize($array));
+
+            fclose($handle);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            throw $e;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function Help($help)
+    {
+        $green = "\033[49;32m";
+        $end = "\033[0m";
+
+        $array['import'] = array(
+            'Import Search Results',
+            $green . 'mp3 import' . $end,
+            '',
+            'Option          Description             Required    Default    Available Options',
+            '--confirm=      Display Confirmation    No          Yes        Yes, No'
+        );
+
+        return implode("\n", $array[$help]) . "\n";
+    }
+
+    /**
      * Directory Array
      *
      * @param string $dir
@@ -298,7 +433,11 @@ class Search extends ServiceProvider implements SearchInterface
         $config = $this->getServiceManager()
             ->get('config');
 
-        return $_SERVER['DOCUMENT_ROOT'] . $config['mp3']['base_dir'];
+        if (php_sapi_name() == 'cli') {
+            return $this->getConfig()['search_path'];
+        } else {
+            return $_SERVER['DOCUMENT_ROOT'] . $config['mp3']['base_dir'];
+        }
     }
 
     /**
@@ -312,8 +451,10 @@ class Search extends ServiceProvider implements SearchInterface
             ->get('config');
 
         return array(
-            'base_dir' => $config['mp3']['base_dir'],
-            'format'   => $config['mp3']['format']
+            'base_dir'    => $config['mp3']['base_dir'],
+            'format'      => $config['mp3']['format'],
+            'search_file' => $config['mp3']['search_file'],
+            'search_path' => $config['mp3']['search_path']
         );
     }
 }
