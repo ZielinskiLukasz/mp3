@@ -222,7 +222,7 @@ class Index extends ServiceProvider implements IndexInterface
             header("Content-Disposition: attachment; filename=" . basename($path));
             header("Content-Length: " . filesize($path));
 
-            $handle = fopen($path, "rb");
+            $handle = fopen($path, 'rb');
 
             $contents = fread($handle, filesize($path));
 
@@ -231,6 +231,43 @@ class Index extends ServiceProvider implements IndexInterface
             }
 
             fclose($handle);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function DownloadFolderZip($dir)
+    {
+        try {
+            $array = $this->DirectoryArray($this->getBasePath() . rawurldecode($dir));
+
+            if (is_array($array) && count($array) > '0') {
+                $zip = new \ZipArchive();
+
+                $filename = basename($dir) . '.zip';
+
+                $zip->open($filename, \ZipArchive::OVERWRITE);
+
+                foreach ($array as $value) {
+                    $zip->addFile($this->getBasePath() . rawurldecode($dir) . $value, basename($value));
+                }
+
+                $zip->close();
+
+                header('Content-Type: application/zip');
+                header('Content-disposition: attachment; filename=' . $filename);
+                header('Content-Length: ' . filesize($filename));
+
+                readfile($filename);
+                unlink($filename);
+
+                exit;
+            } else {
+                throw new \Exception('Something went wrong and we cannot download this folder.');
+            }
         } catch (\Exception $e) {
             throw $e;
         }

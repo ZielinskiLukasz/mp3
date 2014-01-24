@@ -58,4 +58,14 @@ interface IndexInterface
      * @throws \Exception
      */
     public function DownloadSingle($dir);
+
+    /**
+     * Download Folder in ZIP Format
+     *
+     * @param string $dir
+     *
+     * @return null|string|void
+     * @throws \Exception
+     */
+    public function DownloadFolderZip($dir);
 }

@@ -89,6 +89,17 @@ class IndexController extends AbstractActionController
     }
 
     /**
+     * Download Folder
+     *
+     * Format: Zip
+     */
+    public function downloadfolderzipAction()
+    {
+        $this->getServiceIndex()
+            ->DownloadFolderZip($this->params()->fromRoute('dir'));
+    }
+
+    /**
      * Form Search
      *
      * @return \Mp3\Form\Search
