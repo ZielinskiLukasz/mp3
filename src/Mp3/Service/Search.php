@@ -33,6 +33,12 @@ class Search extends ServiceProvider implements SearchInterface
 
             if ($name != null) {
                 $filename = $this->getConfig()['search_file'];
+
+                if (filesize($filename) <= '0') {
+                    header('Location: /mp3/search/flash/The search file is currently empty. Use the Import Tool to populate the Search Results.');
+                    exit;
+                }
+
                 $handle = fopen($filename, 'r');
                 $contents = fread($handle, filesize($filename));
 
@@ -86,7 +92,8 @@ class Search extends ServiceProvider implements SearchInterface
             return array(
                 'paginator'    => $paginator,
                 'total_length' => $total_length,
-                'total_size'   => $total_size
+                'total_size'   => $total_size,
+                'search'       => (is_file($this->getConfig()['search_file']))
             );
         } catch (\Exception $e) {
             throw $e;

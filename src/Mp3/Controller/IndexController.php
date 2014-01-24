@@ -54,6 +54,7 @@ class IndexController extends AbstractActionController
                 'path'         => $service['path'],
                 'total_length' => $service['total_length'],
                 'total_size'   => $service['total_size'],
+                'search'       => $service['search'],
                 'dir'          => $this->params()->fromRoute('dir')
             ));
 

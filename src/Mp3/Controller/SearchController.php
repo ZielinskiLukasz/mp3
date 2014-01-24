@@ -55,6 +55,7 @@ class SearchController extends AbstractActionController
                 'paginator'    => $service['paginator'],
                 'total_length' => $service['total_length'],
                 'total_size'   => $service['total_size'],
+                'search'       => $service['search'],
                 'flash'        => $this->params()->fromRoute('flash')
             ));
 

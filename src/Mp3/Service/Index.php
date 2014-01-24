@@ -89,7 +89,8 @@ class Index extends ServiceProvider implements IndexInterface
                 'paginator'    => $paginator,
                 'path'         => ($dir != null) ? $dir : null,
                 'total_length' => $total_length,
-                'total_size'   => $total_size
+                'total_size'   => $total_size,
+                'search'       => (is_file($this->getConfig()['search_file']))
             );
         } catch (\Exception $e) {
             throw $e;
