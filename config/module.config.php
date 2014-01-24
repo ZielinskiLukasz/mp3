@@ -54,7 +54,7 @@ return array(
             'mp3-search'          => array(
                 'type'    => 'segment',
                 'options' => array(
-                    'route'    => '/mp3/search[/name/:name][/flash/:flash]',
+                    'route'    => '/mp3/search[/name/][:name][/flash/:flash]',
                     'defaults' => array(
                         'controller' => 'Mp3\Controller\Search',
                         'action'     => 'search',
