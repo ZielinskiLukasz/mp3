@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MP3 Player\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-24 12:27-0600\n"
-"PO-Revision-Date: 2014-01-24 12:27-0600\n"
+"POT-Creation-Date: 2014-01-24 12:42-0600\n"
+"PO-Revision-Date: 2014-01-24 12:42-0600\n"
 "Last-Translator: Sammie S. Taunton <diemuzi@gmail.com>\n"
 "Language-Team: OTWebsoft <diemuzi@gmail.com>\n"
 "Language: en\n"
@@ -59,3 +59,7 @@ msgstr "MP3 Player"
 #: D:\Translation\Mp3/mp3.php:12
 msgid "PHP Ran Out of Memory. Please Try Again!"
 msgstr "PHP Ran Out of Memory. Please Try Again!"
+
+#: D:\Translation\Mp3/mp3.php:13
+msgid "Search"
+msgstr "Search"
