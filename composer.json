@@ -20,6 +20,9 @@
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.*"
     },
+    "suggest": {
+        "ext-phar": "Used to compress and download folders"
+    },
     "autoload": {
         "psr-0": {
             "Mp3": "src/"
