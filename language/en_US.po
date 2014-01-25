@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MP3 Player\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-24 13:28-0600\n"
-"PO-Revision-Date: 2014-01-24 13:28-0600\n"
+"POT-Creation-Date: 2014-01-25 12:34-0600\n"
+"PO-Revision-Date: 2014-01-25 12:34-0600\n"
 "Last-Translator: Sammie S. Taunton <diemuzi@gmail.com>\n"
 "Language-Team: OTWebsoft <diemuzi@gmail.com>\n"
 "Language: en\n"
@@ -60,11 +60,31 @@ msgstr "MP3 Player"
 msgid "Search"
 msgstr "Search"
 
+#: D:\Translation\Mp3/mp3.php:13
+msgid "Select Download"
+msgstr "Select Download"
+
 #: D:\Translation\Mp3/mp3.php:14
+msgid "Zip"
+msgstr "Zip"
+
+#: D:\Translation\Mp3/mp3.php:15
+msgid "Tar"
+msgstr "Tar"
+
+#: D:\Translation\Mp3/mp3.php:16
+msgid "Bz2"
+msgstr "Bz2"
+
+#: D:\Translation\Mp3/mp3.php:17
+msgid "Rar"
+msgstr "Rar"
+
+#: D:\Translation\Mp3/mp3.php:19
 msgid "PHP Ran Out of Memory. Please Try Again!"
 msgstr "PHP Ran Out of Memory. Please Try Again!"
 
-#: D:\Translation\Mp3/mp3.php:15
+#: D:\Translation\Mp3/mp3.php:20
 msgid ""
 "The search file is currently empty. Use the Import Tool to populate the "
 "Search Results."
@@ -72,18 +92,54 @@ msgstr ""
 "The search file is currently empty. Use the Import Tool to populate the "
 "Search Results."
 
-#: D:\Translation\Mp3/mp3.php:16
+#: D:\Translation\Mp3/mp3.php:21
 msgid "base_dir is not currently set"
 msgstr "base_dir is not currently set"
 
-#: D:\Translation\Mp3/mp3.php:17
+#: D:\Translation\Mp3/mp3.php:22
 msgid "format is not currently set"
 msgstr "format is not currently set"
 
-#: D:\Translation\Mp3/mp3.php:18
+#: D:\Translation\Mp3/mp3.php:23
 msgid "search_file is not currently set"
 msgstr "search_file is not currently set"
 
-#: D:\Translation\Mp3/mp3.php:19
+#: D:\Translation\Mp3/mp3.php:24
 msgid "search_path is not currently set"
 msgstr "search_path is not currently set"
+
+#: D:\Translation\Mp3/mp3.php:25
+msgid "was not found"
+msgstr "was not found"
+
+#: D:\Translation\Mp3/mp3.php:26
+msgid "Format is not currently supported. Supported formats are: pls, m3u"
+msgstr "Format is not currently supported. Supported formats are: pls, m3u"
+
+#: D:\Translation\Mp3/mp3.php:27
+msgid "Something went wrong and we cannot play this folder"
+msgstr "Something went wrong and we cannot play this folder"
+
+#: D:\Translation\Mp3/mp3.php:28
+msgid "Something went wrong and we cannot download this folder"
+msgstr "Something went wrong and we cannot download this folder"
+
+#: D:\Translation\Mp3/mp3.php:29
+msgid "Phar Extension is not loaded"
+msgstr "Phar Extension is not loaded"
+
+#: D:\Translation\Mp3/mp3.php:30
+msgid ""
+"The search file is currently empty. Use the Import Tool to populate the "
+"Search Results"
+msgstr ""
+"The search file is currently empty. Use the Import Tool to populate the "
+"Search Results"
+
+#: D:\Translation\Mp3/mp3.php:31
+msgid "Cannot Open File"
+msgstr "Cannot Open File"
+
+#: D:\Translation\Mp3/mp3.php:32
+msgid "File Is Not Writable"
+msgstr "File Is Not Writable"
