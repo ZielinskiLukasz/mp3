@@ -48,7 +48,6 @@ class SearchController extends AbstractActionController
 
         $viewModel = new ViewModel();
         $viewModel
-            ->setTerminal(true)
             ->setTemplate('mp3/mp3/search')
             ->setVariables(array(
                 'form'         => $form,
