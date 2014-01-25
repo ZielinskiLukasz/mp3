@@ -1,7 +1,7 @@
 MP3 Player
 ==========
 
-**Version 1.1.0**
+**Version 1.1.1**
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
@@ -31,14 +31,16 @@ Requirements
 
 * [Zend Framework 2](https://github.com/zendframework/zf2)
 
+* [PHP Phar Extension](https://php.net/phar) *Recommended, but not required*
+
 Features
 --------
 
 * Searchable
-* Play music from your library
-* Play Single Songs or Full Albums
-* Download Songs from your library
 * Translatable
+* Play Full Albums or Single Songs
+* Download Folders in .zip, .tar, .bz2, and .rar Formats (Requires PHP Phar Extension)
+* Download Songs from your library
 * More coming soon, see [TODO.md](TODO.md)
 
 Installation

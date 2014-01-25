@@ -2,8 +2,7 @@
 
 Features we would like to see in future releases
 
-* Randomize Play Lists
-* Download Folders
+* Appears we have ran out of ideas for the moment, uh oh!
 
 Not Listed Here?
 ----------------

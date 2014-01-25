@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 1.1.1 (2014-01-25)
+
+- New Download Folders in .zip, .tar, .bz2, and .rar Formats (Requires PHP Phar Extension)
+    - Based on your PHP configuration of ```memory_limit``` this may not work.
+      See the [Wiki](../../wiki) for more details.
+    - Downloading is handled by a simple JS snippet.
+      If you have JS disabled, this feature will not work for you.
+
+- Added Exceptions for error handling
+
+- Disable Layout for entire Module, including Errors
+
 ## 1.1.0 (2014-01-24)
 
 - New Search Feature!
