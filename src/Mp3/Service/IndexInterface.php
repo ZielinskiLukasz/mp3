@@ -60,22 +60,12 @@ interface IndexInterface
     public function DownloadSingle($dir);
 
     /**
-     * Download Folder in ZIP Format
+     * Download Folder
      *
-     * @param string $dir
-     *
-     * @return null|string|void
-     * @throws \Exception
-     */
-    public function DownloadFolderZip($dir);
-
-    /**
-     * Download Folder in TAR Format
-     *
-     * @param string $dir
+     * @param array $params
      *
      * @return null|string|void
      * @throws \Exception
      */
-    public function DownloadFolderTar($dir);
+    public function DownloadFolder(array $params);
 }

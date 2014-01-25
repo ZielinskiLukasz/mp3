@@ -90,24 +90,14 @@ class IndexController extends AbstractActionController
 
     /**
      * Download Folder
-     *
-     * Format: Zip
      */
-    public function downloadfolderzipAction()
+    public function downloadfolderAction()
     {
         $this->getServiceIndex()
-            ->DownloadFolderZip($this->params()->fromRoute('dir'));
-    }
-
-    /**
-     * Download Folder
-     *
-     * Format: Tar
-     */
-    public function downloadfoldertarAction()
-    {
-        $this->getServiceIndex()
-            ->DownloadFolderTar($this->params()->fromRoute('dir'));
+            ->DownloadFolder(array(
+                'dir'    => $this->params()->fromRoute('dir'),
+                'format' => $this->params()->fromRoute('format')
+            ));
     }
 
     /**

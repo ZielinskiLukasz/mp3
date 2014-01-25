@@ -239,72 +239,46 @@ class Index extends ServiceProvider implements IndexInterface
     /**
      * {@inheritdoc}
      */
-    public function DownloadFolderZip($dir)
+    public function DownloadFolder(array $params)
     {
         try {
-            $array = $this->DirectoryArray($this->getBasePath() . rawurldecode($dir));
+            if (extension_loaded('Phartt')) {
+                $dir = rawurldecode($params['dir']);
 
-            if (is_array($array) && count($array) > '0') {
-                $zip = new \ZipArchive();
+                $array = $this->DirectoryArray($this->getBasePath() . $dir);
 
-                $filename = basename($dir) . '.zip';
+                if (is_array($array) && count($array) > '0') {
+                    $filename = basename($dir) . '.' . $params['format'];
 
-                $zip->open($filename, \ZipArchive::OVERWRITE);
+                    $tar = new \PharData($filename);
 
-                foreach ($array as $value) {
-                    $zip->addFile($this->getBasePath() . rawurldecode($dir) . $value, basename($value));
+                    foreach ($array as $value) {
+                        $tar->addFile($this->getBasePath() . $dir . $value, basename($value));
+                    }
+
+                    if ($params['format'] == 'tar') {
+                        header('Content-Type: application/x-tar');
+                    } elseif ($params['format'] == 'zip') {
+                        header('Content-Type: application/zip');
+                    } elseif ($params['format'] == 'bz2') {
+                        header('Content-Type: application/x-bzip2');
+                    } elseif ($params['format'] == 'rar') {
+                        header('Content-Type: x-rar-compressed');
+                    }
+
+                    header('Content-disposition: attachment; filename=' . $filename);
+                    header('Content-Length: ' . filesize($filename));
+
+                    readfile($filename);
+
+                    unlink($filename);
+
+                    exit;
+                } else {
+                    throw new \Exception('Something went wrong and we cannot download this folder.');
                 }
-
-                $zip->close();
-
-                header('Content-Type: application/zip');
-                header('Content-disposition: attachment; filename=' . $filename);
-                header('Content-Length: ' . filesize($filename));
-
-                readfile($filename);
-
-                unlink($filename);
-
-                exit;
             } else {
-                throw new \Exception('Something went wrong and we cannot download this folder.');
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function DownloadFolderTar($dir)
-    {
-        try {
-            $array = $this->DirectoryArray($this->getBasePath() . rawurldecode($dir));
-
-            if (is_array($array) && count($array) > '0') {
-                $filename = basename($dir) . '.tar';
-
-                $tar = new \PharData($filename);
-
-                foreach ($array as $value) {
-                    $tar->addFile($this->getBasePath() . rawurldecode($dir) . $value, basename($value));
-                }
-
-                $tar->compress(\Phar::GZ);
-
-                header('Content-Type: application/x-tar');
-                header('Content-disposition: attachment; filename=' . $filename);
-                header('Content-Length: ' . filesize($filename));
-
-                readfile($filename);
-
-                unlink($filename);
-                unlink($filename . '.gz');
-
-                exit;
-            } else {
-                throw new \Exception('Something went wrong and we cannot download this folder.');
+                throw new \Exception('failed');
             }
         } catch (\Exception $e) {
             throw $e;

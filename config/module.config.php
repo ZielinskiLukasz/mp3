@@ -11,7 +11,7 @@
 return array(
     'router'          => array(
         'routes' => array(
-            'mp3-index'               => array(
+            'mp3-index'           => array(
                 'type'    => 'segment',
                 'options' => array(
                     'route'    => '/mp3/index[:dir]',
@@ -21,7 +21,7 @@ return array(
                     )
                 )
             ),
-            'mp3-play-all'            => array(
+            'mp3-play-all'        => array(
                 'type'    => 'segment',
                 'options' => array(
                     'route'    => '/mp3/play/all[:dir]',
@@ -31,7 +31,7 @@ return array(
                     )
                 )
             ),
-            'mp3-play-single'         => array(
+            'mp3-play-single'     => array(
                 'type'    => 'segment',
                 'options' => array(
                     'route'    => '/mp3/play/single[:dir]',
@@ -41,7 +41,17 @@ return array(
                     )
                 )
             ),
-            'mp3-download-single'     => array(
+            'mp3-download-folder' => array(
+                'type'    => 'segment',
+                'options' => array(
+                    'route'    => '/mp3/download/folder[:dir][/format/:format]',
+                    'defaults' => array(
+                        'controller' => 'Mp3\Controller\Index',
+                        'action'     => 'downloadfolder'
+                    )
+                )
+            ),
+            'mp3-download-single' => array(
                 'type'    => 'segment',
                 'options' => array(
                     'route'    => '/mp3/download/single[:dir]',
@@ -51,27 +61,7 @@ return array(
                     )
                 )
             ),
-            'mp3-download-folder-zip' => array(
-                'type'    => 'segment',
-                'options' => array(
-                    'route'    => '/mp3/download/folder/zip[:dir]',
-                    'defaults' => array(
-                        'controller' => 'Mp3\Controller\Index',
-                        'action'     => 'downloadfolderzip'
-                    )
-                )
-            ),
-            'mp3-download-folder-tar' => array(
-                'type'    => 'segment',
-                'options' => array(
-                    'route'    => '/mp3/download/folder/tar[:dir]',
-                    'defaults' => array(
-                        'controller' => 'Mp3\Controller\Index',
-                        'action'     => 'downloadfoldertar'
-                    )
-                )
-            ),
-            'mp3-search'              => array(
+            'mp3-search'          => array(
                 'type'    => 'segment',
                 'options' => array(
                     'route'    => '/mp3/search[/name/][:name][/flash/:flash]',
