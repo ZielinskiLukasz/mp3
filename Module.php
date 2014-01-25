@@ -31,6 +31,38 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Co
      */
     public function onBootstrap(MvcEvent $e)
     {
+        $eventManager = $e->getApplication()
+            ->getEventManager();
+
+        /**
+         * Disable Layout on Error
+         */
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function ($e) {
+            /**
+             * @var MvcEvent $e
+             */
+            $e->getResult()
+                ->setTerminal(true);
+        });
+
+        $sharedEvents = $eventManager
+            ->getSharedManager();
+
+        /**
+         * Disable Layout in ViewModel
+         */
+        $sharedEvents->attach('Zend\Mvc\Controller\AbstractActionController', 'dispatch',
+            function ($e) {
+                /**
+                 * @var MvcEvent $e
+                 */
+                $result = $e->getResult();
+
+                if ($result instanceof \Zend\View\Model\ViewModel) {
+                    $result->setTerminal(true);
+                }
+            });
+
         $e->getApplication()
             ->getEventManager()
             ->getSharedManager()
