@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 1.1.2 (2014-01-25)
+
+- Fixed missing Translations
+
+- Renamed Translation Files
+
+- Set Default Language as en_US
+
+- Minor CSS color changes
+
 ## 1.1.1 (2014-01-25)
 
 - New Download Folders in .zip, .tar, .bz2, and .rar Formats (Requires PHP Phar Extension)

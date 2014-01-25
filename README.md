@@ -1,7 +1,7 @@
 MP3 Player
 ==========
 
-**Version 1.1.1**
+**Version 1.1.2**
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
@@ -31,7 +31,9 @@ Requirements
 
 * [Zend Framework 2](https://github.com/zendframework/zf2)
 
-* [PHP Phar Extension](https://php.net/phar) *Recommended, but not required*
+* [PHP Gettext Extension](http://php.net/gettext)
+
+* [PHP Phar Extension](http://php.net/phar) *Recommended, but not required*
 
 Features
 --------
