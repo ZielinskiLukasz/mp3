@@ -69,6 +69,7 @@ class ServiceProvider implements ServiceManagerAwareInterface
      * Get Config
      *
      * @return array
+     * @throws \Exception
      */
     public function getConfig()
     {
@@ -76,31 +77,19 @@ class ServiceProvider implements ServiceManagerAwareInterface
             ->get('config');
 
         if (!isset($config['mp3']['base_dir'])) {
-            echo $this->getTranslator()
-                ->translate('base_dir is not currently set', 'mp3');
-
-            exit;
+            throw new \Exception($this->getTranslator()->translate('base_dir is not currently set', 'mp3'));
         }
 
         if (!isset($config['mp3']['format'])) {
-            echo $this->getTranslator()
-                ->translate('format is not currently set', 'mp3');
-
-            exit;
+            throw new \Exception($this->getTranslator()->translate('format is not currently set', 'mp3'));
         }
 
         if (!isset($config['mp3']['search_file'])) {
-            echo $this->getTranslator()
-                ->translate('search_file is not currently set', 'mp3');
-
-            exit;
+            throw new \Exception($this->getTranslator()->translate('search_file is not currently set', 'mp3'));
         }
 
         if (!isset($config['mp3']['search_path'])) {
-            echo $this->getTranslator()
-                ->translate('search_path is not currently set', 'mp3');
-
-            exit;
+            throw new \Exception($this->getTranslator()->translate('search_path is not currently set', 'mp3'));
         }
 
         return array(
@@ -119,6 +108,6 @@ class ServiceProvider implements ServiceManagerAwareInterface
     public function getTranslator()
     {
         return $this->getServiceManager()
-            ->get('translator');
+            ->get('MvcTranslator');
     }
 }

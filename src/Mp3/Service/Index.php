@@ -81,7 +81,7 @@ class Index extends ServiceProvider implements IndexInterface
                     }
                 }
             } else {
-                throw new \Exception($base_dir . ' is not a directory');
+                throw new \Exception($base_dir . ' ' . $this->getTranslator()->translate('was not found', 'mp3'));
             }
 
             $paginator = new Paginator(new ArrayAdapter($array));
@@ -135,7 +135,7 @@ class Index extends ServiceProvider implements IndexInterface
                         echo $playlist;
                         exit;
                     } else {
-                        throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
+                        throw new \Exception($this->getTranslator()->translate('Format is not currently supported. Supported formats are: pls, m3u', 'mp3'));
                     }
                 } elseif ($this->getConfig()['format'] == 'pls') {
                     /**
@@ -168,13 +168,13 @@ class Index extends ServiceProvider implements IndexInterface
                         echo $playlist;
                         exit;
                     } else {
-                        throw new \Exception('Something went wrong and we cannot play this folder.');
+                        throw new \Exception($this->getTranslator()->translate('Something went wrong and we cannot play this folder', 'mp3'));
                     }
                 } else {
-                    throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
+                    throw new \Exception($this->getTranslator()->translate('Format is not currently supported. Supported formats are: pls, m3u', 'mp3'));
                 }
             } else {
-                throw new \Exception($this->getBasePath() . rawurldecode($dir) . ' was not found');
+                throw new \Exception($this->getBasePath() . rawurldecode($dir) . ' ' . $this->getTranslator()->translate('was not found', 'mp3'));
             }
         } catch (\Exception $e) {
             throw $e;
@@ -218,10 +218,10 @@ class Index extends ServiceProvider implements IndexInterface
                     echo $playlist;
                     exit;
                 } else {
-                    throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
+                    throw new \Exception($this->getTranslator()->translate('Format is not currently supported. Supported formats are: pls, m3u', 'mp3'));
                 }
             } else {
-                throw new \Exception($path . ' was not found');
+                throw new \Exception($path . ' ' . $this->getTranslator()->translate('was not found', 'mp3'));
             }
         } catch (\Exception $e) {
             throw $e;
@@ -253,7 +253,7 @@ class Index extends ServiceProvider implements IndexInterface
 
                 fclose($handle);
             } else {
-                throw new \Exception($path . ' was not found');
+                throw new \Exception($path . ' ' . $this->getTranslator()->translate('was not found', 'mp3'));
             }
         } catch (\Exception $e) {
             throw $e;
@@ -302,13 +302,13 @@ class Index extends ServiceProvider implements IndexInterface
 
                         exit;
                     } else {
-                        throw new \Exception('Something went wrong and we cannot download this folder.');
+                        throw new \Exception($this->getTranslator()->translate('Something went wrong and we cannot download this folder', 'mp3'));
                     }
                 } else {
-                    throw new \Exception($this->getBasePath() . $dir . ' was not found');
+                    throw new \Exception($this->getBasePath() . $dir . ' ' . $this->getTranslator()->translate('was not found', 'mp3'));
                 }
             } else {
-                throw new \Exception('Phar Extension is not loaded');
+                throw new \Exception($this->getTranslator()->translate('Phar Extension is not loaded'));
             }
         } catch (\Exception $e) {
             throw $e;

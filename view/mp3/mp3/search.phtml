@@ -212,26 +212,26 @@ if ($this->search):
                 <?php if (extension_loaded('Phar')): ?>
                 <span> | </span>
                 <select id="download">
-                    <option value="0">Select Download</option>
+                    <option value="0"><?php echo $this->translate('Select Download', 'mp3'); ?></option>
                     <option value="<?php echo $this->url('mp3-download-folder', array(
                         'dir'    => $this->path,
                         'format' => 'zip'
-                    )); ?>">Zip
+                    )); ?>"><?php echo $this->translate('Zip', 'mp3'); ?>
                     </option>
                     <option value="<?php echo $this->url('mp3-download-folder', array(
                         'dir'    => $this->path,
                         'format' => 'tar'
-                    )); ?>">Tar
+                    )); ?>"><?php echo $this->translate('Tar', 'mp3'); ?>
                     </option>
                     <option value="<?php echo $this->url('mp3-download-folder', array(
                         'dir'    => $this->path,
                         'format' => 'bz2'
-                    )); ?>">Bz2
+                    )); ?>"><?php echo $this->translate('Bz2', 'mp3'); ?>
                     </option>
                     <option value="<?php echo $this->url('mp3-download-folder', array(
                         'dir'    => $this->path,
                         'format' => 'rar'
-                    )); ?>">Rar
+                    )); ?>"><?php echo $this->translate('Rar', 'mp3'); ?>
                     </option>
                 </select>
                 <?php endif; ?>

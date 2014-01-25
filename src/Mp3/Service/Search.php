@@ -38,7 +38,7 @@ class Search extends ServiceProvider implements SearchInterface
 
                 if (is_file($filename)) {
                     if (filesize($filename) <= '0') {
-                        header('Location: /mp3/search/flash/The search file is currently empty. Use the Import Tool to populate the Search Results.');
+                        header('Location: /mp3/search/flash/' . $this->getTranslator()->translate('The search file is currently empty. Use the Import Tool to populate the Search Results', 'mp3'));
                         exit;
                     }
 
@@ -84,7 +84,7 @@ class Search extends ServiceProvider implements SearchInterface
                         }
                     }
                 } else {
-                    throw new \Exception($filename . ' was not found');
+                    throw new \Exception($filename . ' ' . $this->getTranslator()->translate('was not found', 'mp3'));
                 }
             }
 
@@ -128,10 +128,10 @@ class Search extends ServiceProvider implements SearchInterface
 
                     if (is_writable($filename)) {
                         if (!$handle) {
-                            throw new \Exception('Cannot Open File: ' . $filename);
+                            throw new \Exception($this->getTranslator()->translate('Cannot Open File') . ': ' . $filename);
                         }
                     } else {
-                        throw new \Exception('File Is Not Writable: ' . $filename);
+                        throw new \Exception($this->getTranslator()->translate('File Is Not Writable') . ': ' . $filename);
                     }
 
                     $array = array();
@@ -161,10 +161,10 @@ class Search extends ServiceProvider implements SearchInterface
 
                     fclose($handle);
                 } else {
-                    throw new \Exception($filename . ' was not found');
+                    throw new \Exception($filename . ' ' . $this->getTranslator()->translate('was not found', 'mp3'));
                 }
             } else {
-                throw new \Exception($this->getBasePath() . ' was not found');
+                throw new \Exception($this->getBasePath() . ' ' . $this->getTranslator()->translate('was not found', 'mp3'));
             }
         } catch (\Exception $e) {
             echo $e->getMessage();
@@ -198,7 +198,7 @@ class Search extends ServiceProvider implements SearchInterface
         $left = (memory_get_peak_usage() + $remaining);
 
         if ($left < memory_get_peak_usage(true)) {
-            header('Location: /mp3/search/flash/PHP Ran Out of Memory. Please Try Again!');
+            header('Location: /mp3/search/flash/' . $this->getTranslator()->translate('PHP Ran Out of Memory. Please Try Again', 'mp3'));
             exit;
         }
     }
