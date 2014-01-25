@@ -41,41 +41,47 @@ class Index extends ServiceProvider implements IndexInterface
             $total_length = null;
             $total_size = null;
 
-            foreach ($this->DirectoryArray($base_dir) as $location) {
-                clearstatcache();
+            clearstatcache();
 
-                /**
-                 * Directory
-                 */
-                if (is_dir($base_dir . $location)) {
-                    $array[] = array(
-                        'name'     => ltrim($location, '/'),
-                        'location' => ($dir != null) ? $dir . $location : $location,
-                        'type'     => 'dir'
-                    );
+            if (is_dir($base_dir)) {
+                foreach ($this->DirectoryArray($base_dir) as $location) {
+                    clearstatcache();
+
+                    /**
+                     * Directory
+                     */
+                    if (is_dir($base_dir . $location)) {
+                        $array[] = array(
+                            'name'     => ltrim($location, '/'),
+                            'location' => ($dir != null) ? $dir . $location : $location,
+                            'type'     => 'dir'
+                        );
+                    }
+
+                    /**
+                     * File
+                     */
+                    if (is_file($base_dir . '/' . $location)) {
+                        $path = ($dir != null) ? $base_dir . $location : $location;
+
+                        $calculate = new Calculate($path);
+                        $meta = $calculate->get_metadata();
+
+                        $array[] = array(
+                            'name'     => ltrim($location, '/'),
+                            'location' => ($dir != null) ? $dir . $location : $location,
+                            'type'     => 'file',
+                            'bit_rate' => (isset($meta['Bitrate'])) ? $meta['Bitrate'] : '-',
+                            'length'   => (isset($meta['Length mm:ss'])) ? $meta['Length mm:ss'] : '-',
+                            'size'     => (isset($meta['Filesize'])) ? $meta['Filesize'] : '-'
+                        );
+
+                        $total_length += (isset($meta['Length'])) ? $meta['Length'] : '0';
+                        $total_size += (isset($meta['Filesize'])) ? $meta['Filesize'] : '0';
+                    }
                 }
-
-                /**
-                 * File
-                 */
-                if (is_file($base_dir . '/' . $location)) {
-                    $path = ($dir != null) ? $base_dir . $location : $location;
-
-                    $calculate = new Calculate($path);
-                    $meta = $calculate->get_metadata();
-
-                    $array[] = array(
-                        'name'     => ltrim($location, '/'),
-                        'location' => ($dir != null) ? $dir . $location : $location,
-                        'type'     => 'file',
-                        'bit_rate' => (isset($meta['Bitrate'])) ? $meta['Bitrate'] : '-',
-                        'length'   => (isset($meta['Length mm:ss'])) ? $meta['Length mm:ss'] : '-',
-                        'size'     => (isset($meta['Filesize'])) ? $meta['Filesize'] : '-'
-                    );
-
-                    $total_length += (isset($meta['Length'])) ? $meta['Length'] : '0';
-                    $total_size += (isset($meta['Filesize'])) ? $meta['Filesize'] : '0';
-                }
+            } else {
+                throw new \Exception($base_dir . ' is not a directory');
             }
 
             $paginator = new Paginator(new ArrayAdapter($array));
@@ -105,64 +111,70 @@ class Index extends ServiceProvider implements IndexInterface
         try {
             $path = $this->getConfig()['base_dir'] . rawurldecode($dir);
 
-            $array = $this->DirectoryArray($this->getBasePath() . rawurldecode($dir));
+            clearstatcache();
 
-            if ($this->getConfig()['format'] == 'm3u') {
-                /**
-                 * Windows Media Player
-                 */
-                if (is_array($array) && count($array) > '0') {
-                    $playlist = '#EXTM3U' . "\n";
+            if (is_dir($this->getBasePath() . rawurldecode($dir))) {
+                $array = $this->DirectoryArray($this->getBasePath() . rawurldecode($dir));
 
-                    foreach ($array as $value) {
-                        $playlist .= '#EXTINF: ' . ltrim($value, '/') . "\n";
-                        $playlist .= 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path . $value) . "\n";
-                        $playlist .= "\n";
+                if ($this->getConfig()['format'] == 'm3u') {
+                    /**
+                     * Windows Media Player
+                     */
+                    if (is_array($array) && count($array) > '0') {
+                        $playlist = '#EXTM3U' . "\n";
+
+                        foreach ($array as $value) {
+                            $playlist .= '#EXTINF: ' . ltrim($value, '/') . "\n";
+                            $playlist .= 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path . $value) . "\n";
+                            $playlist .= "\n";
+                        }
+
+                        header("Content-Type: audio/mpegurl");
+                        header("Content-Disposition: attachment; filename=playlist.m3u");
+
+                        echo $playlist;
+                        exit;
+                    } else {
+                        throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
                     }
+                } elseif ($this->getConfig()['format'] == 'pls') {
+                    /**
+                     * Winamp
+                     */
+                    if (is_array($array) && count($array) > '0') {
+                        $playlist = '[Playlist]' . "\n";
 
-                    header("Content-Type: audio/mpegurl");
-                    header("Content-Disposition: attachment; filename=playlist.m3u");
+                        foreach ($array as $key => $value) {
+                            $calculate = new Calculate($this->getBasePath() . rawurldecode($dir) . $value);
+                            $meta = $calculate->get_metadata();
 
-                    echo $playlist;
-                    exit;
+                            if (array_key_exists('Length', $meta)) {
+                                $length = $meta['Length'];
+                            } else {
+                                $length = '-1';
+                            }
+
+                            $playlist .= 'File' . ($key + '1') . '=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path . $value) . "\n";
+                            $playlist .= 'Title' . ($key + '1') . '=' . basename($value) . "\n";
+                            $playlist .= 'Length' . ($key + '1') . '=' . $length . "\n";
+                        }
+
+                        $playlist .= 'Numberofentries=' . count($array) . "\n";
+                        $playlist .= 'Version=2' . "\n";
+
+                        header("Content-Type: audio/x-scpls");
+                        header("Content-Disposition: attachment; filename=playlist.pls");
+
+                        echo $playlist;
+                        exit;
+                    } else {
+                        throw new \Exception('Something went wrong and we cannot play this folder.');
+                    }
                 } else {
                     throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
                 }
-            } elseif ($this->getConfig()['format'] == 'pls') {
-                /**
-                 * Winamp
-                 */
-                if (is_array($array) && count($array) > '0') {
-                    $playlist = '[Playlist]' . "\n";
-
-                    foreach ($array as $key => $value) {
-                        $calculate = new Calculate($this->getBasePath() . rawurldecode($dir) . $value);
-                        $meta = $calculate->get_metadata();
-
-                        if (array_key_exists('Length', $meta)) {
-                            $length = $meta['Length'];
-                        } else {
-                            $length = '-1';
-                        }
-
-                        $playlist .= 'File' . ($key + '1') . '=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path . $value) . "\n";
-                        $playlist .= 'Title' . ($key + '1') . '=' . basename($value) . "\n";
-                        $playlist .= 'Length' . ($key + '1') . '=' . $length . "\n";
-                    }
-
-                    $playlist .= 'Numberofentries=' . count($array) . "\n";
-                    $playlist .= 'Version=2' . "\n";
-
-                    header("Content-Type: audio/x-scpls");
-                    header("Content-Disposition: attachment; filename=playlist.pls");
-
-                    echo $playlist;
-                    exit;
-                } else {
-                    throw new \Exception('Something went wrong and we cannot play this folder.');
-                }
             } else {
-                throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
+                throw new \Exception($this->getBasePath() . rawurldecode($dir) . ' was not found');
             }
         } catch (\Exception $e) {
             throw $e;
@@ -177,33 +189,39 @@ class Index extends ServiceProvider implements IndexInterface
         try {
             $path = $this->getConfig()['base_dir'] . rawurldecode($dir);
 
-            if ($this->getConfig()['format'] == 'm3u') {
-                /**
-                 * Windows Media Player
-                 */
-                header("Content-Type: audio/mpegurl");
-                header("Content-Disposition: attachment; filename=playlist.m3u");
+            clearstatcache();
 
-                echo 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path);
-                exit;
-            } elseif ($this->getConfig()['format'] == 'pls') {
-                /**
-                 * Winamp
-                 */
-                header("Content-Type: audio/x-scpls");
-                header("Content-Disposition: attachment; filename=playlist.pls");
+            if (is_file($path)) {
+                if ($this->getConfig()['format'] == 'm3u') {
+                    /**
+                     * Windows Media Player
+                     */
+                    header("Content-Type: audio/mpegurl");
+                    header("Content-Disposition: attachment; filename=playlist.m3u");
 
-                $playlist = '[Playlist]' . "\n";
-                $playlist .= 'File1=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path) . "\n";
-                $playlist .= 'Title1=' . basename($path) . "\n";
-                $playlist .= 'Length1=-1' . "\n";
-                $playlist .= 'Numberofentries=1' . "\n";
-                $playlist .= 'Version=2' . "\n";
+                    echo 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path);
+                    exit;
+                } elseif ($this->getConfig()['format'] == 'pls') {
+                    /**
+                     * Winamp
+                     */
+                    header("Content-Type: audio/x-scpls");
+                    header("Content-Disposition: attachment; filename=playlist.pls");
 
-                echo $playlist;
-                exit;
+                    $playlist = '[Playlist]' . "\n";
+                    $playlist .= 'File1=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path) . "\n";
+                    $playlist .= 'Title1=' . basename($path) . "\n";
+                    $playlist .= 'Length1=-1' . "\n";
+                    $playlist .= 'Numberofentries=1' . "\n";
+                    $playlist .= 'Version=2' . "\n";
+
+                    echo $playlist;
+                    exit;
+                } else {
+                    throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
+                }
             } else {
-                throw new \Exception('Format is not currently supported' . "\n" . 'Supported formats are: pls, m3u');
+                throw new \Exception($path . ' was not found');
             }
         } catch (\Exception $e) {
             throw $e;
@@ -218,19 +236,25 @@ class Index extends ServiceProvider implements IndexInterface
         try {
             $path = $this->getBasePath() . rawurldecode($dir);
 
-            header("Content-Type: audio/mpeg");
-            header("Content-Disposition: attachment; filename=" . basename($path));
-            header("Content-Length: " . filesize($path));
+            clearstatcache();
 
-            $handle = fopen($path, 'rb');
+            if (is_file($path)) {
+                header("Content-Type: audio/mpeg");
+                header("Content-Disposition: attachment; filename=" . basename($path));
+                header("Content-Length: " . filesize($path));
 
-            $contents = fread($handle, filesize($path));
+                $handle = fopen($path, 'rb');
 
-            while ($contents) {
-                echo $contents;
+                $contents = fread($handle, filesize($path));
+
+                while ($contents) {
+                    echo $contents;
+                }
+
+                fclose($handle);
+            } else {
+                throw new \Exception($path . ' was not found');
             }
-
-            fclose($handle);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -242,43 +266,49 @@ class Index extends ServiceProvider implements IndexInterface
     public function DownloadFolder(array $params)
     {
         try {
-            if (extension_loaded('Phartt')) {
+            if (extension_loaded('Phar')) {
                 $dir = rawurldecode($params['dir']);
 
-                $array = $this->DirectoryArray($this->getBasePath() . $dir);
+                clearstatcache();
 
-                if (is_array($array) && count($array) > '0') {
-                    $filename = basename($dir) . '.' . $params['format'];
+                if (is_dir($this->getBasePath() . $dir)) {
+                    $array = $this->DirectoryArray($this->getBasePath() . $dir);
 
-                    $tar = new \PharData($filename);
+                    if (is_array($array) && count($array) > '0') {
+                        $filename = basename($dir) . '.' . $params['format'];
 
-                    foreach ($array as $value) {
-                        $tar->addFile($this->getBasePath() . $dir . $value, basename($value));
+                        $tar = new \PharData($filename);
+
+                        foreach ($array as $value) {
+                            $tar->addFile($this->getBasePath() . $dir . $value, basename($value));
+                        }
+
+                        if ($params['format'] == 'tar') {
+                            header('Content-Type: application/x-tar');
+                        } elseif ($params['format'] == 'zip') {
+                            header('Content-Type: application/zip');
+                        } elseif ($params['format'] == 'bz2') {
+                            header('Content-Type: application/x-bzip2');
+                        } elseif ($params['format'] == 'rar') {
+                            header('Content-Type: x-rar-compressed');
+                        }
+
+                        header('Content-disposition: attachment; filename=' . $filename);
+                        header('Content-Length: ' . filesize($filename));
+
+                        readfile($filename);
+
+                        unlink($filename);
+
+                        exit;
+                    } else {
+                        throw new \Exception('Something went wrong and we cannot download this folder.');
                     }
-
-                    if ($params['format'] == 'tar') {
-                        header('Content-Type: application/x-tar');
-                    } elseif ($params['format'] == 'zip') {
-                        header('Content-Type: application/zip');
-                    } elseif ($params['format'] == 'bz2') {
-                        header('Content-Type: application/x-bzip2');
-                    } elseif ($params['format'] == 'rar') {
-                        header('Content-Type: x-rar-compressed');
-                    }
-
-                    header('Content-disposition: attachment; filename=' . $filename);
-                    header('Content-Length: ' . filesize($filename));
-
-                    readfile($filename);
-
-                    unlink($filename);
-
-                    exit;
                 } else {
-                    throw new \Exception('Something went wrong and we cannot download this folder.');
+                    throw new \Exception($this->getBasePath() . $dir . ' was not found');
                 }
             } else {
-                throw new \Exception('failed');
+                throw new \Exception('Phar Extension is not loaded');
             }
         } catch (\Exception $e) {
             throw $e;
