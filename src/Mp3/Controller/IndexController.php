@@ -80,15 +80,6 @@ class IndexController extends AbstractActionController
     }
 
     /**
-     * Download Single
-     */
-    public function downloadsingleAction()
-    {
-        $this->getServiceIndex()
-            ->DownloadSingle($this->params()->fromRoute('dir'));
-    }
-
-    /**
      * Download Folder
      */
     public function downloadfolderAction()
@@ -98,6 +89,15 @@ class IndexController extends AbstractActionController
                 'dir'    => $this->params()->fromRoute('dir'),
                 'format' => $this->params()->fromRoute('format')
             ));
+    }
+
+    /**
+     * Download Single
+     */
+    public function downloadsingleAction()
+    {
+        $this->getServiceIndex()
+            ->DownloadSingle($this->params()->fromRoute('dir'));
     }
 
     /**
