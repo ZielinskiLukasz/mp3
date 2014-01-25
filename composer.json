@@ -21,7 +21,8 @@
         "zendframework/zendframework": "2.*"
     },
     "suggest": {
-        "ext-phar": "Used to compress and download folders"
+        "ext-phar": "Used to Compress and Download Folders",
+        "ext-gettext": "Used to Translate Text"
     },
     "autoload": {
         "psr-0": {
