@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.1.3 (2014-03-13)
+
+- Fixed a bug when playing single songs (File Not Found Error). Guess I got used to playing full albums and missed this, my bad =)
+
 ## 1.1.2 (2014-01-25)
 
 - Fixed missing Translations

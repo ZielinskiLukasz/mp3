@@ -187,7 +187,8 @@ class Index extends ServiceProvider implements IndexInterface
     public function PlaySingle($dir)
     {
         try {
-            $path = $this->getConfig()['base_dir'] . rawurldecode($dir);
+            $path = $this->getBasePath() . rawurldecode($dir);
+            $file = $this->getConfig()['base_dir'] . rawurldecode($dir);
 
             clearstatcache();
 
@@ -199,7 +200,7 @@ class Index extends ServiceProvider implements IndexInterface
                     header("Content-Type: audio/mpegurl");
                     header("Content-Disposition: attachment; filename=playlist.m3u");
 
-                    echo 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path);
+                    echo 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($file);
                     exit;
                 } elseif ($this->getConfig()['format'] == 'pls') {
                     /**
@@ -209,7 +210,7 @@ class Index extends ServiceProvider implements IndexInterface
                     header("Content-Disposition: attachment; filename=playlist.pls");
 
                     $playlist = '[Playlist]' . "\n";
-                    $playlist .= 'File1=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path) . "\n";
+                    $playlist .= 'File1=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($file) . "\n";
                     $playlist .= 'Title1=' . basename($path) . "\n";
                     $playlist .= 'Length1=-1' . "\n";
                     $playlist .= 'Numberofentries=1' . "\n";
