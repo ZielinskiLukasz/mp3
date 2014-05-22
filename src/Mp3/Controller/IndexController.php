@@ -10,6 +10,7 @@
 
 namespace Mp3\Controller;
 
+use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -18,7 +19,7 @@ use Zend\View\Model\ViewModel;
  *
  * @package Mp3\Controller
  *
- * @method \Zend\Http\Request getRequest()
+ * @method Request getRequest()
  */
 class IndexController extends AbstractActionController
 {
@@ -31,31 +32,46 @@ class IndexController extends AbstractActionController
     {
         $form = $this->getFormSearch();
 
-        if ($this->getRequest()->isPost()) {
-            $form->setData($this->params()->fromPost());
+        if ($this->getRequest()
+                 ->isPost()
+        ) {
+            $form->setData(
+                $this->params()
+                     ->fromPost()
+            );
 
             if ($form->isValid()) {
-                return $this->redirect()->toRoute('mp3-search', array(
-                    'name' => $this->params()->fromPost('name')
-                ));
+                return $this->redirect()
+                            ->toRoute(
+                                'mp3-search', array(
+                                    'name' => $this->params()
+                                                   ->fromPost('name')
+                                )
+                            );
             }
         }
 
         $service = $this->getServiceIndex()
-            ->Index($this->params()->fromRoute());
+                        ->Index(
+                            $this->params()
+                                 ->fromRoute()
+                        );
 
         $viewModel = new ViewModel();
         $viewModel
             ->setTemplate('mp3/mp3/search')
-            ->setVariables(array(
-                'form'         => $form,
-                'paginator'    => $service['paginator'],
-                'path'         => $service['path'],
-                'total_length' => $service['total_length'],
-                'total_size'   => $service['total_size'],
-                'search'       => $service['search'],
-                'dir'          => $this->params()->fromRoute('dir')
-            ));
+            ->setVariables(
+                array(
+                    'form'         => $form,
+                    'paginator'    => $service['paginator'],
+                    'path'         => $service['path'],
+                    'total_length' => $service['total_length'],
+                    'total_size'   => $service['total_size'],
+                    'search'       => $service['search'],
+                    'dir'          => $this->params()
+                                           ->fromRoute('dir')
+                )
+            );
 
         return $viewModel;
     }
@@ -66,7 +82,10 @@ class IndexController extends AbstractActionController
     public function playallAction()
     {
         $this->getServiceIndex()
-            ->PlayAll($this->params()->fromRoute('dir'));
+             ->PlayAll(
+                 $this->params()
+                      ->fromRoute('dir')
+             );
     }
 
     /**
@@ -75,7 +94,10 @@ class IndexController extends AbstractActionController
     public function playsingleAction()
     {
         $this->getServiceIndex()
-            ->PlaySingle($this->params()->fromRoute('dir'));
+             ->PlaySingle(
+                 $this->params()
+                      ->fromRoute('dir')
+             );
     }
 
     /**
@@ -84,10 +106,14 @@ class IndexController extends AbstractActionController
     public function downloadfolderAction()
     {
         $this->getServiceIndex()
-            ->DownloadFolder(array(
-                'dir'    => $this->params()->fromRoute('dir'),
-                'format' => $this->params()->fromRoute('format')
-            ));
+             ->DownloadFolder(
+                 array(
+                     'dir'    => $this->params()
+                                      ->fromRoute('dir'),
+                     'format' => $this->params()
+                                      ->fromRoute('format')
+                 )
+             );
     }
 
     /**
@@ -96,7 +122,10 @@ class IndexController extends AbstractActionController
     public function downloadsingleAction()
     {
         $this->getServiceIndex()
-            ->DownloadSingle($this->params()->fromRoute('dir'));
+             ->DownloadSingle(
+                 $this->params()
+                      ->fromRoute('dir')
+             );
     }
 
     /**
@@ -107,8 +136,8 @@ class IndexController extends AbstractActionController
     private function getFormSearch()
     {
         return $this->getServiceLocator()
-            ->get('FormElementManager')
-            ->get('Mp3\Form\Search');
+                    ->get('FormElementManager')
+                    ->get('Mp3\Form\Search');
     }
 
     /**
@@ -119,6 +148,6 @@ class IndexController extends AbstractActionController
     private function getServiceIndex()
     {
         return $this->getServiceLocator()
-            ->get('Mp3\Service\Index');
+                    ->get('Mp3\Service\Index');
     }
 }

@@ -81,8 +81,7 @@ class Calculate
     {
         $iscbrmp3 = true;
         if ($this->startswithid3())
-            $this->skipid3tag();
-        elseif ($this->containsvbrxing()) {
+            $this->skipid3tag(); elseif ($this->containsvbrxing()) {
             $this->mp3data['Encoding'] = 'VBR';
             $iscbrmp3 = false;
         } elseif ($this->startswithpk()) {
@@ -124,11 +123,7 @@ class Calculate
             $this->mp3data['Length'] = self::getduration($this->mp3data, $this->tell2());
             $this->mp3data['Length mm:ss'] = self::seconds_to_mmss($this->mp3data['Length']);
 
-            if ($this->mp3data['Bitrate'] == 'bad' ||
-                $this->mp3data['Bitrate'] == 'free' ||
-                $this->mp3data['Sampling Rate'] == 'unknown' ||
-                $this->mp3data['Frame Size'] == 'unknown' ||
-                $this->mp3data['Length'] == 'unknown'
+            if ($this->mp3data['Bitrate'] == 'bad' || $this->mp3data['Bitrate'] == 'free' || $this->mp3data['Sampling Rate'] == 'unknown' || $this->mp3data['Frame Size'] == 'unknown' || $this->mp3data['Length'] == 'unknown'
             )
                 $this->mp3data = array(
                     'Filesize' => $this->mp3data['Filesize'],
@@ -192,8 +187,7 @@ class Calculate
     {
         //echo "<!--".$this->block[37]." ".$this->block[38]."-->";
         //echo "<!--".$this->block[39]." ".$this->block[40]."-->";
-        return (
-        ($this->block[37] == 88 && //X 0x58
+        return (($this->block[37] == 88 && //X 0x58
             $this->block[38] == 105 && //i 0x69
             $this->block[39] == 110 && //n 0x6E
             $this->block[40] == 103) //g 0x67
@@ -201,8 +195,7 @@ class Calculate
                            ($this->block[21]==88  && //X 0x58
                             $this->block[22]==105 && //i 0x69
                             $this->block[23]==110 && //n 0x6E
-                            $this->block[24]==103)   //g 0x67*/
-        );
+                            $this->block[24]==103)   //g 0x67*/);
     }
 
     /**
@@ -549,8 +542,7 @@ class Calculate
 
         $whichcolumn = -1;
         if (self::is_mpeg10($mp3) && self::is_layer1($mp3)) //V1,L1
-            $whichcolumn = 0;
-        elseif (self::is_mpeg10($mp3) && self::is_layer2($mp3)) //V1,L2
+            $whichcolumn = 0; elseif (self::is_mpeg10($mp3) && self::is_layer2($mp3)) //V1,L2
             $whichcolumn = 1;
         elseif (self::is_mpeg10($mp3) && self::is_layer3($mp3)) //V1,L3
             $whichcolumn = 2;
@@ -561,8 +553,7 @@ class Calculate
         //V2,   L2||L3
 
         if (isset($array[$mp3['Bitrate Index']][$whichcolumn]))
-            return $array[$mp3['Bitrate Index']][$whichcolumn];
-        else
+            return $array[$mp3['Bitrate Index']][$whichcolumn]; else
             return "bad";
     }
 
@@ -600,15 +591,13 @@ class Calculate
 
         $whichcolumn = -1;
         if (self::is_mpeg10($mp3))
-            $whichcolumn = 0;
-        elseif (self::is_mpeg20($mp3))
+            $whichcolumn = 0; elseif (self::is_mpeg20($mp3))
             $whichcolumn = 1;
         elseif (self::is_mpeg25($mp3))
             $whichcolumn = 2;
 
         if (isset($array[$mp3['Sampling Freq Idx']][$whichcolumn]))
-            return $array[$mp3['Sampling Freq Idx']][$whichcolumn];
-        else
+            return $array[$mp3['Sampling Freq Idx']][$whichcolumn]; else
             return 'unknown';
     }
 

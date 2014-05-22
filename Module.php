@@ -16,6 +16,7 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ConsoleBannerProviderInterface;
 use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 use Zend\Mvc\MvcEvent;
+use Zend\View\Model\ViewModel;
 
 /**
  * Class Module
@@ -32,18 +33,20 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Co
     public function onBootstrap(MvcEvent $e)
     {
         $eventManager = $e->getApplication()
-            ->getEventManager();
+                          ->getEventManager();
 
         /**
          * Disable Layout on Error
          */
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, function ($e) {
-            /**
-             * @var MvcEvent $e
-             */
-            $e->getResult()
-                ->setTerminal(true);
-        });
+        $eventManager->attach(
+            MvcEvent::EVENT_DISPATCH_ERROR, function ($e) {
+                /**
+                 * @var MvcEvent $e
+                 */
+                $e->getResult()
+                  ->setTerminal(true);
+            }
+        );
 
         $sharedEvents = $eventManager
             ->getSharedManager();
@@ -51,30 +54,33 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Co
         /**
          * Disable Layout in ViewModel
          */
-        $sharedEvents->attach('Zend\Mvc\Controller\AbstractActionController', 'dispatch',
-            function ($e) {
+        $sharedEvents->attach(
+            'Zend\Mvc\Controller\AbstractActionController', 'dispatch', function ($e) {
                 /**
                  * @var MvcEvent $e
                  */
                 $result = $e->getResult();
 
-                if ($result instanceof \Zend\View\Model\ViewModel) {
+                if ($result instanceof ViewModel) {
                     $result->setTerminal(true);
                 }
-            });
+            }
+        );
 
         $e->getApplication()
-            ->getEventManager()
-            ->getSharedManager()
-            ->attach('Mp3\Controller\SearchController', 'Mp3Help', function ($event) use ($e) {
-                /**
-                 * @var MvcEvent $event
-                 */
-                echo $e->getApplication()
-                    ->getServiceManager()
-                    ->get('Mp3\Service\Search')
-                    ->Help($event->getParam('help'));
-            });
+          ->getEventManager()
+          ->getSharedManager()
+          ->attach(
+              'Mp3\Controller\SearchController', 'Mp3Help', function ($event) use ($e) {
+                  /**
+                   * @var MvcEvent $event
+                   */
+                  echo $e->getApplication()
+                         ->getServiceManager()
+                         ->get('Mp3\Service\Search')
+                         ->Help($event->getParam('help'));
+              }
+          );
     }
 
     /**

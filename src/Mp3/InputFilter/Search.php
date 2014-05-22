@@ -27,44 +27,48 @@ class Search extends InputFilter
         /**
          * Help
          */
-        $this->add(array(
-            'name'     => 'help',
-            'required' => false,
-            'filters'  => array(
-                array(
-                    'name' => 'stringtrim'
-                ),
-                array(
-                    'name' => 'stringtolower'
+        $this->add(
+            array(
+                'name'     => 'help',
+                'required' => false,
+                'filters'  => array(
+                    array(
+                        'name' => 'stringtrim'
+                    ),
+                    array(
+                        'name' => 'stringtolower'
+                    )
                 )
             )
-        ));
+        );
 
         /**
          * Confirm
          */
-        $this->add(array(
-            'name'       => 'confirm',
-            'required'   => false,
-            'filters'    => array(
-                array(
-                    'name' => 'stringtrim'
+        $this->add(
+            array(
+                'name'       => 'confirm',
+                'required'   => false,
+                'filters'    => array(
+                    array(
+                        'name' => 'stringtrim'
+                    ),
+                    array(
+                        'name' => 'stringtolower'
+                    )
                 ),
-                array(
-                    'name' => 'stringtolower'
-                )
-            ),
-            'validators' => array(
-                array(
-                    'name' => 'alpha'
-                ),
-                array(
-                    'name'    => 'regex',
-                    'options' => array(
-                        'pattern' => '/^(yes|no)$/'
+                'validators' => array(
+                    array(
+                        'name' => 'alpha'
+                    ),
+                    array(
+                        'name'    => 'regex',
+                        'options' => array(
+                            'pattern' => '/^(yes|no)$/'
+                        )
                     )
                 )
             )
-        ));
+        );
     }
 }

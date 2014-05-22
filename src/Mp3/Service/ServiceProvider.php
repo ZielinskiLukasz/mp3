@@ -18,7 +18,7 @@ use Zend\ServiceManager\ServiceManagerAwareInterface;
  *
  * @package Mp3\Service
  */
-class ServiceProvider implements ServiceManagerAwareInterface
+abstract class ServiceProvider implements ServiceManagerAwareInterface
 {
     /**
      * Protected Variable
@@ -74,22 +74,34 @@ class ServiceProvider implements ServiceManagerAwareInterface
     public function getConfig()
     {
         $config = $this->getServiceManager()
-            ->get('config');
+                       ->get('config');
 
         if (!isset($config['mp3']['base_dir'])) {
-            throw new \Exception($this->getTranslator()->translate('base_dir is not currently set', 'mp3'));
+            throw new \Exception(
+                $this->getTranslator()
+                     ->translate('base_dir is not currently set', 'mp3')
+            );
         }
 
         if (!isset($config['mp3']['format'])) {
-            throw new \Exception($this->getTranslator()->translate('format is not currently set', 'mp3'));
+            throw new \Exception(
+                $this->getTranslator()
+                     ->translate('format is not currently set', 'mp3')
+            );
         }
 
         if (!isset($config['mp3']['search_file'])) {
-            throw new \Exception($this->getTranslator()->translate('search_file is not currently set', 'mp3'));
+            throw new \Exception(
+                $this->getTranslator()
+                     ->translate('search_file is not currently set', 'mp3')
+            );
         }
 
         if (!isset($config['mp3']['search_path'])) {
-            throw new \Exception($this->getTranslator()->translate('search_path is not currently set', 'mp3'));
+            throw new \Exception(
+                $this->getTranslator()
+                     ->translate('search_path is not currently set', 'mp3')
+            );
         }
 
         return array(
@@ -108,6 +120,6 @@ class ServiceProvider implements ServiceManagerAwareInterface
     public function getTranslator()
     {
         return $this->getServiceManager()
-            ->get('MvcTranslator');
+                    ->get('MvcTranslator');
     }
 }

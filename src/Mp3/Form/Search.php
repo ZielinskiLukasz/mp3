@@ -30,35 +30,41 @@ class Search extends Form
          * Form Attributes
          */
         $this->setName('search');
-        $this->setAttributes(array(
-            'action' => '/mp3/search',
-            'method' => 'post'
-        ));
+        $this->setAttributes(
+            array(
+                'action' => '/mp3/search',
+                'method' => 'post'
+            )
+        );
 
         /**
          * Name
          */
-        $this->add(array(
-            'type'       => 'text',
-            'name'       => 'name',
-            'options'    => array(
-                'label' => 'name',
-            ),
-            'attributes' => array(
-                'id' => 'name'
+        $this->add(
+            array(
+                'type'       => 'text',
+                'name'       => 'name',
+                'options'    => array(
+                    'label' => 'name',
+                ),
+                'attributes' => array(
+                    'id' => 'name'
+                )
             )
-        ));
+        );
 
         /**
          * Submit
          */
-        $this->add(array(
-            'type'       => 'submit',
-            'name'       => 'submit',
-            'attributes' => array(
-                'id'    => 'submit',
-                'value' => 'Search'
+        $this->add(
+            array(
+                'type'       => 'submit',
+                'name'       => 'submit',
+                'attributes' => array(
+                    'id'    => 'submit',
+                    'value' => 'Search'
+                )
             )
-        ));
+        );
     }
 }

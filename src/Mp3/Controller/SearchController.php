@@ -20,7 +20,7 @@ use Zend\View\Model\ViewModel;
  *
  * @package Mp3\Controller
  *
- * @method \Zend\Http\Request getRequest()
+ * @method Request getRequest()
  */
 class SearchController extends AbstractActionController
 {
@@ -33,30 +33,45 @@ class SearchController extends AbstractActionController
     {
         $form = $this->getFormSearch();
 
-        if ($this->getRequest()->isPost()) {
-            $form->setData($this->params()->fromPost());
+        if ($this->getRequest()
+                 ->isPost()
+        ) {
+            $form->setData(
+                $this->params()
+                     ->fromPost()
+            );
 
             if ($form->isValid()) {
-                return $this->redirect()->toRoute('mp3-search', array(
-                    'name' => $this->params()->fromPost('name')
-                ));
+                return $this->redirect()
+                            ->toRoute(
+                                'mp3-search', array(
+                                    'name' => $this->params()
+                                                   ->fromPost('name')
+                                )
+                            );
             }
         }
 
         $service = $this->getServiceSearch()
-            ->Search($this->params()->fromRoute('name'));
+                        ->Search(
+                            $this->params()
+                                 ->fromRoute('name')
+                        );
 
         $viewModel = new ViewModel();
         $viewModel
             ->setTemplate('mp3/mp3/search')
-            ->setVariables(array(
-                'form'         => $form,
-                'paginator'    => $service['paginator'],
-                'total_length' => $service['total_length'],
-                'total_size'   => $service['total_size'],
-                'search'       => $service['search'],
-                'flash'        => $this->params()->fromRoute('flash')
-            ));
+            ->setVariables(
+                array(
+                    'form'         => $form,
+                    'paginator'    => $service['paginator'],
+                    'total_length' => $service['total_length'],
+                    'total_size'   => $service['total_size'],
+                    'search'       => $service['search'],
+                    'flash'        => $this->params()
+                                           ->fromRoute('flash')
+                )
+            );
 
         return $viewModel;
     }
@@ -73,7 +88,10 @@ class SearchController extends AbstractActionController
         }
 
         $filter = $this->getFilterSearch();
-        $filter->setData($this->params()->fromRoute());
+        $filter->setData(
+            $this->params()
+                 ->fromRoute()
+        );
 
         if ($filter->isValid() && $filter->getValue('help') == null) {
             if ($filter->getValue('confirm') == 'yes') {
@@ -86,12 +104,12 @@ class SearchController extends AbstractActionController
 
             if ($result) {
                 $this->getServiceSearch()
-                    ->Import();
+                     ->Import();
             }
         } else {
             if ($filter->getValue('help') != null) {
                 $this->getEventManager()
-                    ->trigger('Mp3Help', null, array('help' => 'import'));
+                     ->trigger('Mp3Help', null, array('help' => 'import'));
 
                 exit;
             }
@@ -106,8 +124,8 @@ class SearchController extends AbstractActionController
     private function getFormSearch()
     {
         return $this->getServiceLocator()
-            ->get('FormElementManager')
-            ->get('Mp3\Form\Search');
+                    ->get('FormElementManager')
+                    ->get('Mp3\Form\Search');
     }
 
     /**
@@ -118,8 +136,8 @@ class SearchController extends AbstractActionController
     private function getFilterSearch()
     {
         return $this->getServiceLocator()
-            ->get('InputFilterManager')
-            ->get('Mp3\InputFilter\Search');
+                    ->get('InputFilterManager')
+                    ->get('Mp3\InputFilter\Search');
     }
 
     /**
@@ -130,6 +148,6 @@ class SearchController extends AbstractActionController
     private function getServiceSearch()
     {
         return $this->getServiceLocator()
-            ->get('Mp3\Service\Search');
+                    ->get('Mp3\Service\Search');
     }
 }

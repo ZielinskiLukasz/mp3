@@ -2,117 +2,118 @@
 
 <html lang="en">
 <head>
-    <?php echo $this->headTitle($this->translate('MP3 Player', 'mp3'))->setAutoEscape(true); ?>
+    <?php echo $this->headTitle($this->translate('MP3 Player', 'mp3'))
+                    ->setAutoEscape(true); ?>
 
     <?php echo $this->headMeta()
-        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
-        ->setCharset('UTF-8');?>
+                    ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+                    ->setCharset('UTF-8');?>
 
     <style>
         html, body {
-            margin: 0;
-            padding: 0;
+            margin  : 0;
+            padding : 0;
         }
 
         body {
-            font-family: Arial, serif;
-            font-size: 12px;
-            font-weight: normal;
+            font-family : Arial, serif;
+            font-size   : 12px;
+            font-weight : normal;
         }
 
         a {
-            text-decoration: none;
-            color: #4B598A;
+            text-decoration : none;
+            color           : #4B598A;
         }
 
         table.mp3_table {
-            background-color: #4B598A;
-            border-collapse: collapse;
-            width: 100%;
+            background-color : #4B598A;
+            border-collapse  : collapse;
+            width            : 100%;
         }
 
         thead.mp3_thead {
-            color: #FFFFFF;
-            border: solid #FFFFFF 1px;
+            color  : #FFFFFF;
+            border : solid #FFFFFF 1px;
         }
 
         th.mp3_border, td.mp3_border, tbody.mp3_border {
-            border: solid #FFFFFF 1px;
+            border : solid #FFFFFF 1px;
         }
 
         td.mp3_padding {
-            padding: 5px;
+            padding : 5px;
         }
 
         table.mp3_table tr.mp3_tr:hover {
-            background-color: #FBEC88;
+            background-color : #FBEC88;
         }
 
         tr.mp3_tr:nth-child(odd) {
-            background-color: #FFFFFF;
+            background-color : #FFFFFF;
         }
 
         tr.mp3_tr:nth-child(even) {
-            background-color: #DDDDDD;
+            background-color : #DDDDDD;
         }
 
         th.mp3_center, td.mp3_center {
-            text-align: center;
+            text-align : center;
         }
 
         tr.mp3_footer {
-            background-color: #4B598A;
-            color: #FFFFFF;
+            background-color : #4B598A;
+            color            : #FFFFFF;
         }
 
         tr.mp3_footer a {
-            color: #FFFFFF;
+            color : #FFFFFF;
         }
 
         tr.mp3_footer a:hover {
-            color: #FBEC88;
+            color : #FBEC88;
         }
 
         tr.mp3_nagivation a {
-            text-align: left;
-            color: #FFFFFF;
+            text-align : left;
+            color      : #FFFFFF;
         }
 
         tr.mp3_nagivation a:hover {
-            color: #FBEC88;
+            color : #FBEC88;
         }
 
         tr.mp3_nagivation th {
-            padding-left: 5px;
-            float: left;
+            padding-left : 5px;
+            float        : left;
         }
 
         tr.mp3_search {
-            background-color: #4B598A;
-            color: #FFFFFF;
+            background-color : #4B598A;
+            color            : #FFFFFF;
         }
 
         td.mp3_search {
-            border: solid #FFFFFF 1px;
-            padding-left: 5px;
+            border       : solid #FFFFFF 1px;
+            padding-left : 5px;
         }
 
         input:focus {
-            outline: none;
+            outline : none;
         }
 
         input[type=submit] {
-            border: solid #4B598A 1px;
-            color: #4B598A;
+            border : solid #4B598A 1px;
+            color  : #4B598A;
         }
 
         input[type=text] {
-            border: solid #4B598A 1px;
-            width: 200px;
+            border : solid #4B598A 1px;
+            width  : 200px;
         }
 
         select {
-            border: solid #4B598A 1px;
+            border : solid #4B598A 1px;
         }
     </style>
 </head>
@@ -135,12 +136,12 @@
     </thead>
 </table>
 
-<?php
-if ($this->search):
-    $this->formSubmit()->setTranslatorTextDomain('mp3');
+<?php if ($this->search):
+    $this->formSubmit()
+         ->setTranslatorTextDomain('mp3');
 
-    echo $this->form()->openTag($this->form)
-    ?>
+    echo $this->form()
+              ->openTag($this->form); ?>
 
     <table class="mp3_table">
         <thead class="mp3_thead">
@@ -155,7 +156,8 @@ if ($this->search):
         </thead>
     </table>
 
-    <?php echo $this->form()->closeTag($this->form); endif; ?>
+    <?php echo $this->form()
+                    ->closeTag($this->form); endif; ?>
 
 <table class="mp3_table">
     <thead class="mp3_thead">
@@ -206,7 +208,8 @@ if ($this->search):
     <?php endforeach; ?>
 
     <tr class="mp3_footer">
-        <td><?php echo $this->translate('Total Results', 'mp3'); ?>: <?php echo $this->paginator->getCurrentItemCount(); ?></td>
+        <td><?php echo $this->translate('Total Results', 'mp3'); ?>
+            : <?php echo $this->paginator->getCurrentItemCount(); ?></td>
         <td>&nbsp;</td>
         <td class="mp3_border mp3_center"><?php echo $this->total_length; ?></td>
         <td class="mp3_border mp3_center"><?php echo $this->convert($this->total_size); ?></td>
@@ -214,30 +217,38 @@ if ($this->search):
             <td class="mp3_border mp3_center">
                 <a href="<?php echo $this->url('mp3-play-all', array('dir' => $this->path)); ?>"><?php echo $this->translate('Play All', 'mp3'); ?></a>
                 <?php if (extension_loaded('Phar')): ?>
-                <span> | </span>
-                <select id="download">
-                    <option value="0"><?php echo $this->translate('Select Download', 'mp3'); ?></option>
-                    <option value="<?php echo $this->url('mp3-download-folder', array(
-                        'dir'    => $this->path,
-                        'format' => 'zip'
-                    )); ?>"><?php echo $this->translate('Zip', 'mp3'); ?>
-                    </option>
-                    <option value="<?php echo $this->url('mp3-download-folder', array(
-                        'dir'    => $this->path,
-                        'format' => 'tar'
-                    )); ?>"><?php echo $this->translate('Tar', 'mp3'); ?>
-                    </option>
-                    <option value="<?php echo $this->url('mp3-download-folder', array(
-                        'dir'    => $this->path,
-                        'format' => 'bz2'
-                    )); ?>"><?php echo $this->translate('Bz2', 'mp3'); ?>
-                    </option>
-                    <option value="<?php echo $this->url('mp3-download-folder', array(
-                        'dir'    => $this->path,
-                        'format' => 'rar'
-                    )); ?>"><?php echo $this->translate('Rar', 'mp3'); ?>
-                    </option>
-                </select>
+                    <span> | </span>
+                    <select id="download">
+                        <option value="0"><?php echo $this->translate('Select Download', 'mp3'); ?></option>
+                        <option value="<?php echo $this->url(
+                            'mp3-download-folder', array(
+                                'dir'    => $this->path,
+                                'format' => 'zip'
+                            )
+                        ); ?>"><?php echo $this->translate('Zip', 'mp3'); ?>
+                        </option>
+                        <option value="<?php echo $this->url(
+                            'mp3-download-folder', array(
+                                'dir'    => $this->path,
+                                'format' => 'tar'
+                            )
+                        ); ?>"><?php echo $this->translate('Tar', 'mp3'); ?>
+                        </option>
+                        <option value="<?php echo $this->url(
+                            'mp3-download-folder', array(
+                                'dir'    => $this->path,
+                                'format' => 'bz2'
+                            )
+                        ); ?>"><?php echo $this->translate('Bz2', 'mp3'); ?>
+                        </option>
+                        <option value="<?php echo $this->url(
+                            'mp3-download-folder', array(
+                                'dir'    => $this->path,
+                                'format' => 'rar'
+                            )
+                        ); ?>"><?php echo $this->translate('Rar', 'mp3'); ?>
+                        </option>
+                    </select>
                 <?php endif; ?>
             </td>
         <?php else: ?>
