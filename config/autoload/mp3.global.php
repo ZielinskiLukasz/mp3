@@ -37,7 +37,7 @@ return array(
         /**
          * Full Path to Search
          *
-         * Define the base searchPath for your library
+         * Define the base search path for your library
          */
         'searchPath' => '/backup/domains/mp3-devel/public/music'
     )
