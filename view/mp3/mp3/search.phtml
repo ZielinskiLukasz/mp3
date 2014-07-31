@@ -176,6 +176,11 @@ if ($this->search):
     $this->formSubmit()
          ->setTranslatorTextDomain('mp3');
 
+    $this->form->setAttribute(
+        'action',
+        $this->url('mp3-search')
+    );
+
     echo $this->form()
               ->openTag($this->form); ?>
 
