@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 1.1.4 (2014-07-31)
+
+- Resolved many PSR-2 issues
+
+- General Code Cleanup
+
+- .m4a File Extension is now supported and tested without any known issues
+
+- Added autoload_classmap.php
+
+- Added template_map.php
+
+- Speed should have been improved between searches and general viewing
+
+- Fixed an issue where the search.txt was not being created on import
+
 ## 1.1.3 (2014-03-13)
 
 - Fixed a bug when playing single songs (File Not Found Error). Guess I got used to playing full albums and missed this, my bad =)
