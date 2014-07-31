@@ -4,7 +4,7 @@
  *
  * @author    Sammie S. Taunton <diemuzi@gmail.com>
  * @copyright Copyright (c) 2013, Sammie S. Taunton
- * @license   https://github.com/diemuzi/mp3/blob/master/LICENSE
+ * @license   https://github.com/diemuzi/mp3/blob/master/LICENSE License
  * @link      https://github.com/diemuzi/mp3 MP3 Player
  */
 
