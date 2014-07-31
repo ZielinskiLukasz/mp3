@@ -95,7 +95,7 @@ return array(
         'translation_file_patterns' => array(
             array(
                 'type'        => 'gettext',
-                'base_dir'    => __DIR__ . '/../language',
+                'base_dir'    => dirname(__DIR__) . '/language',
                 'pattern'     => '%s.mo',
                 'text_domain' => 'mp3'
             )
@@ -108,8 +108,9 @@ return array(
         )
     ),
     'view_manager'    => array(
+        'template_map'        => include_once dirname(__DIR__) . '/template_map.php',
         'template_path_stack' => array(
-            'mp3' => __DIR__ . '/../view'
+            'mp3' => dirname(__DIR__) . '/view'
         )
     ),
     'view_helpers'    => array(

@@ -23,28 +23,33 @@ use Zend\View\Model\ViewModel;
  *
  * @package Mp3
  */
-class Module implements ConfigProviderInterface, AutoloaderProviderInterface, ConsoleBannerProviderInterface, ConsoleUsageProviderInterface
+class Module implements
+    ConfigProviderInterface,
+    AutoloaderProviderInterface,
+    ConsoleBannerProviderInterface,
+    ConsoleUsageProviderInterface
 {
     /**
      * Boostrap
      *
-     * @param MvcEvent $e
+     * @param MvcEvent $mvcEvent
      */
-    public function onBootstrap(MvcEvent $e)
+    public function onBootstrap(MvcEvent $mvcEvent)
     {
-        $eventManager = $e->getApplication()
-                          ->getEventManager();
+        $eventManager = $mvcEvent->getApplication()
+                                 ->getEventManager();
 
         /**
          * Disable Layout on Error
          */
         $eventManager->attach(
-            MvcEvent::EVENT_DISPATCH_ERROR, function ($e) {
+            MvcEvent::EVENT_DISPATCH_ERROR,
+            function ($mvcEvent) {
                 /**
-                 * @var MvcEvent $e
+                 * @var MvcEvent $mvcEvent
                  */
-                $e->getResult()
-                  ->setTerminal(true);
+                $mvcEvent->getResult()
+                         ->setTerminal(true);
             }
         );
 
@@ -55,11 +60,13 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Co
          * Disable Layout in ViewModel
          */
         $sharedEvents->attach(
-            'Zend\Mvc\Controller\AbstractActionController', 'dispatch', function ($e) {
+            'Zend\Mvc\Controller\AbstractActionController',
+            'dispatch',
+            function ($mvcEvent) {
                 /**
-                 * @var MvcEvent $e
+                 * @var MvcEvent $mvcEvent
                  */
-                $result = $e->getResult();
+                $result = $mvcEvent->getResult();
 
                 if ($result instanceof ViewModel) {
                     $result->setTerminal(true);
@@ -67,20 +74,25 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Co
             }
         );
 
-        $e->getApplication()
-          ->getEventManager()
-          ->getSharedManager()
-          ->attach(
-              'Mp3\Controller\SearchController', 'Mp3Help', function ($event) use ($e) {
-                  /**
-                   * @var MvcEvent $event
-                   */
-                  echo $e->getApplication()
-                         ->getServiceManager()
-                         ->get('Mp3\Service\Search')
-                         ->Help($event->getParam('help'));
-              }
-          );
+        $mvcEvent->getApplication()
+                 ->getEventManager()
+                 ->getSharedManager()
+                 ->attach(
+                     'Mp3\Controller\SearchController',
+                     'Mp3Help',
+                     function ($event) use
+                     (
+                         $mvcEvent
+                     ) {
+                         /**
+                          * @var MvcEvent $event
+                          */
+                         echo $mvcEvent->getApplication()
+                                       ->getServiceManager()
+                                       ->get('Mp3\Service\Search')
+                                       ->Help($event->getParam('help'));
+                     }
+                 );
     }
 
     /**
@@ -97,6 +109,9 @@ class Module implements ConfigProviderInterface, AutoloaderProviderInterface, Co
     public function getAutoloaderConfig()
     {
         return array(
+            'Zend\Loader\ClassMapAutoloader' => array(
+                __DIR__ . '/autoload_classmap.php'
+            ),
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__
