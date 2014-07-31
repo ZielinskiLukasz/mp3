@@ -35,15 +35,24 @@ class Convert extends AbstractHelper
         $arBytes = array(
             array(
                 'unit'  => 'TB',
-                'value' => pow(1024, 4)
+                'value' => pow(
+                    1024,
+                    4
+                )
             ),
             array(
                 'unit'  => 'GB',
-                'value' => pow(1024, 3)
+                'value' => pow(
+                    1024,
+                    3
+                )
             ),
             array(
                 'unit'  => 'MB',
-                'value' => pow(1024, 2)
+                'value' => pow(
+                    1024,
+                    2
+                )
             ),
             array(
                 'unit'  => 'KB',
@@ -60,9 +69,27 @@ class Convert extends AbstractHelper
                 $result = $bytes / $arItem['value'];
 
                 if ($arItem['value'] != 'B' || $arItem['value'] != 'KB') {
-                    $result = strval(round($result, 2)) . ' ' . $arItem['unit'];
+                    $result = strval(
+                                  round(
+                                      $result,
+                                      2
+                                  )
+                              )
+                              . ' '
+                              . $arItem['unit'];
                 } else {
-                    $result = str_replace('.', ',', strval(round($result, 2))) . ' ' . $arItem['unit'];
+                    $result = str_replace(
+                                  '.',
+                                  ',',
+                                  strval(
+                                      round(
+                                          $result,
+                                          2
+                                      )
+                                  )
+                              )
+                              . ' '
+                              . $arItem['unit'];
                 }
 
                 break;

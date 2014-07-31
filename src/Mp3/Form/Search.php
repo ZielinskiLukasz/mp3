@@ -30,6 +30,7 @@ class Search extends Form
          * Form Attributes
          */
         $this->setName('search');
+
         $this->setAttributes(
             array(
                 'action' => '/mp3/search',

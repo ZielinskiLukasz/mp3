@@ -51,7 +51,10 @@ class Calculate
         $this->mp3data = array();
         $this->mp3data['Filesize'] = filesize($filename);
 
-        $this->fd = fopen($filename, 'rb');
+        $this->fd = fopen(
+            $filename,
+            'rb'
+        );
         $this->prefetchblock();
         $this->readmp3frame();
     }
@@ -120,7 +123,10 @@ class Calculate
             $this->mp3data['Bitrate'] = self::bitratelookup($this->mp3data);
             $this->mp3data['Sampling Rate'] = self::samplelookup($this->mp3data);
             $this->mp3data['Frame Size'] = self::getframesize($this->mp3data);
-            $this->mp3data['Length'] = self::getduration($this->mp3data, $this->tell2());
+            $this->mp3data['Length'] = self::getduration(
+                $this->mp3data,
+                $this->tell2()
+            );
             $this->mp3data['Length mm:ss'] = self::seconds_to_mmss($this->mp3data['Length']);
 
             if ($this->mp3data['Bitrate'] == 'bad' || $this->mp3data['Bitrate'] == 'free' || $this->mp3data['Sampling Rate'] == 'unknown' || $this->mp3data['Frame Size'] == 'unknown' || $this->mp3data['Length'] == 'unknown'
@@ -163,8 +169,8 @@ class Calculate
     protected function startswithid3()
     {
         return ($this->block[1] == 73 && //I
-            $this->block[2] == 68 && //D
-            $this->block[3] == 51); //3
+                $this->block[2] == 68 && //D
+                $this->block[3] == 51); //3
     }
 
     /**
@@ -175,7 +181,7 @@ class Calculate
     protected function startswithpk()
     {
         return ($this->block[1] == 80 && //P
-            $this->block[2] == 75); //K
+                $this->block[2] == 75); //K
     }
 
     /**
@@ -188,9 +194,9 @@ class Calculate
         //echo "<!--".$this->block[37]." ".$this->block[38]."-->";
         //echo "<!--".$this->block[39]." ".$this->block[40]."-->";
         return (($this->block[37] == 88 && //X 0x58
-            $this->block[38] == 105 && //i 0x69
-            $this->block[39] == 110 && //n 0x6E
-            $this->block[40] == 103) //g 0x67
+                 $this->block[38] == 105 && //i 0x69
+                 $this->block[39] == 110 && //n 0x6E
+                 $this->block[40] == 103) //g 0x67
             /*               ||
                            ($this->block[21]==88  && //X 0x58
                             $this->block[22]==105 && //i 0x69
@@ -218,9 +224,15 @@ class Calculate
      */
     protected function prefetchblock()
     {
-        $block = fread($this->fd, $this->blockmax);
+        $block = fread(
+            $this->fd,
+            $this->blockmax
+        );
         $this->blocksize = strlen($block);
-        $this->block = unpack("C*", $block);
+        $this->block = unpack(
+            "C*",
+            $block
+        );
         $this->blockpos = 0;
     }
 
@@ -234,16 +246,50 @@ class Calculate
 
         //3 bytes 1 version byte 2 byte flags
         $arr = array();
-        $arr['ID3v2 Major version'] = bindec(substr($bits, 24, 8));
-        $arr['ID3v2 Minor version'] = bindec(substr($bits, 32, 8));
-        $arr['ID3v2 flags'] = bindec(substr($bits, 40, 8));
-        if (substr($bits, 40, 1))
+        $arr['ID3v2 Major version'] = bindec(
+            substr(
+                $bits,
+                24,
+                8
+            )
+        );
+        $arr['ID3v2 Minor version'] = bindec(
+            substr(
+                $bits,
+                32,
+                8
+            )
+        );
+        $arr['ID3v2 flags'] = bindec(
+            substr(
+                $bits,
+                40,
+                8
+            )
+        );
+        if (substr(
+            $bits,
+            40,
+            1
+        ))
             $arr['Unsynchronisation'] = true;
-        if (substr($bits, 41, 1))
+        if (substr(
+            $bits,
+            41,
+            1
+        ))
             $arr['Extended header'] = true;
-        if (substr($bits, 42, 1))
+        if (substr(
+            $bits,
+            42,
+            1
+        ))
             $arr['Experimental indicator'] = true;
-        if (substr($bits, 43, 1))
+        if (substr(
+            $bits,
+            43,
+            1
+        ))
             $arr['Footer present'] = true;
 
         $size = "";
@@ -254,7 +300,10 @@ class Calculate
 
         $arr['ID3v2 Tags Size'] = bindec($size); //now the size is in bytes;
         if ($arr['ID3v2 Tags Size'] - $this->blockmax > 0) {
-            fseek($this->fd, $arr['ID3v2 Tags Size'] + 10);
+            fseek(
+                $this->fd,
+                $arr['ID3v2 Tags Size'] + 10
+            );
             $this->prefetchblock();
             if (isset($arr['Footer present']) && $arr['Footer present']) {
                 for ($i = 0; $i < 10; $i++)
@@ -625,14 +674,19 @@ class Calculate
      *
      * @return string
      */
-    public static function getduration(&$mp3, $startat)
-    {
+    public static function getduration(
+        &$mp3,
+        $startat
+    ) {
         if ($mp3['Bitrate'] > 0) {
             $KBps = ($mp3['Bitrate'] * 1000) / 8;
             $datasize = ($mp3['Filesize'] - ($startat / 8));
             $length = $datasize / $KBps;
 
-            return sprintf("%d", $length);
+            return sprintf(
+                "%d",
+                $length
+            );
         }
 
         return "unknown";
@@ -647,6 +701,10 @@ class Calculate
      */
     public static function seconds_to_mmss($duration)
     {
-        return sprintf("%d:%02d", ($duration / 60), $duration % 60);
+        return sprintf(
+            "%d:%02d",
+            ($duration / 60),
+            $duration % 60
+        );
     }
 }

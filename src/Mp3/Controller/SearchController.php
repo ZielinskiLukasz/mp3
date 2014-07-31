@@ -31,7 +31,12 @@ class SearchController extends AbstractActionController
      */
     public function searchAction()
     {
-        $form = $this->getFormSearch();
+        /**
+         * @var \Mp3\Form\Search $form
+         */
+        $form = $this->getServiceLocator()
+                     ->get('FormElementManager')
+                     ->get('Mp3\Form\Search');
 
         if ($this->getRequest()
                  ->isPost()
@@ -44,7 +49,8 @@ class SearchController extends AbstractActionController
             if ($form->isValid()) {
                 return $this->redirect()
                             ->toRoute(
-                                'mp3-search', array(
+                                'mp3-search',
+                                array(
                                     'name' => $this->params()
                                                    ->fromPost('name')
                                 )
@@ -52,8 +58,9 @@ class SearchController extends AbstractActionController
             }
         }
 
-        $service = $this->getServiceSearch()
-                        ->Search(
+        $service = $this->getServiceLocator()
+                        ->get('Mp3\Service\Search')
+                        ->find(
                             $this->params()
                                  ->fromRoute('name')
                         );
@@ -87,7 +94,13 @@ class SearchController extends AbstractActionController
             throw new \RuntimeException('You can only use this action from a console!');
         }
 
-        $filter = $this->getFilterSearch();
+        /**
+         * @var \Mp3\InputFilter\Search $filter
+         */
+        $filter = $this->getServiceLocator()
+                       ->get('InputFilterManager')
+                       ->get('Mp3\InputFilter\Search');
+
         $filter->setData(
             $this->params()
                  ->fromRoute()
@@ -95,7 +108,11 @@ class SearchController extends AbstractActionController
 
         if ($filter->isValid() && $filter->getValue('help') == null) {
             if ($filter->getValue('confirm') == 'yes') {
-                $confirm = new Confirm('Are you sure you want to Import Search Results? [y/n]', 'y', 'n');
+                $confirm = new Confirm(
+                    'Are you sure you want to Import Search Results? [y/n]',
+                    'y',
+                    'n'
+                );
 
                 $result = $confirm->show();
             } else {
@@ -103,51 +120,21 @@ class SearchController extends AbstractActionController
             }
 
             if ($result) {
-                $this->getServiceSearch()
-                     ->Import();
+                $this->getServiceLocator()
+                     ->get('Mp3\Service\Search')
+                     ->import();
             }
         } else {
             if ($filter->getValue('help') != null) {
                 $this->getEventManager()
-                     ->trigger('Mp3Help', null, array('help' => 'import'));
+                     ->trigger(
+                         'Mp3Help',
+                         null,
+                         array('help' => 'import')
+                     );
 
                 exit;
             }
         }
-    }
-
-    /**
-     * Form Search
-     *
-     * @return \Mp3\Form\Search
-     */
-    private function getFormSearch()
-    {
-        return $this->getServiceLocator()
-                    ->get('FormElementManager')
-                    ->get('Mp3\Form\Search');
-    }
-
-    /**
-     * Filter Search
-     *
-     * @return \Mp3\InputFilter\Search
-     */
-    private function getFilterSearch()
-    {
-        return $this->getServiceLocator()
-                    ->get('InputFilterManager')
-                    ->get('Mp3\InputFilter\Search');
-    }
-
-    /**
-     * Service Search
-     *
-     * @return \Mp3\Service\Search
-     */
-    private function getServiceSearch()
-    {
-        return $this->getServiceLocator()
-                    ->get('Mp3\Service\Search');
     }
 }

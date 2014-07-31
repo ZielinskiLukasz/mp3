@@ -23,9 +23,9 @@ abstract class ServiceProvider implements ServiceManagerAwareInterface
     /**
      * Protected Variable
      *
-     * @var ServiceManager $ServiceManager
+     * @var ServiceManager $serviceManager
      */
-    protected $ServiceManager;
+    protected $serviceManager;
 
     /**
      * Get ServiceManager
@@ -34,19 +34,19 @@ abstract class ServiceProvider implements ServiceManagerAwareInterface
      */
     public function getServiceManager()
     {
-        return $this->ServiceManager;
+        return $this->serviceManager;
     }
 
     /**
      * Set ServiceManager
      *
-     * @param ServiceManager $ServiceManager
+     * @param ServiceManager $serviceManager
      *
      * @return $this
      */
-    public function setServiceManager(ServiceManager $ServiceManager)
+    public function setServiceManager(ServiceManager $serviceManager)
     {
-        $this->ServiceManager = $ServiceManager;
+        $this->serviceManager = $serviceManager;
 
         return $this;
     }
@@ -59,9 +59,9 @@ abstract class ServiceProvider implements ServiceManagerAwareInterface
     public function getBasePath()
     {
         if (php_sapi_name() == 'cli') {
-            return $this->getConfig()['search_path'];
+            return $this->getConfig()['searchPath'];
         } else {
-            return $_SERVER['DOCUMENT_ROOT'] . $this->getConfig()['base_dir'];
+            return $_SERVER['DOCUMENT_ROOT'] . $this->getConfig()['baseDir'];
         }
     }
 
@@ -76,39 +76,51 @@ abstract class ServiceProvider implements ServiceManagerAwareInterface
         $config = $this->getServiceManager()
                        ->get('config');
 
-        if (!isset($config['mp3']['base_dir'])) {
+        if (!isset($config['mp3']['baseDir'])) {
             throw new \Exception(
                 $this->getTranslator()
-                     ->translate('base_dir is not currently set', 'mp3')
+                     ->translate(
+                         'baseDir is not currently set',
+                         'mp3'
+                     )
             );
         }
 
         if (!isset($config['mp3']['format'])) {
             throw new \Exception(
                 $this->getTranslator()
-                     ->translate('format is not currently set', 'mp3')
+                     ->translate(
+                         'format is not currently set',
+                         'mp3'
+                     )
             );
         }
 
-        if (!isset($config['mp3']['search_file'])) {
+        if (!isset($config['mp3']['searchFile'])) {
             throw new \Exception(
                 $this->getTranslator()
-                     ->translate('search_file is not currently set', 'mp3')
+                     ->translate(
+                         'searchFile is not currently set',
+                         'mp3'
+                     )
             );
         }
 
-        if (!isset($config['mp3']['search_path'])) {
+        if (!isset($config['mp3']['searchPath'])) {
             throw new \Exception(
                 $this->getTranslator()
-                     ->translate('search_path is not currently set', 'mp3')
+                     ->translate(
+                         'searchPath is not currently set',
+                         'mp3'
+                     )
             );
         }
 
         return array(
-            'base_dir'    => $config['mp3']['base_dir'],
-            'format'      => $config['mp3']['format'],
-            'search_file' => $config['mp3']['search_file'],
-            'search_path' => $config['mp3']['search_path']
+            'baseDir'    => $config['mp3']['baseDir'],
+            'format'     => $config['mp3']['format'],
+            'searchFile' => $config['mp3']['searchFile'],
+            'searchPath' => $config['mp3']['searchPath']
         );
     }
 

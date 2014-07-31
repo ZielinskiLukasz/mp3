@@ -23,36 +23,54 @@ class Index extends ServiceProvider implements IndexInterface
     /**
      * {@inheritdoc}
      */
-    public function Index(array $params)
+    public function index(array $params)
     {
         try {
-            if (array_key_exists('dir', $params)) {
-                $base_dir = preg_replace('/(\/+)/', '/', $this->getBasePath() . rawurldecode($params['dir']));
+            if (array_key_exists(
+                'dir',
+                $params
+            )) {
+                $baseDir = preg_replace(
+                    '/(\/+)/',
+                    '/',
+                    $this->getBasePath() . rawurldecode($params['dir'])
+                );
 
-                $dir = preg_replace('/(\/+)/', '/', rawurldecode($params['dir']));
+                $dir = preg_replace(
+                    '/(\/+)/',
+                    '/',
+                    rawurldecode($params['dir'])
+                );
             } else {
-                $base_dir = preg_replace('/(\/+)/', '/', $this->getBasePath());
+                $baseDir = preg_replace(
+                    '/(\/+)/',
+                    '/',
+                    $this->getBasePath()
+                );
 
                 $dir = null;
             }
 
             $array = array();
 
-            $total_length = null;
-            $total_size = null;
+            $totalLength = null;
+            $totalSize = null;
 
             clearstatcache();
 
-            if (is_dir($base_dir)) {
-                foreach ($this->DirectoryArray($base_dir) as $location) {
+            if (is_dir($baseDir)) {
+                foreach ($this->directoryArray($baseDir) as $location) {
                     clearstatcache();
 
                     /**
                      * Directory
                      */
-                    if (is_dir($base_dir . $location)) {
+                    if (is_dir($baseDir . $location)) {
                         $array[] = array(
-                            'name'     => ltrim($location, '/'),
+                            'name'     => ltrim(
+                                $location,
+                                '/'
+                            ),
                             'location' => ($dir != null) ? $dir . $location : $location,
                             'type'     => 'dir'
                         );
@@ -61,14 +79,17 @@ class Index extends ServiceProvider implements IndexInterface
                     /**
                      * File
                      */
-                    if (is_file($base_dir . '/' . $location)) {
-                        $path = ($dir != null) ? $base_dir . $location : $location;
+                    if (is_file($baseDir . '/' . $location)) {
+                        $path = ($dir != null) ? $baseDir . $location : $location;
 
                         $calculate = new Calculate($path);
                         $meta = $calculate->get_metadata();
 
                         $array[] = array(
-                            'name'     => ltrim($location, '/'),
+                            'name'     => ltrim(
+                                $location,
+                                '/'
+                            ),
                             'location' => ($dir != null) ? $dir . $location : $location,
                             'type'     => 'file',
                             'bit_rate' => (isset($meta['Bitrate'])) ? $meta['Bitrate'] : '-',
@@ -76,30 +97,38 @@ class Index extends ServiceProvider implements IndexInterface
                             'size'     => (isset($meta['Filesize'])) ? $meta['Filesize'] : '-'
                         );
 
-                        $total_length += (isset($meta['Length'])) ? $meta['Length'] : '0';
-                        $total_size += (isset($meta['Filesize'])) ? $meta['Filesize'] : '0';
+                        $totalLength += (isset($meta['Length'])) ? $meta['Length'] : '0';
+
+                        $totalSize += (isset($meta['Filesize'])) ? $meta['Filesize'] : '0';
                     }
                 }
             } else {
                 throw new \Exception(
-                    $base_dir . ' ' . $this->getTranslator()
-                                           ->translate('was not found', 'mp3')
+                    $baseDir . ' ' . $this->getTranslator()
+                                          ->translate(
+                                              'was not found',
+                                              'mp3'
+                                          )
                 );
             }
 
             $paginator = new Paginator(new ArrayAdapter($array));
             $paginator->setDefaultItemCountPerPage((count($array) > '0') ? count($array) : '1');
 
-            if ($total_length > '0') {
-                $total_length = sprintf("%d:%02d", ($total_length / 60), $total_length % 60);
+            if ($totalLength > '0') {
+                $totalLength = sprintf(
+                    "%d:%02d",
+                    ($totalLength / 60),
+                    $totalLength % 60
+                );
             }
 
             return array(
                 'paginator'    => $paginator,
                 'path'         => ($dir != null) ? $dir : null,
-                'total_length' => $total_length,
-                'total_size'   => $total_size,
-                'search'       => (is_file($this->getConfig()['search_file']))
+                'total_length' => $totalLength,
+                'total_size'   => $totalSize,
+                'search'       => (is_file($this->getConfig()['searchFile']))
             );
         } catch (\Exception $e) {
             throw $e;
@@ -109,15 +138,22 @@ class Index extends ServiceProvider implements IndexInterface
     /**
      * {@inheritdoc}
      */
-    public function PlayAll($dir)
+    public function playAll($dir)
     {
         try {
-            $path = $this->getConfig()['base_dir'] . rawurldecode($dir);
+            $path = $this->getConfig()['baseDir'] . rawurldecode($dir);
+
+            $serverUrl = $this->getServiceManager()
+                         ->get('ViewHelperManager')
+                         ->get('serverurl')
+                         ->__invoke(
+                             '/'
+                         );
 
             clearstatcache();
 
             if (is_dir($this->getBasePath() . rawurldecode($dir))) {
-                $array = $this->DirectoryArray($this->getBasePath() . rawurldecode($dir));
+                $array = $this->directoryArray($this->getBasePath() . rawurldecode($dir));
 
                 if ($this->getConfig()['format'] == 'm3u') {
                     /**
@@ -127,9 +163,17 @@ class Index extends ServiceProvider implements IndexInterface
                         $playlist = '#EXTM3U' . "\n";
 
                         foreach ($array as $value) {
-                            $playlist .= '#EXTINF: ' . ltrim($value, '/') . "\n";
-                            $playlist .= 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path . $value) . "\n";
+                            $playlist .= '#EXTINF: ';
+                            $playlist .= ltrim(
+                                $value,
+                                '/'
+                            );
                             $playlist .= "\n";
+                            $playlist .= $serverUrl;
+                            $playlist .= rawurlencode(
+                                $path . $value
+                            );
+                            $playlist .= "\n\n";
                         }
 
                         header("Content-Type: audio/mpegurl");
@@ -140,7 +184,10 @@ class Index extends ServiceProvider implements IndexInterface
                     } else {
                         throw new \Exception(
                             $this->getTranslator()
-                                 ->translate('Format is not currently supported. Supported formats are: pls, m3u', 'mp3')
+                                 ->translate(
+                                     'Format is not currently supported. Supported formats are: pls, m3u',
+                                     'mp3'
+                                 )
                         );
                     }
                 } elseif ($this->getConfig()['format'] == 'pls') {
@@ -154,13 +201,22 @@ class Index extends ServiceProvider implements IndexInterface
                             $calculate = new Calculate($this->getBasePath() . rawurldecode($dir) . $value);
                             $meta = $calculate->get_metadata();
 
-                            if (array_key_exists('Length', $meta)) {
+                            if (array_key_exists(
+                                'Length',
+                                $meta
+                            )) {
                                 $length = $meta['Length'];
                             } else {
                                 $length = '-1';
                             }
 
-                            $playlist .= 'File' . ($key + '1') . '=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($path . $value) . "\n";
+                            $playlist .= 'File';
+                            $playlist .= ($key + '1');
+                            $playlist .= '=' . $serverUrl;
+                            $playlist .= rawurlencode(
+                                $path . $value
+                            );
+                            $playlist .= "\n";
                             $playlist .= 'Title' . ($key + '1') . '=' . basename($value) . "\n";
                             $playlist .= 'Length' . ($key + '1') . '=' . $length . "\n";
                         }
@@ -176,19 +232,28 @@ class Index extends ServiceProvider implements IndexInterface
                     } else {
                         throw new \Exception(
                             $this->getTranslator()
-                                 ->translate('Something went wrong and we cannot play this folder', 'mp3')
+                                 ->translate(
+                                     'Something went wrong and we cannot play this folder',
+                                     'mp3'
+                                 )
                         );
                     }
                 } else {
                     throw new \Exception(
                         $this->getTranslator()
-                             ->translate('Format is not currently supported. Supported formats are: pls, m3u', 'mp3')
+                             ->translate(
+                                 'Format is not currently supported. Supported formats are: pls, m3u',
+                                 'mp3'
+                             )
                     );
                 }
             } else {
                 throw new \Exception(
                     $this->getBasePath() . rawurldecode($dir) . ' ' . $this->getTranslator()
-                                                                           ->translate('was not found', 'mp3')
+                                                                           ->translate(
+                                                                               'was not found',
+                                                                               'mp3'
+                                                                           )
                 );
             }
         } catch (\Exception $e) {
@@ -199,11 +264,19 @@ class Index extends ServiceProvider implements IndexInterface
     /**
      * {@inheritdoc}
      */
-    public function PlaySingle($dir)
+    public function playSingle($dir)
     {
         try {
             $path = $this->getBasePath() . rawurldecode($dir);
-            $file = $this->getConfig()['base_dir'] . rawurldecode($dir);
+
+            $file = $this->getConfig()['baseDir'] . rawurldecode($dir);
+
+            $serverUrl = $this->getServiceManager()
+                              ->get('ViewHelperManager')
+                              ->get('serverurl')
+                              ->__invoke(
+                                  '/'
+                              );
 
             clearstatcache();
 
@@ -215,7 +288,7 @@ class Index extends ServiceProvider implements IndexInterface
                     header("Content-Type: audio/mpegurl");
                     header("Content-Disposition: attachment; filename=playlist.m3u");
 
-                    echo 'http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($file);
+                    echo $serverUrl . rawurlencode($file);
                     exit;
                 } elseif ($this->getConfig()['format'] == 'pls') {
                     /**
@@ -225,7 +298,7 @@ class Index extends ServiceProvider implements IndexInterface
                     header("Content-Disposition: attachment; filename=playlist.pls");
 
                     $playlist = '[Playlist]' . "\n";
-                    $playlist .= 'File1=http://' . $_SERVER["SERVER_NAME"] . '/' . rawurlencode($file) . "\n";
+                    $playlist .= 'File1=' . $serverUrl . rawurlencode($file) . "\n";
                     $playlist .= 'Title1=' . basename($path) . "\n";
                     $playlist .= 'Length1=-1' . "\n";
                     $playlist .= 'Numberofentries=1' . "\n";
@@ -236,13 +309,19 @@ class Index extends ServiceProvider implements IndexInterface
                 } else {
                     throw new \Exception(
                         $this->getTranslator()
-                             ->translate('Format is not currently supported. Supported formats are: pls, m3u', 'mp3')
+                             ->translate(
+                                 'Format is not currently supported. Supported formats are: pls, m3u',
+                                 'mp3'
+                             )
                     );
                 }
             } else {
                 throw new \Exception(
                     $path . ' ' . $this->getTranslator()
-                                       ->translate('was not found', 'mp3')
+                                       ->translate(
+                                           'was not found',
+                                           'mp3'
+                                       )
                 );
             }
         } catch (\Exception $e) {
@@ -253,7 +332,7 @@ class Index extends ServiceProvider implements IndexInterface
     /**
      * {@inheritdoc}
      */
-    public function DownloadSingle($dir)
+    public function downloadSingle($dir)
     {
         try {
             $path = $this->getBasePath() . rawurldecode($dir);
@@ -265,9 +344,15 @@ class Index extends ServiceProvider implements IndexInterface
                 header("Content-Disposition: attachment; filename=" . basename($path));
                 header("Content-Length: " . filesize($path));
 
-                $handle = fopen($path, 'rb');
+                $handle = fopen(
+                    $path,
+                    'rb'
+                );
 
-                $contents = fread($handle, filesize($path));
+                $contents = fread(
+                    $handle,
+                    filesize($path)
+                );
 
                 while ($contents) {
                     echo $contents;
@@ -277,7 +362,10 @@ class Index extends ServiceProvider implements IndexInterface
             } else {
                 throw new \Exception(
                     $path . ' ' . $this->getTranslator()
-                                       ->translate('was not found', 'mp3')
+                                       ->translate(
+                                           'was not found',
+                                           'mp3'
+                                       )
                 );
             }
         } catch (\Exception $e) {
@@ -288,7 +376,7 @@ class Index extends ServiceProvider implements IndexInterface
     /**
      * {@inheritdoc}
      */
-    public function DownloadFolder(array $params)
+    public function downloadFolder(array $params)
     {
         try {
             if (extension_loaded('Phar')) {
@@ -297,7 +385,7 @@ class Index extends ServiceProvider implements IndexInterface
                 clearstatcache();
 
                 if (is_dir($this->getBasePath() . $dir)) {
-                    $array = $this->DirectoryArray($this->getBasePath() . $dir);
+                    $array = $this->directoryArray($this->getBasePath() . $dir);
 
                     if (is_array($array) && count($array) > '0') {
                         $filename = basename($dir) . '.' . $params['format'];
@@ -305,7 +393,10 @@ class Index extends ServiceProvider implements IndexInterface
                         $tar = new \PharData($filename);
 
                         foreach ($array as $value) {
-                            $tar->addFile($this->getBasePath() . $dir . $value, basename($value));
+                            $tar->addFile(
+                                $this->getBasePath() . $dir . $value,
+                                basename($value)
+                            );
                         }
 
                         if ($params['format'] == 'tar') {
@@ -329,13 +420,19 @@ class Index extends ServiceProvider implements IndexInterface
                     } else {
                         throw new \Exception(
                             $this->getTranslator()
-                                 ->translate('Something went wrong and we cannot download this folder', 'mp3')
+                                 ->translate(
+                                     'Something went wrong and we cannot download this folder',
+                                     'mp3'
+                                 )
                         );
                     }
                 } else {
                     throw new \Exception(
                         $this->getBasePath() . $dir . ' ' . $this->getTranslator()
-                                                                 ->translate('was not found', 'mp3')
+                                                                 ->translate(
+                                                                     'was not found',
+                                                                     'mp3'
+                                                                 )
                     );
                 }
             } else {
@@ -357,7 +454,7 @@ class Index extends ServiceProvider implements IndexInterface
      * @return array
      * @throws \Exception
      */
-    private function DirectoryArray($dir)
+    private function directoryArray($dir)
     {
         try {
             $result_array = array();
@@ -370,7 +467,10 @@ class Index extends ServiceProvider implements IndexInterface
                         clearstatcache();
 
                         if (is_dir($dir . '/' . $file) && false) {
-                            $list = $this->DirectoryArray($dir . '/' . $file, '/' . $file);
+                            $list = $this->directoryArray(
+                                $dir . '/' . $file,
+                                '/' . $file
+                            );
 
                             $i = 0;
 
@@ -391,7 +491,14 @@ class Index extends ServiceProvider implements IndexInterface
                              * .mp3
                              * .m4a
                              */
-                            if (is_file($dir . '/' . $file) && substr($file, -4) == '.mp3' || substr($file, -4) == '.m4a') {
+                            if (is_file($dir . '/' . $file) && substr(
+                                                                   $file,
+                                                                   -4
+                                                               ) == '.mp3' || substr(
+                                                                                  $file,
+                                                                                  -4
+                                                                              ) == '.m4a'
+                            ) {
                                 $result_array[] = '/' . $file;
                             }
                         }

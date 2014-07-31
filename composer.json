@@ -1,32 +1,32 @@
 {
-    "name": "diemuzi/mp3",
-    "description": "MP3 Player",
-    "type": "zf-module",
-    "license": "MIT",
-    "keywords": [
+    "name"        : "diemuzi/mp3",
+    "description" : "MP3 Player",
+    "type"        : "zf-module",
+    "license"     : "MIT",
+    "keywords"    : [
         "zf2",
         "module",
         "mp3"
     ],
-    "homepage": "https://github.com/diemuzi/mp3",
-    "authors": [
+    "homepage"    : "https://github.com/diemuzi/mp3",
+    "authors"     : [
         {
-            "name": "Sammie S. Taunton",
-            "email": "diemuzi@gmail.com",
-            "homepage": "http://otwebsoft.com/"
+            "name"     : "Sammie S. Taunton",
+            "email"    : "diemuzi@gmail.com",
+            "homepage" : "http://otwebsoft.com/"
         }
     ],
-    "require": {
-        "php": ">=5.3.3",
-        "zendframework/zendframework": "2.*"
+    "require"     : {
+        "php"                         : ">=5.3.3",
+        "zendframework/zendframework" : "2.*"
     },
-    "suggest": {
-        "ext-phar": "Used to Compress and Download Folders",
-        "ext-gettext": "Used to Translate Text"
+    "suggest"     : {
+        "ext-phar"    : "Used to Compress and Download Folders",
+        "ext-gettext" : "Used to Translate Text"
     },
-    "autoload": {
-        "psr-0": {
-            "Mp3": "src/"
+    "autoload"    : {
+        "psr-0" : {
+            "Mp3" : "src/"
         }
     }
 }

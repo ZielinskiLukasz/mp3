@@ -23,7 +23,7 @@ class Search extends ServiceProvider implements SearchInterface
     /**
      * {@inheritdoc}
      */
-    public function Search($name)
+    public function find($name)
     {
         try {
             $array = array();
@@ -32,7 +32,7 @@ class Search extends ServiceProvider implements SearchInterface
             $total_size = null;
 
             if ($name != null) {
-                $filename = $this->getConfig()['search_file'];
+                $filename = $this->getConfig()['searchFile'];
 
                 clearstatcache();
 
@@ -40,29 +40,48 @@ class Search extends ServiceProvider implements SearchInterface
                     if (filesize($filename) <= '0') {
                         header(
                             'Location: /mp3/search/flash/' . $this->getTranslator()
-                                                                  ->translate('The search file is currently empty. Use the Import Tool to populate the Search Results', 'mp3')
+                                                                  ->translate(
+                                                                      'The search file is currently empty. Use the Import Tool to populate the Search Results',
+                                                                      'mp3'
+                                                                  )
                         );
                         exit;
                     }
 
-                    $handle = fopen($filename, 'r');
-                    $contents = fread($handle, filesize($filename));
+                    $handle = fopen(
+                        $filename,
+                        'r'
+                    );
+                    $contents = fread(
+                        $handle,
+                        filesize($filename)
+                    );
 
-                    $unserialize = preg_grep('/' . $name . '/i', unserialize($contents));
+                    $unserialize = preg_grep(
+                        '/' . $name . '/i',
+                        unserialize($contents)
+                    );
 
                     fclose($handle);
 
                     if (count($unserialize) > '0') {
                         foreach ($unserialize as $search) {
-                            $this->MemoryUsage();
+                            $this->memoryUsage();
 
                             clearstatcache();
 
-                            $dir = preg_replace('/(\/+)/', '/', $search);
+                            $dir = preg_replace(
+                                '/(\/+)/',
+                                '/',
+                                $search
+                            );
 
                             if (is_dir($this->getBasePath() . $search)) {
                                 $array[] = array(
-                                    'name'     => ltrim($dir, '/'),
+                                    'name'     => ltrim(
+                                        $dir,
+                                        '/'
+                                    ),
                                     'location' => $dir,
                                     'type'     => 'dir'
                                 );
@@ -73,7 +92,10 @@ class Search extends ServiceProvider implements SearchInterface
                                 $meta = $calculate->get_metadata();
 
                                 $array[] = array(
-                                    'name'     => ltrim($dir, '/'),
+                                    'name'     => ltrim(
+                                        $dir,
+                                        '/'
+                                    ),
                                     'location' => $dir,
                                     'type'     => 'file',
                                     'bit_rate' => (isset($meta['Bitrate'])) ? $meta['Bitrate'] : '-',
@@ -89,7 +111,10 @@ class Search extends ServiceProvider implements SearchInterface
                 } else {
                     throw new \Exception(
                         $filename . ' ' . $this->getTranslator()
-                                               ->translate('was not found', 'mp3')
+                                               ->translate(
+                                                   'was not found',
+                                                   'mp3'
+                                               )
                     );
                 }
             }
@@ -98,14 +123,18 @@ class Search extends ServiceProvider implements SearchInterface
             $paginator->setDefaultItemCountPerPage((count($array) > '0') ? count($array) : '1');
 
             if ($total_length > '0') {
-                $total_length = sprintf("%d:%02d", ($total_length / 60), $total_length % 60);
+                $total_length = sprintf(
+                    "%d:%02d",
+                    ($total_length / 60),
+                    $total_length % 60
+                );
             }
 
             return array(
                 'paginator'    => $paginator,
                 'total_length' => $total_length,
                 'total_size'   => $total_size,
-                'search'       => (is_file($this->getConfig()['search_file']))
+                'search'       => (is_file($this->getConfig()['searchFile']))
             );
         } catch (\Exception $e) {
             throw $e;
@@ -115,22 +144,31 @@ class Search extends ServiceProvider implements SearchInterface
     /**
      * {@inheritdoc}
      */
-    public function Import()
+    public function import()
     {
         try {
-            ini_set('max_execution_time', '0');
+            ini_set(
+                'max_execution_time',
+                '0'
+            );
 
             clearstatcache();
 
             if (is_dir($this->getBasePath())) {
-                $directory = new \RecursiveDirectoryIterator($this->getBasePath(), \FilesystemIterator::FOLLOW_SYMLINKS);
+                $directory = new \RecursiveDirectoryIterator(
+                    $this->getBasePath(),
+                    \FilesystemIterator::FOLLOW_SYMLINKS
+                );
 
-                $filename = $this->getConfig()['search_file'];
+                $filename = $this->getConfig()['searchFile'];
 
                 clearstatcache();
 
                 if (is_file($filename)) {
-                    $handle = fopen($filename, 'w');
+                    $handle = fopen(
+                        $filename,
+                        'w'
+                    );
 
                     if (is_writable($filename)) {
                         if (!$handle) {
@@ -155,33 +193,63 @@ class Search extends ServiceProvider implements SearchInterface
                         /**
                          * Do not index the main folder
                          */
-                        if (substr($current->getPathName(), 0, -2) != $this->getBasePath()) {
+                        if (substr(
+                                $current->getPathName(),
+                                0,
+                                -2
+                            ) != $this->getBasePath()
+                        ) {
                             /**
                              * Remove . and .. but translate the path into the base folder name
                              */
                             if (basename($current->getPathName()) == '.') {
-                                $array[] = str_replace($this->getBasePath(), '', substr($current->getPathName(), 0, -2));
-                            } elseif (basename($current->getPathName()) != '..' && substr($current->getPathName(), -4) == '.mp3') {
-                                $array[] = str_replace($this->getBasePath(), '', $current->getPathName());
+                                $array[] = str_replace(
+                                    $this->getBasePath(),
+                                    '',
+                                    substr(
+                                        $current->getPathName(),
+                                        0,
+                                        -2
+                                    )
+                                );
+                            } elseif (basename($current->getPathName()) != '..' && substr(
+                                                                                       $current->getPathName(),
+                                                                                       -4
+                                                                                   ) == '.mp3'
+                            ) {
+                                $array[] = str_replace(
+                                    $this->getBasePath(),
+                                    '',
+                                    $current->getPathName()
+                                );
                             }
                         }
                     }
 
                     sort($array);
 
-                    fwrite($handle, serialize($array));
+                    fwrite(
+                        $handle,
+                        serialize($array)
+                    );
 
                     fclose($handle);
                 } else {
                     throw new \Exception(
                         $filename . ' ' . $this->getTranslator()
-                                               ->translate('was not found', 'mp3')
+                                               ->translate(
+                                                   'was not found',
+                                                   'mp3'
+                                               )
                     );
                 }
             } else {
                 throw new \Exception(
                     $this->getBasePath() . ' ' . $this->getTranslator()
-                                                      ->translate('was not found', 'mp3')
+                                                      ->translate(
+                                                          'was not found',
+                                                          'mp3'
+                                                      )
                 );
             }
         } catch (\Exception $e) {
@@ -193,7 +261,7 @@ class Search extends ServiceProvider implements SearchInterface
     /**
      * {@inheritdoc}
      */
-    public function Help($help)
+    public function help($help)
     {
         $green = "\033[49;32m";
         $end = "\033[0m";
@@ -206,10 +274,16 @@ class Search extends ServiceProvider implements SearchInterface
             '--confirm=      Display Confirmation    No          Yes        Yes, No'
         );
 
-        return implode("\n", $array[$help]) . "\n";
+        return implode(
+                   "\n",
+                   $array[$help]
+               ) . "\n";
     }
 
-    public function MemoryUsage()
+    /**
+     * {@inheritdoc}
+     */
+    public function memoryUsage()
     {
         $remaining = (memory_get_peak_usage() - memory_get_usage());
 
@@ -218,8 +292,12 @@ class Search extends ServiceProvider implements SearchInterface
         if ($left < memory_get_peak_usage(true)) {
             header(
                 'Location: /mp3/search/flash/' . $this->getTranslator()
-                                                      ->translate('PHP Ran Out of Memory. Please Try Again', 'mp3')
+                                                      ->translate(
+                                                          'PHP Ran Out of Memory. Please Try Again',
+                                                          'mp3'
+                                                      )
             );
+
             exit;
         }
     }

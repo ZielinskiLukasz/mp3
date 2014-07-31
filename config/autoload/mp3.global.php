@@ -17,7 +17,7 @@ return array(
          *
          * Example: http://example.com/music
          */
-        'base_dir'    => '/music',
+        'baseDir'    => '/music',
 
         /**
          * Format
@@ -32,13 +32,13 @@ return array(
          * If you want to enable the Search Feature
          * You will need a file to populate all the results from your library
          */
-        'search_file' => '/backup/domains/mp3-devel/public/search.txt',
+        'searchFile' => '/backup/domains/mp3-devel/public/search.txt',
 
         /**
          * Full Path to Search
          *
-         * Define the base search_path for your library
+         * Define the base searchPath for your library
          */
-        'search_path' => '/backup/domains/mp3-devel/public/music'
+        'searchPath' => '/backup/domains/mp3-devel/public/music'
     )
 );

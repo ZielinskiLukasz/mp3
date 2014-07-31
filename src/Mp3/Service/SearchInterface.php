@@ -27,14 +27,14 @@ interface SearchInterface
      * @return array|Paginator
      * @throws \Exception
      */
-    public function Search($name);
+    public function find($name);
 
     /**
      * Import Search Results
      *
      * @throws \Exception
      */
-    public function Import();
+    public function import();
 
     /**
      * Parse Help
@@ -43,5 +43,12 @@ interface SearchInterface
      *
      * @return string
      */
-    public function Help($help);
+    public function help($help);
+
+    /**
+     * Determines PHP's Memory Usage Overflow
+     *
+     * @return void
+     */
+    public function memoryUsage();
 }

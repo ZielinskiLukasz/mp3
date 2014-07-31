@@ -27,7 +27,7 @@ interface IndexInterface
      * @return array|Paginator
      * @throws \Exception
      */
-    public function Index(array $params);
+    public function index(array $params);
 
     /**
      * Play All
@@ -37,7 +37,7 @@ interface IndexInterface
      * @return null|string|void
      * @throws \Exception
      */
-    public function PlayAll($dir);
+    public function playAll($dir);
 
     /**
      * Play Single Song
@@ -47,7 +47,7 @@ interface IndexInterface
      * @return null|string|void
      * @throws \Exception
      */
-    public function PlaySingle($dir);
+    public function playSingle($dir);
 
     /**
      * Download Single
@@ -57,7 +57,7 @@ interface IndexInterface
      * @return null|string|void
      * @throws \Exception
      */
-    public function DownloadSingle($dir);
+    public function downloadSingle($dir);
 
     /**
      * Download Folder
@@ -67,5 +67,5 @@ interface IndexInterface
      * @return null|string|void
      * @throws \Exception
      */
-    public function DownloadFolder(array $params);
+    public function downloadFolder(array $params);
 }

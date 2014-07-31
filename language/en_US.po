@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MP3 Player\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-25 12:34-0600\n"
-"PO-Revision-Date: 2014-01-25 12:34-0600\n"
+"POT-Creation-Date: 2014-07-31 09:14-0600\n"
+"PO-Revision-Date: 2014-07-31 09:15-0600\n"
 "Last-Translator: Sammie S. Taunton <diemuzi@gmail.com>\n"
 "Language-Team: OTWebsoft <diemuzi@gmail.com>\n"
 "Language: en\n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.6.3\n"
+"X-Generator: Poedit 1.6.7\n"
 "X-Poedit-SearchPath-0: D:\\Translation\\Mp3\n"
 
 #: D:\Translation\Mp3/mp3.php:2
@@ -93,20 +93,20 @@ msgstr ""
 "Search Results."
 
 #: D:\Translation\Mp3/mp3.php:21
-msgid "base_dir is not currently set"
-msgstr "base_dir is not currently set"
+msgid "baseDir is not currently set"
+msgstr "baseDir is not currently set"
 
 #: D:\Translation\Mp3/mp3.php:22
 msgid "format is not currently set"
 msgstr "format is not currently set"
 
 #: D:\Translation\Mp3/mp3.php:23
-msgid "search_file is not currently set"
-msgstr "search_file is not currently set"
+msgid "searchFile is not currently set"
+msgstr "searchFile is not currently set"
 
 #: D:\Translation\Mp3/mp3.php:24
-msgid "search_path is not currently set"
-msgstr "search_path is not currently set"
+msgid "searchPath is not currently set"
+msgstr "searchPath is not currently set"
 
 #: D:\Translation\Mp3/mp3.php:25
 msgid "was not found"

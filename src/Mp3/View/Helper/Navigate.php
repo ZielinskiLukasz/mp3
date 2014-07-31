@@ -30,7 +30,10 @@ class Navigate extends AbstractHelper
     {
         $navigate = array();
 
-        $explode = explode('/', $path);
+        $explode = explode(
+            '/',
+            $path
+        );
 
         $res = null;
 
