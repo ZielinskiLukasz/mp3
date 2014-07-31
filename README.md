@@ -1,7 +1,7 @@
 MP3 Player
 ==========
 
-**Version 1.1.3** (Last Updated on 03-13-2014)
+**Version 1.1.4** (Last Updated on 07-31-2014)
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
@@ -15,10 +15,15 @@ Introduction
 
 MP3 Player is a web-based music player which streams content to your local PC in several formats.
 
-Supported formats are currently:
+Supported playlist formats are currently:
 
   * PLS (Winamp)
   * M3U (Windows Media Player)
+
+Supported File Extensions:
+
+  * .mp3
+  * .m4a
 
 Support
 -------
@@ -67,3 +72,7 @@ Main Screen
 Play Lists
 
 ![](docs/songs.png)
+
+Search and Download Options Enabled
+
+![](docs/download.png)
