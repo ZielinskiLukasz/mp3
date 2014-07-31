@@ -28,8 +28,8 @@ class Search extends ServiceProvider implements SearchInterface
         try {
             $array = array();
 
-            $total_length = null;
-            $total_size = null;
+            $totalLength = null;
+            $totalSize = null;
 
             if ($name != null) {
                 $filename = $this->getConfig()['searchFile'];
@@ -38,13 +38,27 @@ class Search extends ServiceProvider implements SearchInterface
 
                 if (is_file($filename)) {
                     if (filesize($filename) <= '0') {
-                        header(
-                            'Location: /mp3/search/flash/' . $this->getTranslator()
-                                                                  ->translate(
-                                                                      'The search file is currently empty. Use the Import Tool to populate the Search Results',
-                                                                      'mp3'
-                                                                  )
-                        );
+                        $errorString = 'The search file is currently empty.';
+                        $errorString .= 'Use the Import Tool to populate the Search Results';
+
+                        $translateError = $this->getTranslator()
+                                               ->translate(
+                                                   $errorString,
+                                                   'mp3'
+                                               );
+
+                        $location = $this->getServiceManager()
+                                          ->get('ViewHelperManager')
+                                          ->get('url')
+                                          ->__invoke(
+                                              'mp3-search',
+                                              array(
+                                                  'flash' => $translateError
+                                              )
+                                          );
+
+                        header('Location: ' . $location);
+
                         exit;
                     }
 
@@ -52,6 +66,7 @@ class Search extends ServiceProvider implements SearchInterface
                         $filename,
                         'r'
                     );
+
                     $contents = fread(
                         $handle,
                         filesize($filename)
@@ -103,8 +118,9 @@ class Search extends ServiceProvider implements SearchInterface
                                     'size'     => (isset($meta['Filesize'])) ? $meta['Filesize'] : '-'
                                 );
 
-                                $total_length += (isset($meta['Length'])) ? $meta['Length'] : '0';
-                                $total_size += (isset($meta['Filesize'])) ? $meta['Filesize'] : '0';
+                                $totalLength += (isset($meta['Length'])) ? $meta['Length'] : '0';
+
+                                $totalSize += (isset($meta['Filesize'])) ? $meta['Filesize'] : '0';
                             }
                         }
                     }
@@ -122,18 +138,18 @@ class Search extends ServiceProvider implements SearchInterface
             $paginator = new Paginator(new ArrayAdapter($array));
             $paginator->setDefaultItemCountPerPage((count($array) > '0') ? count($array) : '1');
 
-            if ($total_length > '0') {
-                $total_length = sprintf(
+            if ($totalLength > '0') {
+                $totalLength = sprintf(
                     "%d:%02d",
-                    ($total_length / 60),
-                    $total_length % 60
+                    ($totalLength / 60),
+                    $totalLength % 60
                 );
             }
 
             return array(
                 'paginator'    => $paginator,
-                'total_length' => $total_length,
-                'total_size'   => $total_size,
+                'total_length' => $totalLength,
+                'total_size'   => $totalSize,
                 'search'       => (is_file($this->getConfig()['searchFile']))
             );
         } catch (\Exception $e) {
@@ -164,6 +180,16 @@ class Search extends ServiceProvider implements SearchInterface
 
                 clearstatcache();
 
+                if (!touch($filename)) {
+                    throw new \Exception(
+                        $filename . ' ' . $this->getTranslator()
+                                               ->translate(
+                                                   'could not be created',
+                                                   'mp3'
+                                               )
+                    );
+                }
+
                 if (is_file($filename)) {
                     $handle = fopen(
                         $filename,
@@ -190,14 +216,21 @@ class Search extends ServiceProvider implements SearchInterface
                      * @var \RecursiveDirectoryIterator $current
                      */
                     foreach (new \RecursiveIteratorIterator($directory) as $current) {
+                        $mainFolder = substr(
+                            $current->getPathName(),
+                            0,
+                            -2
+                        );
+
+                        $mainFile = substr(
+                            $current->getPathName(),
+                            -4
+                        );
+
                         /**
                          * Do not index the main folder
                          */
-                        if (substr(
-                                $current->getPathName(),
-                                0,
-                                -2
-                            ) != $this->getBasePath()
+                        if ($mainFolder != $this->getBasePath()
                         ) {
                             /**
                              * Remove . and .. but translate the path into the base folder name
@@ -212,10 +245,8 @@ class Search extends ServiceProvider implements SearchInterface
                                         -2
                                     )
                                 );
-                            } elseif (basename($current->getPathName()) != '..' && substr(
-                                                                                       $current->getPathName(),
-                                                                                       -4
-                                                                                   ) == '.mp3'
+                            } elseif (
+                                basename($current->getPathName()) != '..' && $mainFile == '.mp3'
                             ) {
                                 $array[] = str_replace(
                                     $this->getBasePath(),
@@ -274,10 +305,12 @@ class Search extends ServiceProvider implements SearchInterface
             '--confirm=      Display Confirmation    No          Yes        Yes, No'
         );
 
-        return implode(
-                   "\n",
-                   $array[$help]
-               ) . "\n";
+        $implode = implode(
+            "\n",
+            $array[$help]
+        );
+
+        return $implode . "\n";
     }
 
     /**
@@ -290,13 +323,25 @@ class Search extends ServiceProvider implements SearchInterface
         $left = (memory_get_peak_usage() + $remaining);
 
         if ($left < memory_get_peak_usage(true)) {
-            header(
-                'Location: /mp3/search/flash/' . $this->getTranslator()
-                                                      ->translate(
-                                                          'PHP Ran Out of Memory. Please Try Again',
-                                                          'mp3'
-                                                      )
-            );
+            $errorString = 'PHP Ran Out of Memory. Please Try Again';
+
+            $translateError = $this->getTranslator()
+                                   ->translate(
+                                       $errorString,
+                                       'mp3'
+                                   );
+
+            $location = $this->getServiceManager()
+                             ->get('ViewHelperManager')
+                             ->get('url')
+                             ->__invoke(
+                                 'mp3-search',
+                                 array(
+                                     'flash' => $translateError
+                                 )
+                             );
+
+            header('Location: ' . $location);
 
             exit;
         }

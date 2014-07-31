@@ -153,11 +153,16 @@ echo $this->doctype();
             </a>
             <?php
             if (isset($this->dir)):
-                foreach ($this->navigate(rawurldecode($this->dir)) as $key => $value):
-                    echo ' :: <a href="' . $this->url(
-                            'mp3-index',
-                            array('dir' => $value['url'])
-                        ) . '">' . $value['text'] . '</a>';
+                foreach ($this->navigate(rawurldecode($this->dir)) as $key => $value): ?>
+                    ::
+                    <a href="<?php
+                    echo $this->url(
+                        'mp3-index',
+                        array('dir' => $value['url'])
+                    ); ?>">
+                        <?php echo $value['text']; ?>
+                    </a>
+                <?php
                 endforeach;
             endif;
             ?> ::
@@ -166,7 +171,8 @@ echo $this->doctype();
     </thead>
 </table>
 
-<?php if ($this->search):
+<?php
+if ($this->search):
     $this->formSubmit()
          ->setTranslatorTextDomain('mp3');
 
@@ -177,56 +183,54 @@ echo $this->doctype();
         <thead class="mp3_thead">
         <tr class="mp3_search">
             <td class="mp3_search"
-                style="width: 20%;"><?php echo $this->formText(
+                style="width: 20%;"><?php
+                echo $this->formText(
                     $this->form->get('name')
-                ); ?> <?php echo $this->formSubmit($this->form->get('submit')); ?></td>
-            <?php if ($this->flash != ''): ?>
+                ); ?>
+                <?php echo $this->formSubmit($this->form->get('submit')); ?>
+            </td>
+            <?php
+            if ($this->flash != ''): ?>
                 <td class="mp3_search"
-                    style="width: 80%; color: #FBEC88; "><?php echo $this->translate(
+                    style="width: 80%; color: #FBEC88; "><?php
+                    echo $this->translate(
                         $this->flash,
                         'mp3'
-                    ); ?></td>
-            <?php endif; ?>
+                    ); ?>
+                </td>
+            <?php
+            endif; ?>
         </tr>
         </thead>
     </table>
 
-    <?php echo $this->form()
-                    ->closeTag($this->form); endif; ?>
+    <?php
+    echo $this->form()
+              ->closeTag($this->form);
+endif; ?>
 
 <table class="mp3_table">
     <thead class="mp3_thead">
     <tr>
-        <th class="mp3_border mp3_center"
-            style="width: 50%;"><?php echo $this->translate(
-                'Name',
-                'mp3'
-            ); ?>
-        </th>
-        <th class="mp3_border mp3_center"
-            style="width: 10%;"><?php echo $this->translate(
-                'Bit Rate',
-                'mp3'
-            ); ?>
-        </th>
-        <th class="mp3_border mp3_center"
-            style="width: 10%;"><?php echo $this->translate(
-                'Length',
-                'mp3'
-            ); ?>
-        </th>
-        <th class="mp3_border mp3_center"
-            style="width: 10%;"><?php echo $this->translate(
-                'Size',
-                'mp3'
-            ); ?>
-        </th>
-        <th class="mp3_border mp3_center"
-            style="width: 20%;"><?php echo $this->translate(
-                'Play',
-                'mp3'
-            ); ?>
-        </th>
+        <?php
+        foreach (array(
+                     'Name'     => '50%;',
+                     'Bit Rate' => '10%;',
+                     'Length'   => '10%;',
+                     'Size'     => '10%;',
+                     'Play'     => '20%;'
+                 ) as $key => $value): ?>
+            <th class="mp3_border mp3_center"
+                style="width: <?php
+                echo $value; ?>">
+                <?php
+                echo $this->translate(
+                    $key,
+                    'mp3'
+                ); ?>
+            </th>
+        <?php
+        endforeach; ?>
     </tr>
     </thead>
 
@@ -237,125 +241,161 @@ echo $this->doctype();
     foreach ($this->paginator as $item): $array[] = $item['type']; ?>
         <tr class="mp3_tr">
             <td class="mp3_border mp3_padding"><?php echo $this->escapeHtml($item['name']); ?></td>
-            <td class="mp3_border mp3_center mp3_padding"><?php if ($item['type'] == 'file'): echo $item['bit_rate'];
-                else: ?>-<?php endif; ?></td>
-            <td class="mp3_border mp3_center mp3_padding"><?php if ($item['type'] == 'file'): echo $item['length'];
-                else: ?>-<?php endif; ?></td>
-            <td class="mp3_border mp3_center mp3_padding"><?php if ($item['type'] == 'file'): echo $this->convert(
-                    $item['size']
-                );
-                else: ?>-<?php endif; ?></td>
             <td class="mp3_border mp3_center mp3_padding">
-                <?php if ($item['type'] == 'dir'): ?>
-                    <a href="<?php echo $this->url(
+                <?php
+                if ($item['type'] == 'file'):
+                    echo $item['bit_rate'];
+                else:
+                    echo '-';
+                endif; ?>
+            </td>
+            <td class="mp3_border mp3_center mp3_padding">
+                <?php
+                if ($item['type'] == 'file'):
+                    echo $item['length'];
+                else:
+                    echo '-';
+                endif; ?>
+            </td>
+            <td class="mp3_border mp3_center mp3_padding">
+                <?php
+                if ($item['type'] == 'file'):
+                    echo $this->convert(
+                        $item['size']
+                    );
+                else:
+                    echo '-';
+                endif; ?>
+            </td>
+            <td class="mp3_border mp3_center mp3_padding">
+                <?php
+                if ($item['type'] == 'dir'): ?>
+                    <a href="<?php
+                    echo $this->url(
                         'mp3-index',
                         array('dir' => $item['location'])
-                    ); ?>"><?php echo $this->translate(
+                    ); ?>">
+                        <?php
+                        echo $this->translate(
                             'Open',
                             'mp3'
-                        ); ?></a>
-                <?php endif; ?>
+                        ); ?>
+                    </a>
+                <?php
+                endif; ?>
 
-                <?php if ($item['type'] == 'file'): ?>
-                    <a href="<?php echo $this->url(
+                <?php
+                if ($item['type'] == 'file'): ?>
+                    <a href="<?php
+                    echo $this->url(
                         'mp3-play-single',
                         array('dir' => $item['location'])
-                    ); ?>"><?php echo $this->translate(
+                    ); ?>">
+                        <?php
+                        echo $this->translate(
                             'Play',
                             'mp3'
-                        ); ?></a>
+                        ); ?>
+                    </a>
+
                     <span> | </span>
-                    <a href="<?php echo $this->url(
+
+                    <a href="<?php
+                    echo $this->url(
                         'mp3-download-single',
                         array('dir' => $item['location'])
-                    ); ?>"><?php echo $this->translate(
+                    ); ?>">
+                        <?php
+                        echo $this->translate(
                             'Download',
                             'mp3'
-                        ); ?></a>
-                <?php endif; ?>
+                        ); ?>
+                    </a>
+                <?php
+                endif; ?>
             </td>
         </tr>
-    <?php endforeach; ?>
+    <?php
+    endforeach; ?>
 
     <tr class="mp3_footer">
-        <td><?php echo $this->translate(
+        <td><?php
+            echo $this->translate(
                 'Total Results',
                 'mp3'
             ); ?>
-            : <?php echo $this->paginator->getCurrentItemCount(); ?></td>
+            : <?php
+            echo $this->paginator->getCurrentItemCount(); ?>
+        </td>
         <td>&nbsp;</td>
-        <td class="mp3_border mp3_center"><?php echo $this->total_length; ?></td>
-        <td class="mp3_border mp3_center"><?php echo $this->convert($this->total_size); ?></td>
-        <?php if (count($array) > '0' && !in_array(
+        <td class="mp3_border mp3_center"><?php echo $this->totalLength; ?></td>
+        <td class="mp3_border mp3_center"><?php echo $this->convert($this->totalSize); ?></td>
+        <?php
+        if (count($array) > '0' && !in_array(
                 'dir',
                 $array
             )
         ): ?>
             <td class="mp3_border mp3_center">
-                <a href="<?php echo $this->url(
+                <a href="<?php
+                echo $this->url(
                     'mp3-play-all',
                     array('dir' => $this->path)
-                ); ?>"><?php echo $this->translate(
+                ); ?>">
+                    <?php
+                    echo $this->translate(
                         'Play All',
                         'mp3'
-                    ); ?></a>
-                <?php if (extension_loaded('Phar')): ?>
+                    ); ?>
+                </a>
+                <?php
+                if (extension_loaded('Phar')): ?>
                     <span> | </span>
-                    <select id="download">
-                        <option value="0"><?php echo $this->translate(
-                                'Select Download',
-                                'mp3'
-                            ); ?></option>
-                        <option value="<?php echo $this->url(
-                            'mp3-download-folder',
-                            array(
-                                'dir'    => $this->path,
-                                'format' => 'zip'
-                            )
-                        ); ?>"><?php echo $this->translate(
-                                'Zip',
-                                'mp3'
-                            ); ?>
-                        </option>
-                        <option value="<?php echo $this->url(
-                            'mp3-download-folder',
-                            array(
-                                'dir'    => $this->path,
-                                'format' => 'tar'
-                            )
-                        ); ?>"><?php echo $this->translate(
-                                'Tar',
-                                'mp3'
-                            ); ?>
-                        </option>
-                        <option value="<?php echo $this->url(
-                            'mp3-download-folder',
-                            array(
-                                'dir'    => $this->path,
-                                'format' => 'bz2'
-                            )
-                        ); ?>"><?php echo $this->translate(
-                                'Bz2',
-                                'mp3'
-                            ); ?>
-                        </option>
-                        <option value="<?php echo $this->url(
-                            'mp3-download-folder',
-                            array(
-                                'dir'    => $this->path,
-                                'format' => 'rar'
-                            )
-                        ); ?>"><?php echo $this->translate(
-                                'Rar',
-                                'mp3'
-                            ); ?>
-                        </option>
-                    </select>
-                <?php endif; ?>
+
+                    <form style="display : inline-block;">
+                        <label for="download"></label>
+
+                        <select id="download">
+                            <option value="0"><?php
+                                echo $this->translate(
+                                    'Select Download',
+                                    'mp3'
+                                ); ?>
+                            </option>
+
+                            <?php
+                            foreach (array(
+                                         'zip' => 'Zip',
+                                         'tar' => 'Tar',
+                                         'bz2' => 'Bz2',
+                                         'rar' => 'Rar'
+                                     ) as $key => $value): ?>
+                                <option value="<?php
+                                echo $this->url(
+                                    'mp3-download-folder',
+                                    array(
+                                        'dir'    => $this->path,
+                                        'format' => $key
+                                    )
+                                ); ?>">
+                                    <?php
+                                    echo $this->translate(
+                                        $value,
+                                        'mp3'
+                                    ); ?>
+                                </option>
+                            <?php
+                            endforeach; ?>
+                        </select>
+                    </form>
+                <?php
+                endif; ?>
             </td>
-        <?php else: ?>
+        <?php
+        else: ?>
             <td>&nbsp;</td>
-        <?php endif; ?>
+        <?php
+        endif; ?>
     </tr>
 
     <script>

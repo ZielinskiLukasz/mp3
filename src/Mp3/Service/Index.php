@@ -54,6 +54,7 @@ class Index extends ServiceProvider implements IndexInterface
             $array = array();
 
             $totalLength = null;
+
             $totalSize = null;
 
             clearstatcache();
@@ -144,11 +145,11 @@ class Index extends ServiceProvider implements IndexInterface
             $path = $this->getConfig()['baseDir'] . rawurldecode($dir);
 
             $serverUrl = $this->getServiceManager()
-                         ->get('ViewHelperManager')
-                         ->get('serverurl')
-                         ->__invoke(
-                             '/'
-                         );
+                              ->get('ViewHelperManager')
+                              ->get('serverurl')
+                              ->__invoke(
+                                  '/'
+                              );
 
             clearstatcache();
 
@@ -180,6 +181,7 @@ class Index extends ServiceProvider implements IndexInterface
                         header("Content-Disposition: attachment; filename=playlist.m3u");
 
                         echo $playlist;
+
                         exit;
                     } else {
                         throw new \Exception(
@@ -210,15 +212,17 @@ class Index extends ServiceProvider implements IndexInterface
                                 $length = '-1';
                             }
 
+                            $keyNum = ($key + 1);
+
                             $playlist .= 'File';
-                            $playlist .= ($key + '1');
+                            $playlist .= $keyNum;
                             $playlist .= '=' . $serverUrl;
                             $playlist .= rawurlencode(
                                 $path . $value
                             );
                             $playlist .= "\n";
-                            $playlist .= 'Title' . ($key + '1') . '=' . basename($value) . "\n";
-                            $playlist .= 'Length' . ($key + '1') . '=' . $length . "\n";
+                            $playlist .= 'Title' . $keyNum . '=' . basename($value) . "\n";
+                            $playlist .= 'Length' . $keyNum . '=' . $length . "\n";
                         }
 
                         $playlist .= 'Numberofentries=' . count($array) . "\n";
@@ -228,6 +232,7 @@ class Index extends ServiceProvider implements IndexInterface
                         header("Content-Disposition: attachment; filename=playlist.pls");
 
                         echo $playlist;
+
                         exit;
                     } else {
                         throw new \Exception(
@@ -289,6 +294,7 @@ class Index extends ServiceProvider implements IndexInterface
                     header("Content-Disposition: attachment; filename=playlist.m3u");
 
                     echo $serverUrl . rawurlencode($file);
+
                     exit;
                 } elseif ($this->getConfig()['format'] == 'pls') {
                     /**
@@ -305,6 +311,7 @@ class Index extends ServiceProvider implements IndexInterface
                     $playlist .= 'Version=2' . "\n";
 
                     echo $playlist;
+
                     exit;
                 } else {
                     throw new \Exception(
@@ -472,11 +479,12 @@ class Index extends ServiceProvider implements IndexInterface
                                 '/' . $file
                             );
 
-                            $i = 0;
+                            $count = 0;
 
-                            while ($list[$i]) {
-                                $result_array[] = $list[$i];
-                                $i++;
+                            while ($list[$count]) {
+                                $result_array[] = $list[$count];
+
+                                $count++;
                             }
                         } else {
                             clearstatcache();
@@ -485,20 +493,18 @@ class Index extends ServiceProvider implements IndexInterface
                                 $result_array[] = '/' . $file;
                             }
 
+                            $fileExt = substr(
+                                $file,
+                                -4
+                            );
+
                             /**
                              * Currently Supported Formats
                              *
                              * .mp3
                              * .m4a
                              */
-                            if (is_file($dir . '/' . $file) && substr(
-                                                                   $file,
-                                                                   -4
-                                                               ) == '.mp3' || substr(
-                                                                                  $file,
-                                                                                  -4
-                                                                              ) == '.m4a'
-                            ) {
+                            if (is_file($dir . '/' . $file) && $fileExt == '.mp3' || $fileExt == '.m4a') {
                                 $result_array[] = '/' . $file;
                             }
                         }
