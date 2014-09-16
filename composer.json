@@ -13,14 +13,15 @@
         {
             "name"     : "Sammie S. Taunton",
             "email"    : "diemuzi@gmail.com",
-            "homepage" : "http://otwebsoft.com/"
+            "homepage" : "http://sitegoodies.com/"
         }
     ],
     "require"     : {
         "php"                         : ">=5.3.3",
-        "zendframework/zendframework" : "2.*"
+        "zendframework/zendframework" : "2.3.*"
     },
     "suggest"     : {
+        "ext-intl"    : "ext/intl for i18n features (included in default builds of PHP)",
         "ext-phar"    : "Used to Compress and Download Folders",
         "ext-gettext" : "Used to Translate Text"
     },
