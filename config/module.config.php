@@ -26,9 +26,9 @@ return [
         ]
     ],
     'controllers'     => [
-        'invokables' => [
-            'Mp3\Controller\Index'  => 'Mp3\Controller\IndexController',
-            'Mp3\Controller\Search' => 'Mp3\Controller\SearchController'
+        'factories' => [
+            'Mp3\Controller\Index'  => 'Mp3\Controller\Factory\IndexControllerFactory',
+            'Mp3\Controller\Search' => 'Mp3\Controller\Factory\SearchControllerFactory'
         ]
     ],
     'form_elements'   => [
