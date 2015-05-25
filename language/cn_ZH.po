@@ -1,0 +1,139 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-31 09:14-0600\n"
+"PO-Revision-Date: 2015-04-15 15:11+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.5\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: D:\Translation\Mp3/mp3.php:2
+msgid "Open"
+msgstr "打开"
+
+#: D:\Translation\Mp3/mp3.php:3
+msgid "Name"
+msgstr "名字"
+
+#: D:\Translation\Mp3/mp3.php:4
+msgid "Bit Rate"
+msgstr "位率"
+
+#: D:\Translation\Mp3/mp3.php:5
+msgid "Length"
+msgstr "长度"
+
+#: D:\Translation\Mp3/mp3.php:6
+msgid "Size"
+msgstr "尺寸"
+
+#: D:\Translation\Mp3/mp3.php:7
+msgid "Play"
+msgstr "播放"
+
+#: D:\Translation\Mp3/mp3.php:8
+msgid "Play All"
+msgstr "全部播放"
+
+#: D:\Translation\Mp3/mp3.php:9
+msgid "Download"
+msgstr "下载"
+
+#: D:\Translation\Mp3/mp3.php:10
+msgid "Total Results"
+msgstr "总结果"
+
+#: D:\Translation\Mp3/mp3.php:11
+msgid "MP3 Player"
+msgstr "MP3播放"
+
+#: D:\Translation\Mp3/mp3.php:12
+msgid "Search"
+msgstr "搜索"
+
+#: D:\Translation\Mp3/mp3.php:13
+msgid "Select Download"
+msgstr "选择下载"
+
+#: D:\Translation\Mp3/mp3.php:14
+msgid "Zip"
+msgstr "Zip"
+
+#: D:\Translation\Mp3/mp3.php:15
+msgid "Tar"
+msgstr "Tar"
+
+#: D:\Translation\Mp3/mp3.php:16
+msgid "Bz2"
+msgstr "Bz2"
+
+#: D:\Translation\Mp3/mp3.php:17
+msgid "Rar"
+msgstr "Rar"
+
+#: D:\Translation\Mp3/mp3.php:19
+msgid "PHP Ran Out of Memory. Please Try Again!"
+msgstr "PHP内存溢出,请重试."
+
+#: D:\Translation\Mp3/mp3.php:20
+msgid ""
+"The search file is currently empty. Use the Import Tool to populate the "
+"Search Results."
+msgstr "没有所搜索文件的文件,请使用输入工具汇总搜索结果."
+
+#: D:\Translation\Mp3/mp3.php:21
+msgid "baseDir is not currently set"
+msgstr "基本目录尚未设置"
+
+#: D:\Translation\Mp3/mp3.php:22
+msgid "format is not currently set"
+msgstr "格式尚未设置"
+
+#: D:\Translation\Mp3/mp3.php:23
+msgid "searchFile is not currently set"
+msgstr "搜索文件尚未设置"
+
+#: D:\Translation\Mp3/mp3.php:24
+msgid "searchPath is not currently set"
+msgstr "搜索路径尚未设置"
+
+#: D:\Translation\Mp3/mp3.php:25
+msgid "was not found"
+msgstr "未找到"
+
+#: D:\Translation\Mp3/mp3.php:26
+msgid "Format is not currently supported. Supported formats are: pls, m3u"
+msgstr "格式尚未支持,支持的格式是: pls, m3u"
+
+#: D:\Translation\Mp3/mp3.php:27
+msgid "Something went wrong and we cannot play this folder"
+msgstr "某种错误,此文件夹不能播放."
+
+#: D:\Translation\Mp3/mp3.php:28
+msgid "Something went wrong and we cannot download this folder"
+msgstr "某种错误,此文件夹不能下载."
+
+#: D:\Translation\Mp3/mp3.php:29
+msgid "Phar Extension is not loaded"
+msgstr "Phar扩展不能上载"
+
+#: D:\Translation\Mp3/mp3.php:30
+msgid ""
+"The search file is currently empty. Use the Import Tool to populate the "
+"Search Results"
+msgstr "没有所搜索文件的文件,请使用输入工具汇总搜索结果."
+
+#: D:\Translation\Mp3/mp3.php:31
+msgid "Cannot Open File"
+msgstr "不能打开文件"
+
+#: D:\Translation\Mp3/mp3.php:32
+msgid "File Is Not Writable"
+msgstr "文件不可写入"
