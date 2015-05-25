@@ -18,7 +18,8 @@
     ],
     "require": {
         "php": ">=5.4",
-        "zendframework/zendframework": "2.4.*"
+        "zendframework/zendframework": "2.4.*",
+        "james-heinrich/getid3": "1.9.*"
     },
     "suggest": {
         "ext-intl": "ext/intl for i18n features (included in default builds of PHP)",
