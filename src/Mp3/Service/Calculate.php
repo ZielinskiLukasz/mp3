@@ -36,7 +36,7 @@ class Calculate
      */
     public function __construct($filename)
     {
-        $this->powarr = array(
+        $this->powarr = [
             0 => 1,
             1 => 2,
             2 => 4,
@@ -45,10 +45,10 @@ class Calculate
             5 => 32,
             6 => 64,
             7 => 128
-        );
+        ];
         $this->blockmax = 1024;
 
-        $this->mp3data = array();
+        $this->mp3data = [];
         $this->mp3data['Filesize'] = filesize($filename);
 
         $this->fd = fopen(
@@ -131,10 +131,10 @@ class Calculate
 
             if ($this->mp3data['Bitrate'] == 'bad' || $this->mp3data['Bitrate'] == 'free' || $this->mp3data['Sampling Rate'] == 'unknown' || $this->mp3data['Frame Size'] == 'unknown' || $this->mp3data['Length'] == 'unknown'
             )
-                $this->mp3data = array(
+                $this->mp3data = [
                     'Filesize' => $this->mp3data['Filesize'],
                     'Encoding' => 'Unknown'
-                );
+                ];
         } else {
             if (!isset($this->mp3data['Encoding']))
                 $this->mp3data['Encoding'] = 'Unknown';
@@ -245,7 +245,7 @@ class Calculate
         $bits .= $this->getnextbits(24); //v.v flags
 
         //3 bytes 1 version byte 2 byte flags
-        $arr = array();
+        $arr = [];
         $arr['ID3v2 Major version'] = bindec(
             substr(
                 $bits,
@@ -475,119 +475,119 @@ class Calculate
     public static function bitratelookup(&$mp3)
     {
         //bits               V1,L1  V1,L2  V1,L3  V2,L1  V2,L2&L3
-        $array = array();
-        $array['0000'] = array(
+        $array = [];
+        $array['0000'] = [
             'free',
             'free',
             'free',
             'free',
             'free'
-        );
-        $array['0001'] = array(
+        ];
+        $array['0001'] = [
             '32',
             '32',
             '32',
             '32',
             '8'
-        );
-        $array['0010'] = array(
+        ];
+        $array['0010'] = [
             '64',
             '48',
             '40',
             '48',
             '16'
-        );
-        $array['0011'] = array(
+        ];
+        $array['0011'] = [
             '96',
             '56',
             '48',
             '56',
             '24'
-        );
-        $array['0100'] = array(
+        ];
+        $array['0100'] = [
             '128',
             '64',
             '56',
             '64',
             '32'
-        );
-        $array['0101'] = array(
+        ];
+        $array['0101'] = [
             '160',
             '80',
             '64',
             '80',
             '40'
-        );
-        $array['0110'] = array(
+        ];
+        $array['0110'] = [
             '192',
             '96',
             '80',
             '96',
             '48'
-        );
-        $array['0111'] = array(
+        ];
+        $array['0111'] = [
             '224',
             '112',
             '96',
             '112',
             '56'
-        );
-        $array['1000'] = array(
+        ];
+        $array['1000'] = [
             '256',
             '128',
             '112',
             '128',
             '64'
-        );
-        $array['1001'] = array(
+        ];
+        $array['1001'] = [
             '288',
             '160',
             '128',
             '144',
             '80'
-        );
-        $array['1010'] = array(
+        ];
+        $array['1010'] = [
             '320',
             '192',
             '160',
             '160',
             '96'
-        );
-        $array['1011'] = array(
+        ];
+        $array['1011'] = [
             '352',
             '224',
             '192',
             '176',
             '112'
-        );
-        $array['1100'] = array(
+        ];
+        $array['1100'] = [
             '384',
             '256',
             '224',
             '192',
             '128'
-        );
-        $array['1101'] = array(
+        ];
+        $array['1101'] = [
             '416',
             '320',
             '256',
             '224',
             '144'
-        );
-        $array['1110'] = array(
+        ];
+        $array['1110'] = [
             '448',
             '384',
             '320',
             '256',
             '160'
-        );
-        $array['1111'] = array(
+        ];
+        $array['1111'] = [
             'bad',
             'bad',
             'bad',
             'bad',
             'bad'
-        );
+        ];
 
         $whichcolumn = -1;
         if (self::is_mpeg10($mp3) && self::is_layer1($mp3)) //V1,L1
@@ -616,27 +616,27 @@ class Calculate
     public static function samplelookup(&$mp3)
     {
         //bits               MPEG1   MPEG2   MPEG2.5
-        $array = array();
-        $array['00'] = array(
+        $array = [];
+        $array['00'] = [
             '44100',
             '22050',
             '11025'
-        );
-        $array['01'] = array(
+        ];
+        $array['01'] = [
             '48000',
             '24000',
             '12000'
-        );
-        $array['10'] = array(
+        ];
+        $array['10'] = [
             '32000',
             '16000',
             '8000'
-        );
-        $array['11'] = array(
+        ];
+        $array['11'] = [
             'res',
             'res',
             'res'
-        );
+        ];
 
         $whichcolumn = -1;
         if (self::is_mpeg10($mp3))

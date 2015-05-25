@@ -26,7 +26,7 @@ class Search extends ServiceProvider implements SearchInterface
     public function find($name)
     {
         try {
-            $array = array();
+            $array = [];
 
             $totalLength = null;
             $totalSize = null;
@@ -48,14 +48,14 @@ class Search extends ServiceProvider implements SearchInterface
                                                );
 
                         $location = $this->getServiceManager()
-                                          ->get('ViewHelperManager')
-                                          ->get('url')
-                                          ->__invoke(
-                                              'mp3-search',
-                                              array(
-                                                  'flash' => $translateError
-                                              )
-                                          );
+                                         ->get('ViewHelperManager')
+                                         ->get('url')
+                                         ->__invoke(
+                                             'mp3-search',
+                                             [
+                                                 'flash' => $translateError
+                                             ]
+                                         );
 
                         header('Location: ' . $location);
 
@@ -92,35 +92,45 @@ class Search extends ServiceProvider implements SearchInterface
                             );
 
                             if (is_dir($this->getBasePath() . $search)) {
-                                $array[] = array(
+                                $array[] = [
                                     'name'     => ltrim(
                                         $dir,
                                         '/'
                                     ),
                                     'location' => $dir,
                                     'type'     => 'dir'
-                                );
+                                ];
                             }
 
                             if (is_file($this->getBasePath() . $search)) {
                                 $calculate = new Calculate($this->getBasePath() . $dir);
                                 $meta = $calculate->get_metadata();
 
-                                $array[] = array(
+                                $array[] = [
                                     'name'     => ltrim(
                                         $dir,
                                         '/'
                                     ),
                                     'location' => $dir,
                                     'type'     => 'file',
-                                    'bit_rate' => (isset($meta['Bitrate'])) ? $meta['Bitrate'] : '-',
-                                    'length'   => (isset($meta['Length mm:ss'])) ? $meta['Length mm:ss'] : '-',
-                                    'size'     => (isset($meta['Filesize'])) ? $meta['Filesize'] : '-'
-                                );
+                                    'bit_rate' => (isset($meta['Bitrate']))
+                                        ? $meta['Bitrate']
+                                        : '-',
+                                    'length'   => (isset($meta['Length mm:ss']))
+                                        ? $meta['Length mm:ss']
+                                        : '-',
+                                    'size'     => (isset($meta['Filesize']))
+                                        ? $meta['Filesize']
+                                        : '-'
+                                ];
 
-                                $totalLength += (isset($meta['Length'])) ? $meta['Length'] : '0';
+                                $totalLength += (isset($meta['Length']))
+                                    ? $meta['Length']
+                                    : '0';
 
-                                $totalSize += (isset($meta['Filesize'])) ? $meta['Filesize'] : '0';
+                                $totalSize += (isset($meta['Filesize']))
+                                    ? $meta['Filesize']
+                                    : '0';
                             }
                         }
                     }
@@ -136,7 +146,11 @@ class Search extends ServiceProvider implements SearchInterface
             }
 
             $paginator = new Paginator(new ArrayAdapter($array));
-            $paginator->setDefaultItemCountPerPage((count($array) > '0') ? count($array) : '1');
+            $paginator->setDefaultItemCountPerPage(
+                (count($array) > '0')
+                    ? count($array)
+                    : '1'
+            );
 
             if ($totalLength > '0') {
                 $totalLength = sprintf(
@@ -146,12 +160,12 @@ class Search extends ServiceProvider implements SearchInterface
                 );
             }
 
-            return array(
+            return [
                 'paginator'    => $paginator,
                 'total_length' => $totalLength,
                 'total_size'   => $totalSize,
                 'search'       => (is_file($this->getConfig()['searchFile']))
-            );
+            ];
         } catch (\Exception $e) {
             throw $e;
         }
@@ -210,7 +224,7 @@ class Search extends ServiceProvider implements SearchInterface
                         );
                     }
 
-                    $array = array();
+                    $array = [];
 
                     /**
                      * @var \RecursiveDirectoryIterator $current
@@ -297,13 +311,13 @@ class Search extends ServiceProvider implements SearchInterface
         $green = "\033[49;32m";
         $end = "\033[0m";
 
-        $array['import'] = array(
+        $array['import'] = [
             'Import Search Results',
             $green . 'mp3 import' . $end,
             '',
             'Option          Description             Required    Default    Available Options',
             '--confirm=      Display Confirmation    No          Yes        Yes, No'
-        );
+        ];
 
         $implode = implode(
             "\n",
@@ -336,9 +350,9 @@ class Search extends ServiceProvider implements SearchInterface
                              ->get('url')
                              ->__invoke(
                                  'mp3-search',
-                                 array(
+                                 [
                                      'flash' => $translateError
-                                 )
+                                 ]
                              );
 
             header('Location: ' . $location);

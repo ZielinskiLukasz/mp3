@@ -32,37 +32,37 @@ class Convert extends AbstractHelper
 
         $bytes = floatval($bytes);
 
-        $arBytes = array(
-            array(
+        $arBytes = [
+            [
                 'unit'  => 'TB',
                 'value' => pow(
                     1024,
                     4
                 )
-            ),
-            array(
+            ],
+            [
                 'unit'  => 'GB',
                 'value' => pow(
                     1024,
                     3
                 )
-            ),
-            array(
+            ],
+            [
                 'unit'  => 'MB',
                 'value' => pow(
                     1024,
                     2
                 )
-            ),
-            array(
+            ],
+            [
                 'unit'  => 'KB',
                 'value' => 1024
-            ),
-            array(
+            ],
+            [
                 'unit'  => 'B',
                 'value' => 1
-            )
-        );
+            ]
+        ];
 
         foreach ($arBytes as $arItem) {
             if ($bytes >= $arItem['value']) {

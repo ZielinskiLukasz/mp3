@@ -31,36 +31,39 @@ class Search extends Form
          */
         $this->setName('search');
 
-        $this->setAttribute('method', 'post');
+        $this->setAttribute(
+            'method',
+            'post'
+        );
 
         /**
          * Name
          */
         $this->add(
-            array(
+            [
                 'type'       => 'text',
                 'name'       => 'name',
-                'options'    => array(
+                'options'    => [
                     'label' => 'name',
-                ),
-                'attributes' => array(
+                ],
+                'attributes' => [
                     'id' => 'name'
-                )
-            )
+                ]
+            ]
         );
 
         /**
          * Submit
          */
         $this->add(
-            array(
+            [
                 'type'       => 'submit',
                 'name'       => 'submit',
-                'attributes' => array(
+                'attributes' => [
                     'id'    => 'submit',
                     'value' => 'Search'
-                )
-            )
+                ]
+            ]
         );
     }
 }

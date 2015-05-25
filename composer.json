@@ -1,33 +1,36 @@
 {
-    "name"        : "diemuzi/mp3",
-    "description" : "MP3 Player",
-    "type"        : "zf-module",
-    "license"     : "MIT",
-    "keywords"    : [
+    "name": "diemuzi/mp3",
+    "description": "MP3 Player",
+    "type": "zf-module",
+    "license": "MIT",
+    "keywords": [
         "zf2",
         "module",
         "mp3"
     ],
-    "homepage"    : "https://github.com/diemuzi/mp3",
-    "authors"     : [
+    "homepage": "https://github.com/diemuzi/mp3",
+    "authors": [
         {
-            "name"     : "Sammie S. Taunton",
-            "email"    : "diemuzi@gmail.com",
-            "homepage" : "http://sitegoodies.com/"
+            "name": "Sammie S. Taunton",
+            "email": "diemuzi@gmail.com",
+            "homepage": "http://sitegoodies.com/"
         }
     ],
-    "require"     : {
-        "php"                         : ">=5.3.3",
-        "zendframework/zendframework" : "2.3.*"
+    "require": {
+        "php": ">=5.4",
+        "zendframework/zendframework": "2.4.*"
     },
-    "suggest"     : {
-        "ext-intl"    : "ext/intl for i18n features (included in default builds of PHP)",
-        "ext-phar"    : "Used to Compress and Download Folders",
-        "ext-gettext" : "Used to Translate Text"
+    "suggest": {
+        "ext-intl": "ext/intl for i18n features (included in default builds of PHP)",
+        "ext-phar": "Used to Compress and Download Folders",
+        "ext-gettext": "Used to Translate Text"
     },
-    "autoload"    : {
-        "psr-0" : {
-            "Mp3" : "src/"
-        }
+    "autoload": {
+        "psr-0": {
+            "Mp3": "src/"
+        },
+        "classmap": [
+            "./Module.php"
+        ]
     }
 }

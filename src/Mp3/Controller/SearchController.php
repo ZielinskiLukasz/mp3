@@ -50,10 +50,10 @@ class SearchController extends AbstractActionController
                 return $this->redirect()
                             ->toRoute(
                                 'mp3-search',
-                                array(
+                                [
                                     'name' => $this->params()
                                                    ->fromPost('name')
-                                )
+                                ]
                             );
             }
         }
@@ -69,7 +69,7 @@ class SearchController extends AbstractActionController
         $viewModel
             ->setTemplate('mp3/mp3/search')
             ->setVariables(
-                array(
+                [
                     'form'         => $form,
                     'paginator'    => $service['paginator'],
                     'total_length' => $service['total_length'],
@@ -77,7 +77,7 @@ class SearchController extends AbstractActionController
                     'search'       => $service['search'],
                     'flash'        => $this->params()
                                            ->fromRoute('flash')
-                )
+                ]
             );
 
         return $viewModel;
@@ -130,7 +130,7 @@ class SearchController extends AbstractActionController
                      ->trigger(
                          'Mp3Help',
                          null,
-                         array('help' => 'import')
+                         ['help' => 'import']
                      );
 
                 exit;

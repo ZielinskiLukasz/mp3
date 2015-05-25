@@ -8,132 +8,132 @@
  * @link      https://github.com/diemuzi/mp3 MP3 Player
  */
 
-return array(
-    'router'          => array(
-        'routes' => array(
-            'mp3-index'           => array(
+return [
+    'router'          => [
+        'routes' => [
+            'mp3-index'           => [
                 'type'    => 'segment',
-                'options' => array(
+                'options' => [
                     'route'    => '/mp3/index[:dir]',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Mp3\Controller\Index',
                         'action'     => 'index'
-                    )
-                )
-            ),
-            'mp3-play-all'        => array(
+                    ]
+                ]
+            ],
+            'mp3-play-all'        => [
                 'type'    => 'segment',
-                'options' => array(
+                'options' => [
                     'route'    => '/mp3/play/all[:dir]',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Mp3\Controller\Index',
                         'action'     => 'playall'
-                    )
-                )
-            ),
-            'mp3-play-single'     => array(
+                    ]
+                ]
+            ],
+            'mp3-play-single'     => [
                 'type'    => 'segment',
-                'options' => array(
+                'options' => [
                     'route'    => '/mp3/play/single[:dir]',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Mp3\Controller\Index',
                         'action'     => 'playsingle'
-                    )
-                )
-            ),
-            'mp3-download-folder' => array(
+                    ]
+                ]
+            ],
+            'mp3-download-folder' => [
                 'type'    => 'segment',
-                'options' => array(
+                'options' => [
                     'route'    => '/mp3/download/folder[:dir][/format/:format]',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Mp3\Controller\Index',
                         'action'     => 'downloadfolder'
-                    )
-                )
-            ),
-            'mp3-download-single' => array(
+                    ]
+                ]
+            ],
+            'mp3-download-single' => [
                 'type'    => 'segment',
-                'options' => array(
+                'options' => [
                     'route'    => '/mp3/download/single[:dir]',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Mp3\Controller\Index',
                         'action'     => 'downloadsingle'
-                    )
-                )
-            ),
-            'mp3-search'          => array(
+                    ]
+                ]
+            ],
+            'mp3-search'          => [
                 'type'    => 'segment',
-                'options' => array(
+                'options' => [
                     'route'    => '/mp3/search[/name/][:name][/flash/:flash]',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'Mp3\Controller\Search',
                         'action'     => 'search',
                         'name'       => null
-                    )
-                )
-            )
-        )
-    ),
-    'console'         => array(
-        'router' => array(
-            'routes' => array(
-                'mp3-import' => array(
-                    'options' => array(
+                    ]
+                ]
+            ]
+        ]
+    ],
+    'console'         => [
+        'router' => [
+            'routes' => [
+                'mp3-import' => [
+                    'options' => [
                         'route'    => 'mp3 import [--help] [--confirm=]',
-                        'defaults' => array(
+                        'defaults' => [
                             'controller' => 'Mp3\Controller\Search',
                             'action'     => 'import',
                             'confirm'    => 'yes'
-                        )
-                    )
-                )
-            )
-        )
-    ),
-    'translator'      => array(
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+    'translator'      => [
         'locale'                    => 'en_US',
-        'translation_file_patterns' => array(
-            array(
+        'translation_file_patterns' => [
+            [
                 'type'        => 'gettext',
                 'base_dir'    => dirname(__DIR__) . '/language',
                 'pattern'     => '%s.mo',
                 'text_domain' => 'mp3'
-            )
-        )
-    ),
-    'controllers'     => array(
-        'invokables' => array(
+            ]
+        ]
+    ],
+    'controllers'     => [
+        'invokables' => [
             'Mp3\Controller\Index'  => 'Mp3\Controller\IndexController',
             'Mp3\Controller\Search' => 'Mp3\Controller\SearchController'
-        )
-    ),
-    'view_manager'    => array(
+        ]
+    ],
+    'view_manager'    => [
         'template_map'        => include_once dirname(__DIR__) . '/template_map.php',
-        'template_path_stack' => array(
+        'template_path_stack' => [
             'mp3' => dirname(__DIR__) . '/view'
-        )
-    ),
-    'view_helpers'    => array(
-        'invokables' => array(
+        ]
+    ],
+    'view_helpers'    => [
+        'invokables' => [
             'convert'  => 'Mp3\View\Helper\Convert',
             'navigate' => 'Mp3\View\Helper\Navigate'
-        )
-    ),
-    'service_manager' => array(
-        'invokables' => array(
+        ]
+    ],
+    'service_manager' => [
+        'invokables' => [
             'Mp3\Service\Calculate' => 'Mp3\Service\Calculate',
             'Mp3\Service\Index'     => 'Mp3\Service\Index',
             'Mp3\Service\Search'    => 'Mp3\Service\Search'
-        )
-    ),
-    'form_elements'   => array(
-        'invokables' => array(
+        ]
+    ],
+    'form_elements'   => [
+        'invokables' => [
             'Mp3\Form\Search' => 'Mp3\Form\Search'
-        )
-    ),
-    'input_filters'   => array(
-        'invokables' => array(
+        ]
+    ],
+    'input_filters'   => [
+        'invokables' => [
             'Mp3\InputFilter\Search' => 'Mp3\InputFilter\Search'
-        )
-    )
-);
+        ]
+    ]
+];

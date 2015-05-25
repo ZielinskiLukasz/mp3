@@ -158,11 +158,11 @@ echo $this->doctype();
                     <a href="<?php
                     echo $this->url(
                         'mp3-index',
-                        array('dir' => $value['url'])
+                        ['dir' => $value['url']]
                     ); ?>">
                         <?php echo $value['text']; ?>
                     </a>
-                <?php
+                    <?php
                 endforeach;
             endif;
             ?> ::
@@ -203,7 +203,7 @@ if ($this->search):
                         'mp3'
                     ); ?>
                 </td>
-            <?php
+                <?php
             endif; ?>
         </tr>
         </thead>
@@ -218,13 +218,13 @@ endif; ?>
     <thead class="mp3_thead">
     <tr>
         <?php
-        foreach (array(
+        foreach ([
                      'Name'     => '50%;',
                      'Bit Rate' => '10%;',
                      'Length'   => '10%;',
                      'Size'     => '10%;',
                      'Play'     => '20%;'
-                 ) as $key => $value): ?>
+                 ] as $key => $value): ?>
             <th class="mp3_border mp3_center"
                 style="width: <?php
                 echo $value; ?>">
@@ -234,14 +234,14 @@ endif; ?>
                     'mp3'
                 ); ?>
             </th>
-        <?php
+            <?php
         endforeach; ?>
     </tr>
     </thead>
 
     <tbody class="mp3_border">
     <?php
-    $array = array();
+    $array = [];
 
     foreach ($this->paginator as $item): $array[] = $item['type']; ?>
         <tr class="mp3_tr">
@@ -278,7 +278,7 @@ endif; ?>
                     <a href="<?php
                     echo $this->url(
                         'mp3-index',
-                        array('dir' => $item['location'])
+                        ['dir' => $item['location']]
                     ); ?>">
                         <?php
                         echo $this->translate(
@@ -286,7 +286,7 @@ endif; ?>
                             'mp3'
                         ); ?>
                     </a>
-                <?php
+                    <?php
                 endif; ?>
 
                 <?php
@@ -294,7 +294,7 @@ endif; ?>
                     <a href="<?php
                     echo $this->url(
                         'mp3-play-single',
-                        array('dir' => $item['location'])
+                        ['dir' => $item['location']]
                     ); ?>">
                         <?php
                         echo $this->translate(
@@ -308,7 +308,7 @@ endif; ?>
                     <a href="<?php
                     echo $this->url(
                         'mp3-download-single',
-                        array('dir' => $item['location'])
+                        ['dir' => $item['location']]
                     ); ?>">
                         <?php
                         echo $this->translate(
@@ -316,11 +316,11 @@ endif; ?>
                             'mp3'
                         ); ?>
                     </a>
-                <?php
+                    <?php
                 endif; ?>
             </td>
         </tr>
-    <?php
+        <?php
     endforeach; ?>
 
     <tr class="mp3_footer">
@@ -345,7 +345,7 @@ endif; ?>
                 <a href="<?php
                 echo $this->url(
                     'mp3-play-all',
-                    array('dir' => $this->path)
+                    ['dir' => $this->path]
                 ); ?>">
                     <?php
                     echo $this->translate(
@@ -369,19 +369,19 @@ endif; ?>
                             </option>
 
                             <?php
-                            foreach (array(
+                            foreach ([
                                          'zip' => 'Zip',
                                          'tar' => 'Tar',
                                          'bz2' => 'Bz2',
                                          'rar' => 'Rar'
-                                     ) as $key => $value): ?>
+                                     ] as $key => $value): ?>
                                 <option value="<?php
                                 echo $this->url(
                                     'mp3-download-folder',
-                                    array(
+                                    [
                                         'dir'    => $this->path,
                                         'format' => $key
-                                    )
+                                    ]
                                 ); ?>">
                                     <?php
                                     echo $this->translate(
@@ -389,17 +389,17 @@ endif; ?>
                                         'mp3'
                                     ); ?>
                                 </option>
-                            <?php
+                                <?php
                             endforeach; ?>
                         </select>
                     </form>
-                <?php
+                    <?php
                 endif; ?>
             </td>
-        <?php
+            <?php
         else: ?>
             <td>&nbsp;</td>
-        <?php
+            <?php
         endif; ?>
     </tr>
 

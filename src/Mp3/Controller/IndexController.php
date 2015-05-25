@@ -49,10 +49,10 @@ class IndexController extends AbstractActionController
                 return $this->redirect()
                             ->toRoute(
                                 'mp3-search',
-                                array(
+                                [
                                     'name' => $this->params()
                                                    ->fromPost('name')
-                                )
+                                ]
                             );
             }
         }
@@ -68,7 +68,7 @@ class IndexController extends AbstractActionController
         $viewModel
             ->setTemplate('mp3/mp3/search')
             ->setVariables(
-                array(
+                [
                     'form'        => $form,
                     'paginator'   => $service['paginator'],
                     'path'        => $service['path'],
@@ -77,7 +77,7 @@ class IndexController extends AbstractActionController
                     'search'      => $service['search'],
                     'dir'         => $this->params()
                                           ->fromRoute('dir')
-                )
+                ]
             );
 
         return $viewModel;
@@ -117,12 +117,12 @@ class IndexController extends AbstractActionController
         $this->getServiceLocator()
              ->get('Mp3\Service\Index')
              ->downloadFolder(
-                 array(
+                 [
                      'dir'    => $this->params()
                                       ->fromRoute('dir'),
                      'format' => $this->params()
                                       ->fromRoute('format')
-                 )
+                 ]
              );
     }
 

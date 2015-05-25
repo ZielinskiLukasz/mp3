@@ -8,8 +8,8 @@
  * @link      https://github.com/diemuzi/mp3 MP3 Player
  */
 
-return array(
-    'mp3' => array(
+return [
+    'mp3' => [
         /**
          * Base Directory
          *
@@ -24,7 +24,7 @@ return array(
          *
          * Support types are; pls, m3u
          */
-        'format'      => 'pls',
+        'format'     => 'pls',
 
         /**
          * Full Path to search.txt
@@ -40,5 +40,5 @@ return array(
          * Define the base search path for your library
          */
         'searchPath' => '/backup/domains/mp3-devel/public/music'
-    )
-);
+    ]
+];

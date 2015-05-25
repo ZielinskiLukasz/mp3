@@ -116,12 +116,12 @@ abstract class ServiceProvider implements ServiceManagerAwareInterface
             );
         }
 
-        return array(
+        return [
             'baseDir'    => $config['mp3']['baseDir'],
             'format'     => $config['mp3']['format'],
             'searchFile' => $config['mp3']['searchFile'],
             'searchPath' => $config['mp3']['searchPath']
-        );
+        ];
     }
 
     /**

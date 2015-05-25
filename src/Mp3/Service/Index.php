@@ -51,7 +51,7 @@ class Index extends ServiceProvider implements IndexInterface
                 $dir = null;
             }
 
-            $array = array();
+            $array = [];
 
             $totalLength = null;
 
@@ -67,40 +67,56 @@ class Index extends ServiceProvider implements IndexInterface
                      * Directory
                      */
                     if (is_dir($baseDir . $location)) {
-                        $array[] = array(
+                        $array[] = [
                             'name'     => ltrim(
                                 $location,
                                 '/'
                             ),
-                            'location' => ($dir != null) ? $dir . $location : $location,
+                            'location' => ($dir != null)
+                                ? $dir . $location
+                                : $location,
                             'type'     => 'dir'
-                        );
+                        ];
                     }
 
                     /**
                      * File
                      */
                     if (is_file($baseDir . '/' . $location)) {
-                        $path = ($dir != null) ? $baseDir . $location : $location;
+                        $path = ($dir != null)
+                            ? $baseDir . $location
+                            : $location;
 
                         $calculate = new Calculate($path);
                         $meta = $calculate->get_metadata();
 
-                        $array[] = array(
+                        $array[] = [
                             'name'     => ltrim(
                                 $location,
                                 '/'
                             ),
-                            'location' => ($dir != null) ? $dir . $location : $location,
+                            'location' => ($dir != null)
+                                ? $dir . $location
+                                : $location,
                             'type'     => 'file',
-                            'bit_rate' => (isset($meta['Bitrate'])) ? $meta['Bitrate'] : '-',
-                            'length'   => (isset($meta['Length mm:ss'])) ? $meta['Length mm:ss'] : '-',
-                            'size'     => (isset($meta['Filesize'])) ? $meta['Filesize'] : '-'
-                        );
+                            'bit_rate' => (isset($meta['Bitrate']))
+                                ? $meta['Bitrate']
+                                : '-',
+                            'length'   => (isset($meta['Length mm:ss']))
+                                ? $meta['Length mm:ss']
+                                : '-',
+                            'size'     => (isset($meta['Filesize']))
+                                ? $meta['Filesize']
+                                : '-'
+                        ];
 
-                        $totalLength += (isset($meta['Length'])) ? $meta['Length'] : '0';
+                        $totalLength += (isset($meta['Length']))
+                            ? $meta['Length']
+                            : '0';
 
-                        $totalSize += (isset($meta['Filesize'])) ? $meta['Filesize'] : '0';
+                        $totalSize += (isset($meta['Filesize']))
+                            ? $meta['Filesize']
+                            : '0';
                     }
                 }
             } else {
@@ -114,7 +130,11 @@ class Index extends ServiceProvider implements IndexInterface
             }
 
             $paginator = new Paginator(new ArrayAdapter($array));
-            $paginator->setDefaultItemCountPerPage((count($array) > '0') ? count($array) : '1');
+            $paginator->setDefaultItemCountPerPage(
+                (count($array) > '0')
+                    ? count($array)
+                    : '1'
+            );
 
             if ($totalLength > '0') {
                 $totalLength = sprintf(
@@ -124,13 +144,15 @@ class Index extends ServiceProvider implements IndexInterface
                 );
             }
 
-            return array(
+            return [
                 'paginator'    => $paginator,
-                'path'         => ($dir != null) ? $dir : null,
+                'path'         => ($dir != null)
+                    ? $dir
+                    : null,
                 'total_length' => $totalLength,
                 'total_size'   => $totalSize,
                 'search'       => (is_file($this->getConfig()['searchFile']))
-            );
+            ];
         } catch (\Exception $e) {
             throw $e;
         }
@@ -464,7 +486,7 @@ class Index extends ServiceProvider implements IndexInterface
     private function directoryArray($dir)
     {
         try {
-            $result_array = array();
+            $result_array = [];
 
             $handle = opendir($dir);
 

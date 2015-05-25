@@ -28,47 +28,47 @@ class Search extends InputFilter
          * Help
          */
         $this->add(
-            array(
+            [
                 'name'     => 'help',
                 'required' => false,
-                'filters'  => array(
-                    array(
+                'filters'  => [
+                    [
                         'name' => 'stringtrim'
-                    ),
-                    array(
+                    ],
+                    [
                         'name' => 'stringtolower'
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
 
         /**
          * Confirm
          */
         $this->add(
-            array(
+            [
                 'name'       => 'confirm',
                 'required'   => false,
-                'filters'    => array(
-                    array(
+                'filters'    => [
+                    [
                         'name' => 'stringtrim'
-                    ),
-                    array(
+                    ],
+                    [
                         'name' => 'stringtolower'
-                    )
-                ),
-                'validators' => array(
-                    array(
+                    ]
+                ],
+                'validators' => [
+                    [
                         'name' => 'alpha'
-                    ),
-                    array(
+                    ],
+                    [
                         'name'    => 'regex',
-                        'options' => array(
+                        'options' => [
                             'pattern' => '/^(yes|no)$/'
-                        )
-                    )
-                )
-            )
+                        ]
+                    ]
+                ]
+            ]
         );
     }
 }

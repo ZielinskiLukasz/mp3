@@ -28,7 +28,7 @@ class Navigate extends AbstractHelper
      */
     public function __invoke($path)
     {
-        $navigate = array();
+        $navigate = [];
 
         $explode = explode(
             '/',
@@ -40,10 +40,10 @@ class Navigate extends AbstractHelper
         for ($i = 1; $i < count($explode); $i++) {
             $res .= '/' . $explode[$i];
 
-            $navigate[] = array(
+            $navigate[] = [
                 'url'  => $res,
                 'text' => $explode[$i]
-            );
+            ];
         }
 
         return $navigate;
