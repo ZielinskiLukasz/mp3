@@ -10,45 +10,48 @@
 
 namespace Mp3\Service;
 
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\Mvc\I18n\Translator;
+use Zend\View\HelperPluginManager;
 
 /**
  * Class ServiceProvider
  *
  * @package Mp3\Service
  */
-abstract class ServiceProvider implements ServiceManagerAwareInterface
+abstract class ServiceProvider
 {
     /**
-     * Protected Variable
-     *
-     * @var ServiceManager $serviceManager
+     * @var array $config
      */
-    protected $serviceManager;
+    protected $config;
 
     /**
-     * Get ServiceManager
-     *
-     * @return ServiceManager
+     * @var HelperPluginManager $serverUrl
      */
-    public function getServiceManager()
-    {
-        return $this->serviceManager;
-    }
+    protected $serverUrl;
 
     /**
-     * Set ServiceManager
-     *
-     * @param ServiceManager $serviceManager
-     *
-     * @return $this
+     * @var Translator $translate
      */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
+    protected $translate;
 
-        return $this;
+    /**
+     * Construct
+     *
+     * @param array               $config
+     * @param HelperPluginManager $serverUrl
+     * @param Translator          $translate
+     */
+    public function __construct(
+        array $config,
+        $serverUrl,
+        Translator $translate
+    ) {
+        $this->config = $config;
+
+        $this->serverUrl = $serverUrl;
+
+        $this->translate = $translate;
     }
 
     /**
@@ -56,7 +59,7 @@ abstract class ServiceProvider implements ServiceManagerAwareInterface
      *
      * @return string
      */
-    public function getBasePath()
+    protected function getBasePath()
     {
         if (php_sapi_name() == 'cli') {
             return $this->getConfig()['searchPath'];
@@ -71,48 +74,43 @@ abstract class ServiceProvider implements ServiceManagerAwareInterface
      * @return array
      * @throws \Exception
      */
-    public function getConfig()
+    protected function getConfig()
     {
-        $config = $this->getServiceManager()
-                       ->get('config');
+        $config = $this->config;
 
         if (!isset($config['mp3']['baseDir'])) {
             throw new \Exception(
-                $this->getTranslator()
-                     ->translate(
-                         'baseDir is not currently set',
-                         'mp3'
-                     )
+                $this->translate->translate(
+                    'baseDir is not currently set',
+                    'mp3'
+                )
             );
         }
 
         if (!isset($config['mp3']['format'])) {
             throw new \Exception(
-                $this->getTranslator()
-                     ->translate(
-                         'format is not currently set',
-                         'mp3'
-                     )
+                $this->translate->translate(
+                    'format is not currently set',
+                    'mp3'
+                )
             );
         }
 
         if (!isset($config['mp3']['searchFile'])) {
             throw new \Exception(
-                $this->getTranslator()
-                     ->translate(
-                         'searchFile is not currently set',
-                         'mp3'
-                     )
+                $this->translate->translate(
+                    'searchFile is not currently set',
+                    'mp3'
+                )
             );
         }
 
         if (!isset($config['mp3']['searchPath'])) {
             throw new \Exception(
-                $this->getTranslator()
-                     ->translate(
-                         'searchPath is not currently set',
-                         'mp3'
-                     )
+                $this->translate->translate(
+                    'searchPath is not currently set',
+                    'mp3'
+                )
             );
         }
 
@@ -122,16 +120,5 @@ abstract class ServiceProvider implements ServiceManagerAwareInterface
             'searchFile' => $config['mp3']['searchFile'],
             'searchPath' => $config['mp3']['searchPath']
         ];
-    }
-
-    /**
-     * Get Translator
-     *
-     * @return \Zend\I18n\Translator\Translator
-     */
-    public function getTranslator()
-    {
-        return $this->getServiceManager()
-                    ->get('MvcTranslator');
     }
 }
