@@ -9,6 +9,38 @@
  */
 
 return [
+    'console'         => [
+        'router' => [
+            'routes' => [
+                'mp3-import' => [
+                    'options' => [
+                        'route'    => 'mp3 import [--help] [--confirm=]',
+                        'defaults' => [
+                            'controller' => 'Mp3\Controller\Search',
+                            'action'     => 'import',
+                            'confirm'    => 'yes'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+    'controllers'     => [
+        'invokables' => [
+            'Mp3\Controller\Index'  => 'Mp3\Controller\IndexController',
+            'Mp3\Controller\Search' => 'Mp3\Controller\SearchController'
+        ]
+    ],
+    'form_elements'   => [
+        'invokables' => [
+            'Mp3\Form\Search' => 'Mp3\Form\Search'
+        ]
+    ],
+    'input_filters'   => [
+        'invokables' => [
+            'Mp3\InputFilter\Search' => 'Mp3\InputFilter\Search'
+        ]
+    ],
     'router'          => [
         'routes' => [
             'mp3-index'           => [
@@ -74,43 +106,21 @@ return [
             ]
         ]
     ],
-    'console'         => [
-        'router' => [
-            'routes' => [
-                'mp3-import' => [
-                    'options' => [
-                        'route'    => 'mp3 import [--help] [--confirm=]',
-                        'defaults' => [
-                            'controller' => 'Mp3\Controller\Search',
-                            'action'     => 'import',
-                            'confirm'    => 'yes'
-                        ]
-                    ]
-                ]
-            ]
+    'service_manager' => [
+        'invokables' => [
+            'Mp3\Service\Calculate' => 'Mp3\Service\Calculate',
+            'Mp3\Service\Index'     => 'Mp3\Service\Index',
+            'Mp3\Service\Search'    => 'Mp3\Service\Search'
         ]
     ],
     'translator'      => [
-        'locale'                    => 'en_US',
         'translation_file_patterns' => [
             [
                 'type'        => 'gettext',
-                'base_dir'    => dirname(__DIR__) . '/language',
+                'base_dir'    => __DIR__ . '/../language',
                 'pattern'     => '%s.mo',
                 'text_domain' => 'mp3'
             ]
-        ]
-    ],
-    'controllers'     => [
-        'invokables' => [
-            'Mp3\Controller\Index'  => 'Mp3\Controller\IndexController',
-            'Mp3\Controller\Search' => 'Mp3\Controller\SearchController'
-        ]
-    ],
-    'view_manager'    => [
-        'template_map'        => include_once dirname(__DIR__) . '/template_map.php',
-        'template_path_stack' => [
-            'mp3' => dirname(__DIR__) . '/view'
         ]
     ],
     'view_helpers'    => [
@@ -119,21 +129,9 @@ return [
             'navigate' => 'Mp3\View\Helper\Navigate'
         ]
     ],
-    'service_manager' => [
-        'invokables' => [
-            'Mp3\Service\Calculate' => 'Mp3\Service\Calculate',
-            'Mp3\Service\Index'     => 'Mp3\Service\Index',
-            'Mp3\Service\Search'    => 'Mp3\Service\Search'
-        ]
-    ],
-    'form_elements'   => [
-        'invokables' => [
-            'Mp3\Form\Search' => 'Mp3\Form\Search'
-        ]
-    ],
-    'input_filters'   => [
-        'invokables' => [
-            'Mp3\InputFilter\Search' => 'Mp3\InputFilter\Search'
+    'view_manager'    => [
+        'template_path_stack' => [
+            'mp3' => __DIR__ . '/../view'
         ]
     ]
 ];
