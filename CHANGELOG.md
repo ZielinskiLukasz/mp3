@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 1.2.0 (2015-05-25)
+
+- Removed PHP 5.3 Support
+    - PHP >= 5.4 is now required
+
+- Chinease Language Support
+    - Special thanks to Zhang Meng
+
+- Performance Enhancements
+
 ## 1.1.4 (2014-07-31)
 
 - Resolved many PSR-2 issues
