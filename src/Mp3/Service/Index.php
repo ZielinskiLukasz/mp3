@@ -126,15 +126,15 @@ class Index extends ServiceProvider implements IndexInterface
                 }
             } else {
                 throw new \Exception(
-                    $baseDir . ' ' . $this->getTranslator()
-                                          ->translate(
-                                              'was not found',
-                                              'mp3'
-                                          )
+                    $baseDir . ' ' . $this->translate->translate(
+                        'was not found',
+                        'mp3'
+                    )
                 );
             }
 
             $paginator = new Paginator(new ArrayAdapter($array));
+
             $paginator->setDefaultItemCountPerPage(
                 (count($array) > '0')
                     ? count($array)
@@ -176,12 +176,10 @@ class Index extends ServiceProvider implements IndexInterface
         try {
             $path = $this->getConfig()['baseDir'] . rawurldecode($dir);
 
-            $serverUrl = $this->getServiceManager()
-                              ->get('ViewHelperManager')
-                              ->get('serverurl')
-                              ->__invoke(
-                                  '/'
-                              );
+            $serverUrl = $this->serverUrl->get('serverurl')
+                                         ->__invoke(
+                                             '/'
+                                         );
 
             clearstatcache();
 
@@ -217,11 +215,10 @@ class Index extends ServiceProvider implements IndexInterface
                         exit;
                     } else {
                         throw new \Exception(
-                            $this->getTranslator()
-                                 ->translate(
-                                     'Format is not currently supported. Supported formats are: pls, m3u',
-                                     'mp3'
-                                 )
+                            $this->translate->translate(
+                                'Format is not currently supported. Supported formats are: pls, m3u',
+                                'mp3'
+                            )
                         );
                     }
                 } elseif ($this->getConfig()['format'] == 'pls') {
@@ -268,29 +265,26 @@ class Index extends ServiceProvider implements IndexInterface
                         exit;
                     } else {
                         throw new \Exception(
-                            $this->getTranslator()
-                                 ->translate(
-                                     'Something went wrong and we cannot play this folder',
-                                     'mp3'
-                                 )
+                            $this->translate->translate(
+                                'Something went wrong and we cannot play this folder',
+                                'mp3'
+                            )
                         );
                     }
                 } else {
                     throw new \Exception(
-                        $this->getTranslator()
-                             ->translate(
-                                 'Format is not currently supported. Supported formats are: pls, m3u',
-                                 'mp3'
-                             )
+                        $this->translate->translate(
+                            'Format is not currently supported. Supported formats are: pls, m3u',
+                            'mp3'
+                        )
                     );
                 }
             } else {
                 throw new \Exception(
-                    $this->getBasePath() . rawurldecode($dir) . ' ' . $this->getTranslator()
-                                                                           ->translate(
-                                                                               'was not found',
-                                                                               'mp3'
-                                                                           )
+                    $this->getBasePath() . rawurldecode($dir) . ' ' . $this->translate->translate(
+                        'was not found',
+                        'mp3'
+                    )
                 );
             }
         } catch (\Exception $e) {
@@ -313,12 +307,10 @@ class Index extends ServiceProvider implements IndexInterface
 
             $file = $this->getConfig()['baseDir'] . rawurldecode($dir);
 
-            $serverUrl = $this->getServiceManager()
-                              ->get('ViewHelperManager')
-                              ->get('serverurl')
-                              ->__invoke(
-                                  '/'
-                              );
+            $serverUrl = $this->serverUrl->get('serverurl')
+                                         ->__invoke(
+                                             '/'
+                                         );
 
             clearstatcache();
 
@@ -352,20 +344,18 @@ class Index extends ServiceProvider implements IndexInterface
                     exit;
                 } else {
                     throw new \Exception(
-                        $this->getTranslator()
-                             ->translate(
-                                 'Format is not currently supported. Supported formats are: pls, m3u',
-                                 'mp3'
-                             )
+                        $this->translate->translate(
+                            'Format is not currently supported. Supported formats are: pls, m3u',
+                            'mp3'
+                        )
                     );
                 }
             } else {
                 throw new \Exception(
-                    $path . ' ' . $this->getTranslator()
-                                       ->translate(
-                                           'was not found',
-                                           'mp3'
-                                       )
+                    $path . ' ' . $this->translate->translate(
+                        'was not found',
+                        'mp3'
+                    )
                 );
             }
         } catch (\Exception $e) {
@@ -410,11 +400,10 @@ class Index extends ServiceProvider implements IndexInterface
                 fclose($handle);
             } else {
                 throw new \Exception(
-                    $path . ' ' . $this->getTranslator()
-                                       ->translate(
-                                           'was not found',
-                                           'mp3'
-                                       )
+                    $path . ' ' . $this->translate->translate(
+                        'was not found',
+                        'mp3'
+                    )
                 );
             }
         } catch (\Exception $e) {
@@ -473,26 +462,23 @@ class Index extends ServiceProvider implements IndexInterface
                         exit;
                     } else {
                         throw new \Exception(
-                            $this->getTranslator()
-                                 ->translate(
-                                     'Something went wrong and we cannot download this folder',
-                                     'mp3'
-                                 )
+                            $this->translate->translate(
+                                'Something went wrong and we cannot download this folder',
+                                'mp3'
+                            )
                         );
                     }
                 } else {
                     throw new \Exception(
-                        $this->getBasePath() . $dir . ' ' . $this->getTranslator()
-                                                                 ->translate(
-                                                                     'was not found',
-                                                                     'mp3'
-                                                                 )
+                        $this->getBasePath() . $dir . ' ' . $this->translate->translate(
+                            'was not found',
+                            'mp3'
+                        )
                     );
                 }
             } else {
                 throw new \Exception(
-                    $this->getTranslator()
-                         ->translate('Phar Extension is not loaded')
+                    $this->translate->translate('Phar Extension is not loaded')
                 );
             }
         } catch (\Exception $e) {
@@ -522,8 +508,7 @@ class Index extends ServiceProvider implements IndexInterface
 
                         if (is_dir($dir . '/' . $file) && false) {
                             $list = $this->directoryArray(
-                                $dir . '/' . $file,
-                                '/' . $file
+                                $dir . '/' . $file
                             );
 
                             $count = 0;

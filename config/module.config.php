@@ -108,9 +108,11 @@ return [
     ],
     'service_manager' => [
         'invokables' => [
-            'Mp3\Service\Calculate' => 'Mp3\Service\Calculate',
-            'Mp3\Service\Index'     => 'Mp3\Service\Index',
-            'Mp3\Service\Search'    => 'Mp3\Service\Search'
+            'Mp3\Service\Calculate' => 'Mp3\Service\Calculate'
+        ],
+        'factories'  => [
+            'Mp3\Service\Index'  => 'Mp3\Service\Factory\IndexFactory',
+            'Mp3\Service\Search' => 'Mp3\Service\Factory\SearchFactory'
         ]
     ],
     'translator'      => [

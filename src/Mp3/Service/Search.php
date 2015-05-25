@@ -21,7 +21,12 @@ use Zend\Paginator\Paginator;
 class Search extends ServiceProvider implements SearchInterface
 {
     /**
-     * {@inheritdoc}
+     * Search
+     *
+     * @param string $name
+     *
+     * @return array|Paginator
+     * @throws \Exception
      */
     public function find($name)
     {
@@ -41,21 +46,19 @@ class Search extends ServiceProvider implements SearchInterface
                         $errorString = 'The search file is currently empty.';
                         $errorString .= 'Use the Import Tool to populate the Search Results';
 
-                        $translateError = $this->getTranslator()
-                                               ->translate(
-                                                   $errorString,
-                                                   'mp3'
-                                               );
+                        $translateError = $this->translate->translate(
+                            $errorString,
+                            'mp3'
+                        );
 
-                        $location = $this->getServiceManager()
-                                         ->get('ViewHelperManager')
-                                         ->get('url')
-                                         ->__invoke(
-                                             'mp3-search',
-                                             [
-                                                 'flash' => $translateError
-                                             ]
-                                         );
+                        $location = $this->serverUrl
+                            ->get('url')
+                            ->__invoke(
+                                'mp3-search',
+                                [
+                                    'flash' => $translateError
+                                ]
+                            );
 
                         header('Location: ' . $location);
 
@@ -136,11 +139,10 @@ class Search extends ServiceProvider implements SearchInterface
                     }
                 } else {
                     throw new \Exception(
-                        $filename . ' ' . $this->getTranslator()
-                                               ->translate(
-                                                   'was not found',
-                                                   'mp3'
-                                               )
+                        $filename . ' ' . $this->translate->translate(
+                            'was not found',
+                            'mp3'
+                        )
                     );
                 }
             }
@@ -172,7 +174,9 @@ class Search extends ServiceProvider implements SearchInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Import Search Results
+     *
+     * @throws \Exception
      */
     public function import()
     {
@@ -196,11 +200,10 @@ class Search extends ServiceProvider implements SearchInterface
 
                 if (!touch($filename)) {
                     throw new \Exception(
-                        $filename . ' ' . $this->getTranslator()
-                                               ->translate(
-                                                   'could not be created',
-                                                   'mp3'
-                                               )
+                        $filename . ' ' . $this->translate->translate(
+                            'could not be created',
+                            'mp3'
+                        )
                     );
                 }
 
@@ -213,14 +216,12 @@ class Search extends ServiceProvider implements SearchInterface
                     if (is_writable($filename)) {
                         if (!$handle) {
                             throw new \Exception(
-                                $this->getTranslator()
-                                     ->translate('Cannot Open File') . ': ' . $filename
+                                $this->translate->translate('Cannot Open File') . ': ' . $filename
                             );
                         }
                     } else {
                         throw new \Exception(
-                            $this->getTranslator()
-                                 ->translate('File Is Not Writable') . ': ' . $filename
+                            $this->translate->translate('File Is Not Writable') . ': ' . $filename
                         );
                     }
 
@@ -281,20 +282,18 @@ class Search extends ServiceProvider implements SearchInterface
                     fclose($handle);
                 } else {
                     throw new \Exception(
-                        $filename . ' ' . $this->getTranslator()
-                                               ->translate(
-                                                   'was not found',
-                                                   'mp3'
-                                               )
+                        $filename . ' ' . $this->translate->translate(
+                            'was not found',
+                            'mp3'
+                        )
                     );
                 }
             } else {
                 throw new \Exception(
-                    $this->getBasePath() . ' ' . $this->getTranslator()
-                                                      ->translate(
-                                                          'was not found',
-                                                          'mp3'
-                                                      )
+                    $this->getBasePath() . ' ' . $this->translate->translate(
+                        'was not found',
+                        'mp3'
+                    )
                 );
             }
         } catch (\Exception $e) {
@@ -304,7 +303,11 @@ class Search extends ServiceProvider implements SearchInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Parse Help
+     *
+     * @param string $help
+     *
+     * @return string
      */
     public function help($help)
     {
@@ -328,7 +331,9 @@ class Search extends ServiceProvider implements SearchInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Determines PHP's Memory Usage Overflow
+     *
+     * @return void
      */
     public function memoryUsage()
     {
@@ -339,21 +344,19 @@ class Search extends ServiceProvider implements SearchInterface
         if ($left < memory_get_peak_usage(true)) {
             $errorString = 'PHP Ran Out of Memory. Please Try Again';
 
-            $translateError = $this->getTranslator()
-                                   ->translate(
-                                       $errorString,
-                                       'mp3'
-                                   );
+            $translateError = $this->translate->translate(
+                $errorString,
+                'mp3'
+            );
 
-            $location = $this->getServiceManager()
-                             ->get('ViewHelperManager')
-                             ->get('url')
-                             ->__invoke(
-                                 'mp3-search',
-                                 [
-                                     'flash' => $translateError
-                                 ]
-                             );
+            $location = $this->serverUrl
+                ->get('url')
+                ->__invoke(
+                    'mp3-search',
+                    [
+                        'flash' => $translateError
+                    ]
+                );
 
             header('Location: ' . $location);
 
