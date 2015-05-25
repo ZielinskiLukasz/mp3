@@ -1,5 +1,14 @@
 <?php
 /**
+ * MP3 Player
+ *
+ * @author    Sammie S. Taunton <diemuzi@gmail.com>
+ * @copyright 2014 Sammie S. Taunton
+ * @license   https://github.com/diemuzi/mp3/blob/master/LICENSE License
+ * @link      https://github.com/diemuzi/mp3 MP3 Player
+ */
+
+/**
  * php5 class (will not work in php4)
  * for detecting bitrate and duration of regular mp3 files (not VBR files)
  *
@@ -13,7 +22,7 @@ namespace Mp3\Service;
  *
  * @package Mp3\Service
  */
-class Calculate
+class Calculate implements CalculateInterface
 {
     protected $block;
 
