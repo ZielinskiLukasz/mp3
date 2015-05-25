@@ -21,7 +21,12 @@ use Zend\Paginator\Paginator;
 class Index extends ServiceProvider implements IndexInterface
 {
     /**
-     * {@inheritdoc}
+     * Index
+     *
+     * @param array $params
+     *
+     * @return array|Paginator
+     * @throws \Exception
      */
     public function index(array $params)
     {
@@ -159,7 +164,12 @@ class Index extends ServiceProvider implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Play All
+     *
+     * @param string $dir
+     *
+     * @return null|string|void
+     * @throws \Exception
      */
     public function playAll($dir)
     {
@@ -289,7 +299,12 @@ class Index extends ServiceProvider implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Play Single Song
+     *
+     * @param string $dir
+     *
+     * @return null|string|void
+     * @throws \Exception
      */
     public function playSingle($dir)
     {
@@ -359,7 +374,12 @@ class Index extends ServiceProvider implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Download Single
+     *
+     * @param string $dir
+     *
+     * @return null|string|void
+     * @throws \Exception
      */
     public function downloadSingle($dir)
     {
@@ -403,7 +423,12 @@ class Index extends ServiceProvider implements IndexInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Download Folder
+     *
+     * @param array $params
+     *
+     * @return null|string|void
+     * @throws \Exception
      */
     public function downloadFolder(array $params)
     {
