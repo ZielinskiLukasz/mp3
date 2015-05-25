@@ -43,7 +43,7 @@ class Search extends ServiceProvider implements SearchInterface
 
                 if (is_file($filename)) {
                     if (filesize($filename) <= '0') {
-                        $errorString = 'The search file is currently empty.';
+                        $errorString = 'The search file is currently empty. ';
                         $errorString .= 'Use the Import Tool to populate the Search Results';
 
                         $translateError = $this->translate->translate(
@@ -106,34 +106,48 @@ class Search extends ServiceProvider implements SearchInterface
                             }
 
                             if (is_file($this->getBasePath() . $search)) {
-                                $calculate = new Calculate($this->getBasePath() . $dir);
-                                $meta = $calculate->get_metadata();
+                                $ThisFileInfo = $this->getId3($this->getBasePath() . $dir);
 
-                                $array[] = [
-                                    'name'     => ltrim(
+                                $name = htmlentities(
+                                    !empty($ThisFileInfo['comments_html']['title'])
+                                        ? implode(
+                                        '<br>',
+                                        $ThisFileInfo['comments_html']['title']
+                                    )
+                                        : ltrim(
                                         $dir,
                                         '/'
-                                    ),
+                                    )
+                                );
+
+                                $bitRate = htmlentities(
+                                    !empty($ThisFileInfo['audio']['bitrate'])
+                                        ? round($ThisFileInfo['audio']['bitrate'] / 1000)
+                                        : '-'
+                                );
+
+                                $length = htmlentities(
+                                    !empty($ThisFileInfo['playtime_string'])
+                                        ? $ThisFileInfo['playtime_string']
+                                        : '-'
+                                );
+
+                                $filesize = !empty($ThisFileInfo['filesize'])
+                                    ? $ThisFileInfo['filesize']
+                                    : '-';
+
+                                $array[] = [
+                                    'name'     => $name,
+                                    'bit_rate' => $bitRate,
+                                    'length'   => $length,
+                                    'size'     => $filesize,
                                     'location' => $dir,
                                     'type'     => 'file',
-                                    'bit_rate' => (isset($meta['Bitrate']))
-                                        ? $meta['Bitrate']
-                                        : '-',
-                                    'length'   => (isset($meta['Length mm:ss']))
-                                        ? $meta['Length mm:ss']
-                                        : '-',
-                                    'size'     => (isset($meta['Filesize']))
-                                        ? $meta['Filesize']
-                                        : '-'
                                 ];
 
-                                $totalLength += (isset($meta['Length']))
-                                    ? $meta['Length']
-                                    : '0';
+                                $totalLength += $this->convertTime($length);
 
-                                $totalSize += (isset($meta['Filesize']))
-                                    ? $meta['Filesize']
-                                    : '0';
+                                $totalSize += $filesize;
                             }
                         }
                     }
@@ -148,6 +162,7 @@ class Search extends ServiceProvider implements SearchInterface
             }
 
             $paginator = new Paginator(new ArrayAdapter($array));
+
             $paginator->setDefaultItemCountPerPage(
                 (count($array) > '0')
                     ? count($array)

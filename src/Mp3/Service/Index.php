@@ -88,40 +88,50 @@ class Index extends ServiceProvider implements IndexInterface
                      * File
                      */
                     if (is_file($baseDir . '/' . $location)) {
-                        $path = ($dir != null)
-                            ? $baseDir . $location
-                            : $location;
+                        $ThisFileInfo = $this->getId3($baseDir . '/' . $location);
 
-                        $calculate = new Calculate($path);
-                        $meta = $calculate->get_metadata();
-
-                        $array[] = [
-                            'name'     => ltrim(
+                        $name = htmlentities(
+                            !empty($ThisFileInfo['comments_html']['title'])
+                                ? implode(
+                                '<br>',
+                                $ThisFileInfo['comments_html']['title']
+                            )
+                                : ltrim(
                                 $location,
                                 '/'
-                            ),
+                            )
+                        );
+
+                        $bitRate = htmlentities(
+                            !empty($ThisFileInfo['audio']['bitrate'])
+                                ? round($ThisFileInfo['audio']['bitrate'] / 1000)
+                                : '-'
+                        );
+
+                        $length = htmlentities(
+                            !empty($ThisFileInfo['playtime_string'])
+                                ? $ThisFileInfo['playtime_string']
+                                : '-'
+                        );
+
+                        $filesize = !empty($ThisFileInfo['filesize'])
+                            ? $ThisFileInfo['filesize']
+                            : '-';
+
+                        $array[] = [
+                            'name'     => $name,
+                            'bit_rate' => $bitRate,
+                            'length'   => $length,
+                            'size'     => $filesize,
                             'location' => ($dir != null)
                                 ? $dir . $location
                                 : $location,
                             'type'     => 'file',
-                            'bit_rate' => (isset($meta['Bitrate']))
-                                ? $meta['Bitrate']
-                                : '-',
-                            'length'   => (isset($meta['Length mm:ss']))
-                                ? $meta['Length mm:ss']
-                                : '-',
-                            'size'     => (isset($meta['Filesize']))
-                                ? $meta['Filesize']
-                                : '-'
                         ];
 
-                        $totalLength += (isset($meta['Length']))
-                            ? $meta['Length']
-                            : '0';
+                        $totalLength += $this->convertTime($length);
 
-                        $totalSize += (isset($meta['Filesize']))
-                            ? $meta['Filesize']
-                            : '0';
+                        $totalSize += $filesize;
                     }
                 }
             } else {
@@ -229,17 +239,25 @@ class Index extends ServiceProvider implements IndexInterface
                         $playlist = '[Playlist]' . "\n";
 
                         foreach ($array as $key => $value) {
-                            $calculate = new Calculate($this->getBasePath() . rawurldecode($dir) . $value);
-                            $meta = $calculate->get_metadata();
+                            $ThisFileInfo = $this->getId3($this->getBasePath() . rawurldecode($dir) . $value);
 
-                            if (array_key_exists(
-                                'Length',
-                                $meta
-                            )) {
-                                $length = $meta['Length'];
-                            } else {
-                                $length = '-1';
-                            }
+                            $name = htmlentities(
+                                !empty($ThisFileInfo['comments_html']['title'])
+                                    ? implode(
+                                    '<br>',
+                                    $ThisFileInfo['comments_html']['title']
+                                )
+                                    : ltrim(
+                                    $dir,
+                                    '/'
+                                )
+                            );
+
+                            $length = htmlentities(
+                                !empty($ThisFileInfo['playtime_string'])
+                                    ? $ThisFileInfo['playtime_string']
+                                    : '-1'
+                            );
 
                             $keyNum = ($key + 1);
 
@@ -250,8 +268,8 @@ class Index extends ServiceProvider implements IndexInterface
                                 $path . $value
                             );
                             $playlist .= "\n";
-                            $playlist .= 'Title' . $keyNum . '=' . basename($value) . "\n";
-                            $playlist .= 'Length' . $keyNum . '=' . $length . "\n";
+                            $playlist .= 'Title' . $keyNum . '=' . $name . "\n";
+                            $playlist .= 'Length' . $keyNum . '=' . $this->convertTime($length) . "\n";
                         }
 
                         $playlist .= 'Numberofentries=' . count($array) . "\n";
@@ -531,13 +549,46 @@ class Index extends ServiceProvider implements IndexInterface
                             );
 
                             /**
-                             * Currently Supported Formats
-                             *
-                             * .mp3
-                             * .m4a
+                             * Supported Audio Formats
                              */
-                            if (is_file($dir . '/' . $file) && $fileExt == '.mp3' || $fileExt == '.m4a') {
-                                $result_array[] = '/' . $file;
+                            foreach ([
+                                         '.3gp',
+                                         '.act',
+                                         '.aiff',
+                                         '.aac',
+                                         '.aac',
+                                         '.au',
+                                         '.awb',
+                                         '.dct',
+                                         '.dss',
+                                         '.dvf',
+                                         '.flac',
+                                         '.gsm',
+                                         '.iklax',
+                                         '.ivs',
+                                         '.m4a',
+                                         '.m4p',
+                                         '.mmf',
+                                         '.mp3',
+                                         '.mpc',
+                                         '.msv',
+                                         '.ogg',
+                                         '.oga',
+                                         '.opus',
+                                         '.ra',
+                                         '.rm',
+                                         '.raw',
+                                         '.sln',
+                                         '.tta',
+                                         '.vox',
+                                         '.wav',
+                                         '.wma',
+                                         '.wv',
+                                         '.webm'
+                                     ] as $ext) {
+                                if (is_file($dir . '/' . $file) && $fileExt == $ext) {
+                                    $result_array[] = '/' . $file;
+                                }
                             }
                         }
                     }
