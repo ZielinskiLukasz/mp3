@@ -10,6 +10,8 @@
 
 namespace Mp3\Controller;
 
+use Mp3\Form\Search as FormSearch;
+use Mp3\Service\Index as ServiceIndex;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -24,18 +26,38 @@ use Zend\View\Model\ViewModel;
 class IndexController extends AbstractActionController
 {
     /**
+     * @var FormSearch $formSearch
+     */
+    private $formSearch;
+
+    /**
+     * @var ServiceIndex $serviceIndex
+     */
+    private $serviceIndex;
+
+    /**
+     * Construct
+     *
+     * @param FormSearch   $formSearch
+     * @param ServiceIndex $serviceIndex
+     */
+    public function __construct(
+        FormSearch $formSearch,
+        ServiceIndex $serviceIndex
+    ) {
+        $this->formSearch = $formSearch;
+
+        $this->serviceIndex = $serviceIndex;
+    }
+
+    /**
      * Index
      *
      * @return ViewModel
      */
     public function indexAction()
     {
-        /**
-         * @var \Mp3\Form\Search $form
-         */
-        $form = $this->getServiceLocator()
-                     ->get('FormElementManager')
-                     ->get('Mp3\Form\Search');
+        $form = $this->formSearch;
 
         if ($this->getRequest()
                  ->isPost()
@@ -57,15 +79,13 @@ class IndexController extends AbstractActionController
             }
         }
 
-        $service = $this->getServiceLocator()
-                        ->get('Mp3\Service\Index')
-                        ->index(
-                            $this->params()
-                                 ->fromRoute()
-                        );
+        $service = $this->serviceIndex
+            ->index(
+                $this->params()
+                     ->fromRoute()
+            );
 
-        $viewModel = new ViewModel();
-        $viewModel
+        return (new ViewModel())
             ->setTemplate('mp3/mp3/search')
             ->setVariables(
                 [
@@ -79,8 +99,6 @@ class IndexController extends AbstractActionController
                                           ->fromRoute('dir')
                 ]
             );
-
-        return $viewModel;
     }
 
     /**
@@ -88,12 +106,11 @@ class IndexController extends AbstractActionController
      */
     public function playallAction()
     {
-        $this->getServiceLocator()
-             ->get('Mp3\Service\Index')
-             ->playAll(
-                 $this->params()
-                      ->fromRoute('dir')
-             );
+        $this->serviceIndex
+            ->playAll(
+                $this->params()
+                     ->fromRoute('dir')
+            );
     }
 
     /**
@@ -101,12 +118,11 @@ class IndexController extends AbstractActionController
      */
     public function playsingleAction()
     {
-        $this->getServiceLocator()
-             ->get('Mp3\Service\Index')
-             ->playSingle(
-                 $this->params()
-                      ->fromRoute('dir')
-             );
+        $this->serviceIndex
+            ->playSingle(
+                $this->params()
+                     ->fromRoute('dir')
+            );
     }
 
     /**
@@ -114,16 +130,15 @@ class IndexController extends AbstractActionController
      */
     public function downloadfolderAction()
     {
-        $this->getServiceLocator()
-             ->get('Mp3\Service\Index')
-             ->downloadFolder(
-                 [
-                     'dir'    => $this->params()
-                                      ->fromRoute('dir'),
-                     'format' => $this->params()
-                                      ->fromRoute('format')
-                 ]
-             );
+        $this->serviceIndex
+            ->downloadFolder(
+                [
+                    'dir'    => $this->params()
+                                     ->fromRoute('dir'),
+                    'format' => $this->params()
+                                     ->fromRoute('format')
+                ]
+            );
     }
 
     /**
@@ -131,11 +146,10 @@ class IndexController extends AbstractActionController
      */
     public function downloadsingleAction()
     {
-        $this->getServiceLocator()
-             ->get('Mp3\Service\Index')
-             ->downloadSingle(
-                 $this->params()
-                      ->fromRoute('dir')
-             );
+        $this->serviceIndex
+            ->downloadSingle(
+                $this->params()
+                     ->fromRoute('dir')
+            );
     }
 }

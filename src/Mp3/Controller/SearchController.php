@@ -10,8 +10,12 @@
 
 namespace Mp3\Controller;
 
+use Mp3\Form\Search as FormSearch;
+use Mp3\InputFilter\Search as InputFilterSearch;
+use Mp3\Service\Search as ServiceSearch;
 use Zend\Console\Prompt\Confirm;
-use Zend\Console\Request;
+use Zend\Console\Request as ConsoleRequest;
+use Zend\Http\Request as HttpRequest;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -20,10 +24,44 @@ use Zend\View\Model\ViewModel;
  *
  * @package Mp3\Controller
  *
- * @method Request getRequest()
+ * @method ConsoleRequest|HttpRequest getRequest()
  */
 class SearchController extends AbstractActionController
 {
+    /**
+     * @var InputFilterSearch $inputFilterSearch
+     */
+    private $inputFilterSearch;
+
+    /**
+     * @var FormSearch $formSearch
+     */
+    private $formSearch;
+
+    /**
+     * @var ServiceSearch $serviceSearch
+     */
+    private $serviceSearch;
+
+    /**
+     * Construct
+     *
+     * @param InputFilterSearch $inputFilterSearch
+     * @param FormSearch        $formSearch
+     * @param ServiceSearch     $serviceSearch
+     */
+    public function __construct(
+        InputFilterSearch $inputFilterSearch,
+        FormSearch $formSearch,
+        ServiceSearch $serviceSearch
+    ) {
+        $this->inputFilterSearch = $inputFilterSearch;
+
+        $this->formSearch = $formSearch;
+
+        $this->serviceSearch = $serviceSearch;
+    }
+
     /**
      * Search
      *
@@ -31,12 +69,7 @@ class SearchController extends AbstractActionController
      */
     public function searchAction()
     {
-        /**
-         * @var \Mp3\Form\Search $form
-         */
-        $form = $this->getServiceLocator()
-                     ->get('FormElementManager')
-                     ->get('Mp3\Form\Search');
+        $form = $this->formSearch;
 
         if ($this->getRequest()
                  ->isPost()
@@ -58,15 +91,13 @@ class SearchController extends AbstractActionController
             }
         }
 
-        $service = $this->getServiceLocator()
-                        ->get('Mp3\Service\Search')
-                        ->find(
-                            $this->params()
-                                 ->fromRoute('name')
-                        );
+        $service = $this->serviceSearch
+            ->find(
+                $this->params()
+                     ->fromRoute('name')
+            );
 
-        $viewModel = new ViewModel();
-        $viewModel
+        return (new ViewModel())
             ->setTemplate('mp3/mp3/search')
             ->setVariables(
                 [
@@ -79,8 +110,6 @@ class SearchController extends AbstractActionController
                                            ->fromRoute('flash')
                 ]
             );
-
-        return $viewModel;
     }
 
     /**
@@ -90,16 +119,11 @@ class SearchController extends AbstractActionController
      */
     public function importAction()
     {
-        if (!$this->getRequest() instanceof Request) {
+        if (!$this->getRequest() instanceof ConsoleRequest) {
             throw new \RuntimeException('You can only use this action from a console!');
         }
 
-        /**
-         * @var \Mp3\InputFilter\Search $filter
-         */
-        $filter = $this->getServiceLocator()
-                       ->get('InputFilterManager')
-                       ->get('Mp3\InputFilter\Search');
+        $filter = $this->inputFilterSearch;
 
         $filter->setData(
             $this->params()
@@ -120,9 +144,7 @@ class SearchController extends AbstractActionController
             }
 
             if ($result) {
-                $this->getServiceLocator()
-                     ->get('Mp3\Service\Search')
-                     ->import();
+                $this->serviceSearch->import();
             }
         } else {
             if ($filter->getValue('help') != null) {
