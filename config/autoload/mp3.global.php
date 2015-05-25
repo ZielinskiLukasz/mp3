@@ -15,7 +15,9 @@ return [
          *
          * Must be Web Accessible and only contain the location without a full URL
          *
-         * Example: http://example.com/music
+         * If your URL is http://example.com/music then only enter /music
+         *
+         * Example: /music
          */
         'baseDir'    => '/music',
 
@@ -31,6 +33,9 @@ return [
          *
          * If you want to enable the Search Feature
          * You will need a file to populate all the results from your library
+         *
+         * Warning: This may consume a lot of memory depending on how large your respository is
+         *          You may need to increase the 'memory_limit' for PHP
          */
         'searchFile' => '/backup/domains/mp3-devel/public/search.txt',
 
