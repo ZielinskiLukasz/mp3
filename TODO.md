@@ -2,9 +2,7 @@
 
 Features we would like to see in future releases
 
-* Appears we have ran out of ideas for the moment, uh oh!
-
-* Import does not include .m4a files
+* Database Support for Search Results. I'm currently working on a MySQL and PgSQL format.
 
 Not Listed Here?
 ----------------

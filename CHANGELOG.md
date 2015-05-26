@@ -10,6 +10,10 @@
 
 - Performance Enhancements
 
+- getID3 Support
+
+- All known bugs are resolved
+
 ## 1.1.4 (2014-07-31)
 
 - Resolved many PSR-2 issues

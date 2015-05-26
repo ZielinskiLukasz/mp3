@@ -1,7 +1,7 @@
 MP3 Player
 ==========
 
-**Version 1.1.4** (Last Updated on 07-31-2014)
+**Version 1.2.0** (Last Updated on 05-25-2015)
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
@@ -22,8 +22,39 @@ Supported playlist formats are currently:
 
 Supported File Extensions:
 
-  * .mp3
+  * .3gp
+  * .act
+  * .aiff
+  * .aac
+  * .aac
+  * .au
+  * .awb
+  * .dct
+  * .dss
+  * .dvf
+  * .flac
+  * .gsm
+  * .iklax
+  * .ivs
   * .m4a
+  * .m4p
+  * .mmf
+  * .mp3
+  * .mpc
+  * .msv
+  * .ogg
+  * .oga
+  * .opus
+  * .ra
+  * .rm
+  * .raw
+  * .sln
+  * .tta
+  * .vox
+  * .wav
+  * .wma
+  * .wv
+  * .webm
 
 Support
 -------
@@ -37,6 +68,8 @@ Requirements
 * [Zend Framework 2](https://github.com/zendframework/zf2)
 
 * [PHP Gettext Extension](http://php.net/gettext)
+
+* [getID3](https://github.com/JamesHeinrich/getID3)
 
 * [PHP Phar Extension](http://php.net/phar) *Recommended, but not required*
 
@@ -61,6 +94,22 @@ Installation
    or download it directly from github and place it in your application's `module/` directory.
 2. Add the `Mp3` module to the module section of your `config/application.config.php`.
 3. Edit `config/autoload/mp3.global.php` and change the settings per your configuration.
+4. Copy the `config/autoload/mp3.global.php` to your autoload folder
+
+Standalone Installation
+-----------------------
+
+If you're looking to run this software on it's own domain and don't plan on running any other modules you can use the MP3 Skeleton.
+
+1. git clone https://github.com/diemuzi/mp3-skeleton.git
+2. cd mp3-skeleton
+3. php composer.phar self-update
+4. php composer.phar install
+5. chown -R nginx:nginx /backup/domains/mp3-skeleton
+6. ln -s /backup/domains/mp3-skeleton/vendor/diemuzi/mp3/config/autoload/mp3.global.php /backup/domains/mp3-skeleton/config/autoload/mp3.global.php
+7. Access http://example.com/mp3/index (for example)
+
+This should get you started, just don't forget to change the paths to match your setup. If you run into any problems, let me know!
 
 Screenshots
 -----------
