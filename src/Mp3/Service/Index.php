@@ -551,41 +551,7 @@ class Index extends ServiceProvider implements IndexInterface
                             /**
                              * Supported Audio Formats
                              */
-                            foreach ([
-                                         '.3gp',
-                                         '.act',
-                                         '.aiff',
-                                         '.aac',
-                                         '.aac',
-                                         '.au',
-                                         '.awb',
-                                         '.dct',
-                                         '.dss',
-                                         '.dvf',
-                                         '.flac',
-                                         '.gsm',
-                                         '.iklax',
-                                         '.ivs',
-                                         '.m4a',
-                                         '.m4p',
-                                         '.mmf',
-                                         '.mp3',
-                                         '.mpc',
-                                         '.msv',
-                                         '.ogg',
-                                         '.oga',
-                                         '.opus',
-                                         '.ra',
-                                         '.rm',
-                                         '.raw',
-                                         '.sln',
-                                         '.tta',
-                                         '.vox',
-                                         '.wav',
-                                         '.wma',
-                                         '.wv',
-                                         '.webm'
-                                     ] as $ext) {
+                            foreach ($this->getExtensions() as $ext) {
                                 if (is_file($dir . '/' . $file) && $fileExt == $ext) {
                                     $result_array[] = '/' . $file;
                                 }

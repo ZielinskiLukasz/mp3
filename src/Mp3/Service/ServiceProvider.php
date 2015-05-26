@@ -168,4 +168,48 @@ abstract class ServiceProvider
 
         return $analyze;
     }
+
+    /**
+     * Extensions
+     *
+     * @return array
+     */
+    protected function getExtensions()
+    {
+        return [
+            '.3gp',
+            '.act',
+            '.aiff',
+            '.aac',
+            '.aac',
+            '.au',
+            '.awb',
+            '.dct',
+            '.dss',
+            '.dvf',
+            '.flac',
+            '.gsm',
+            '.iklax',
+            '.ivs',
+            '.m4a',
+            '.m4p',
+            '.mmf',
+            '.mp3',
+            '.mpc',
+            '.msv',
+            '.ogg',
+            '.oga',
+            '.opus',
+            '.ra',
+            '.rm',
+            '.raw',
+            '.sln',
+            '.tta',
+            '.vox',
+            '.wav',
+            '.wma',
+            '.wv',
+            '.webm'
+        ];
+    }
 }

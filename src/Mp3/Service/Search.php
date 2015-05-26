@@ -276,7 +276,7 @@ class Search extends ServiceProvider implements SearchInterface
                                     )
                                 );
                             } elseif (
-                                basename($current->getPathName()) != '..' && $mainFile == '.mp3'
+                                basename($current->getPathName()) != '..' && in_array($mainFile, $this->getExtensions())
                             ) {
                                 $array[] = str_replace(
                                     $this->getBasePath(),
