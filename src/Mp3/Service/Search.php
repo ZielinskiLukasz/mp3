@@ -108,29 +108,23 @@ class Search extends ServiceProvider implements SearchInterface
                             if (is_file($this->getBasePath() . $search)) {
                                 $ThisFileInfo = $this->getId3($this->getBasePath() . $dir);
 
-                                $name = htmlentities(
-                                    !empty($ThisFileInfo['comments_html']['title'])
-                                        ? implode(
+                                $name = !empty($ThisFileInfo['comments_html']['title'])
+                                    ? implode(
                                         '<br>',
                                         $ThisFileInfo['comments_html']['title']
                                     )
-                                        : ltrim(
+                                    : ltrim(
                                         $dir,
                                         '/'
-                                    )
-                                );
+                                    );
 
-                                $bitRate = htmlentities(
-                                    !empty($ThisFileInfo['audio']['bitrate'])
-                                        ? round($ThisFileInfo['audio']['bitrate'] / 1000)
-                                        : '-'
-                                );
+                                $bitRate = !empty($ThisFileInfo['audio']['bitrate'])
+                                    ? round($ThisFileInfo['audio']['bitrate'] / 1000)
+                                    : '-';
 
-                                $length = htmlentities(
-                                    !empty($ThisFileInfo['playtime_string'])
-                                        ? $ThisFileInfo['playtime_string']
-                                        : '-'
-                                );
+                                $length = !empty($ThisFileInfo['playtime_string'])
+                                    ? $ThisFileInfo['playtime_string']
+                                    : '-';
 
                                 $filesize = !empty($ThisFileInfo['filesize'])
                                     ? $ThisFileInfo['filesize']
@@ -276,7 +270,10 @@ class Search extends ServiceProvider implements SearchInterface
                                     )
                                 );
                             } elseif (
-                                basename($current->getPathName()) != '..' && in_array($mainFile, $this->getExtensions())
+                                basename($current->getPathName()) != '..' && in_array(
+                                    $mainFile,
+                                    $this->getExtensions()
+                                )
                             ) {
                                 $array[] = str_replace(
                                     $this->getBasePath(),

@@ -245,7 +245,7 @@ endif; ?>
 
     foreach ($this->paginator as $item): $array[] = $item['type']; ?>
         <tr class="mp3_tr">
-            <td class="mp3_border mp3_padding"><?php echo $this->escapeHtml($item['name']); ?></td>
+            <td class="mp3_border mp3_padding"><?php echo $item['name']; ?></td>
             <td class="mp3_border mp3_center mp3_padding">
                 <?php
                 if ($item['type'] == 'file'):

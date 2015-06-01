@@ -90,29 +90,23 @@ class Index extends ServiceProvider implements IndexInterface
                     if (is_file($baseDir . '/' . $location)) {
                         $ThisFileInfo = $this->getId3($baseDir . '/' . $location);
 
-                        $name = htmlentities(
-                            !empty($ThisFileInfo['comments_html']['title'])
-                                ? implode(
+                        $name = !empty($ThisFileInfo['comments_html']['title'])
+                            ? implode(
                                 '<br>',
                                 $ThisFileInfo['comments_html']['title']
                             )
-                                : ltrim(
+                            : ltrim(
                                 $location,
                                 '/'
-                            )
-                        );
+                            );
 
-                        $bitRate = htmlentities(
-                            !empty($ThisFileInfo['audio']['bitrate'])
-                                ? round($ThisFileInfo['audio']['bitrate'] / 1000)
-                                : '-'
-                        );
+                        $bitRate = !empty($ThisFileInfo['audio']['bitrate'])
+                            ? round($ThisFileInfo['audio']['bitrate'] / 1000)
+                            : '-';
 
-                        $length = htmlentities(
-                            !empty($ThisFileInfo['playtime_string'])
-                                ? $ThisFileInfo['playtime_string']
-                                : '-'
-                        );
+                        $length = !empty($ThisFileInfo['playtime_string'])
+                            ? $ThisFileInfo['playtime_string']
+                            : '-';
 
                         $filesize = !empty($ThisFileInfo['filesize'])
                             ? $ThisFileInfo['filesize']
@@ -187,9 +181,7 @@ class Index extends ServiceProvider implements IndexInterface
             $path = $this->getConfig()['baseDir'] . rawurldecode($dir);
 
             $serverUrl = $this->serverUrl->get('serverurl')
-                                         ->__invoke(
-                                             '/'
-                                         );
+                                         ->__invoke('/');
 
             clearstatcache();
 
@@ -211,9 +203,7 @@ class Index extends ServiceProvider implements IndexInterface
                             );
                             $playlist .= "\n";
                             $playlist .= $serverUrl;
-                            $playlist .= rawurlencode(
-                                $path . $value
-                            );
+                            $playlist .= rawurlencode($path . $value);
                             $playlist .= "\n\n";
                         }
 
@@ -241,32 +231,26 @@ class Index extends ServiceProvider implements IndexInterface
                         foreach ($array as $key => $value) {
                             $ThisFileInfo = $this->getId3($this->getBasePath() . rawurldecode($dir) . $value);
 
-                            $name = htmlentities(
-                                !empty($ThisFileInfo['comments_html']['title'])
-                                    ? implode(
+                            $name = !empty($ThisFileInfo['comments_html']['title'])
+                                ? implode(
                                     '<br>',
                                     $ThisFileInfo['comments_html']['title']
                                 )
-                                    : ltrim(
+                                : ltrim(
                                     $dir,
                                     '/'
-                                )
-                            );
+                                );
 
-                            $length = htmlentities(
-                                !empty($ThisFileInfo['playtime_string'])
-                                    ? $ThisFileInfo['playtime_string']
-                                    : '-1'
-                            );
+                            $length = !empty($ThisFileInfo['playtime_string'])
+                                ? $ThisFileInfo['playtime_string']
+                                : '-1';
 
                             $keyNum = ($key + 1);
 
                             $playlist .= 'File';
                             $playlist .= $keyNum;
                             $playlist .= '=' . $serverUrl;
-                            $playlist .= rawurlencode(
-                                $path . $value
-                            );
+                            $playlist .= rawurlencode($path . $value);
                             $playlist .= "\n";
                             $playlist .= 'Title' . $keyNum . '=' . $name . "\n";
                             $playlist .= 'Length' . $keyNum . '=' . $this->convertTime($length) . "\n";
@@ -326,9 +310,7 @@ class Index extends ServiceProvider implements IndexInterface
             $file = $this->getConfig()['baseDir'] . rawurldecode($dir);
 
             $serverUrl = $this->serverUrl->get('serverurl')
-                                         ->__invoke(
-                                             '/'
-                                         );
+                                         ->__invoke('/');
 
             clearstatcache();
 
