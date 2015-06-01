@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MP3 Player\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-31 09:14-0600\n"
-"PO-Revision-Date: 2014-07-31 09:15-0600\n"
+"POT-Creation-Date: 2015-06-01 08:55-0600\n"
+"PO-Revision-Date: 2015-06-01 08:55-0600\n"
 "Last-Translator: Sammie S. Taunton <diemuzi@gmail.com>\n"
 "Language-Team: OTWebsoft <diemuzi@gmail.com>\n"
 "Language: en\n"
@@ -13,78 +13,78 @@ msgstr ""
 "X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 1.6.7\n"
-"X-Poedit-SearchPath-0: D:\\Translation\\Mp3\n"
+"X-Generator: Poedit 1.8.1\n"
+"X-Poedit-SearchPath-0: .\n"
 
-#: D:\Translation\Mp3/mp3.php:2
+#: mp3.php:2
 msgid "Open"
 msgstr "Open"
 
-#: D:\Translation\Mp3/mp3.php:3
+#: mp3.php:3
 msgid "Name"
 msgstr "Name"
 
-#: D:\Translation\Mp3/mp3.php:4
+#: mp3.php:4
 msgid "Bit Rate"
 msgstr "Bit Rate"
 
-#: D:\Translation\Mp3/mp3.php:5
+#: mp3.php:5
 msgid "Length"
 msgstr "Length"
 
-#: D:\Translation\Mp3/mp3.php:6
+#: mp3.php:6
 msgid "Size"
 msgstr "Size"
 
-#: D:\Translation\Mp3/mp3.php:7
+#: mp3.php:7
 msgid "Play"
 msgstr "Play"
 
-#: D:\Translation\Mp3/mp3.php:8
+#: mp3.php:8
 msgid "Play All"
 msgstr "Play All"
 
-#: D:\Translation\Mp3/mp3.php:9
+#: mp3.php:9
 msgid "Download"
 msgstr "Download"
 
-#: D:\Translation\Mp3/mp3.php:10
+#: mp3.php:10
 msgid "Total Results"
 msgstr "Total Results"
 
-#: D:\Translation\Mp3/mp3.php:11
+#: mp3.php:11
 msgid "MP3 Player"
 msgstr "MP3 Player"
 
-#: D:\Translation\Mp3/mp3.php:12
+#: mp3.php:12
 msgid "Search"
 msgstr "Search"
 
-#: D:\Translation\Mp3/mp3.php:13
+#: mp3.php:13
 msgid "Select Download"
 msgstr "Select Download"
 
-#: D:\Translation\Mp3/mp3.php:14
+#: mp3.php:14
 msgid "Zip"
 msgstr "Zip"
 
-#: D:\Translation\Mp3/mp3.php:15
+#: mp3.php:15
 msgid "Tar"
 msgstr "Tar"
 
-#: D:\Translation\Mp3/mp3.php:16
+#: mp3.php:16
 msgid "Bz2"
 msgstr "Bz2"
 
-#: D:\Translation\Mp3/mp3.php:17
+#: mp3.php:17
 msgid "Rar"
 msgstr "Rar"
 
-#: D:\Translation\Mp3/mp3.php:19
+#: mp3.php:19
 msgid "PHP Ran Out of Memory. Please Try Again!"
 msgstr "PHP Ran Out of Memory. Please Try Again!"
 
-#: D:\Translation\Mp3/mp3.php:20
+#: mp3.php:20
 msgid ""
 "The search file is currently empty. Use the Import Tool to populate the "
 "Search Results."
@@ -92,43 +92,47 @@ msgstr ""
 "The search file is currently empty. Use the Import Tool to populate the "
 "Search Results."
 
-#: D:\Translation\Mp3/mp3.php:21
+#: mp3.php:21
 msgid "baseDir is not currently set"
 msgstr "baseDir is not currently set"
 
-#: D:\Translation\Mp3/mp3.php:22
+#: mp3.php:22
 msgid "format is not currently set"
 msgstr "format is not currently set"
 
-#: D:\Translation\Mp3/mp3.php:23
+#: mp3.php:23
 msgid "searchFile is not currently set"
 msgstr "searchFile is not currently set"
 
-#: D:\Translation\Mp3/mp3.php:24
+#: mp3.php:24
 msgid "searchPath is not currently set"
 msgstr "searchPath is not currently set"
 
-#: D:\Translation\Mp3/mp3.php:25
+#: mp3.php:25
+msgid "memoryLimit is not currently set"
+msgstr "memoryLimit is not currently set"
+
+#: mp3.php:26
 msgid "was not found"
 msgstr "was not found"
 
-#: D:\Translation\Mp3/mp3.php:26
+#: mp3.php:27
 msgid "Format is not currently supported. Supported formats are: pls, m3u"
 msgstr "Format is not currently supported. Supported formats are: pls, m3u"
 
-#: D:\Translation\Mp3/mp3.php:27
+#: mp3.php:28
 msgid "Something went wrong and we cannot play this folder"
 msgstr "Something went wrong and we cannot play this folder"
 
-#: D:\Translation\Mp3/mp3.php:28
+#: mp3.php:29
 msgid "Something went wrong and we cannot download this folder"
 msgstr "Something went wrong and we cannot download this folder"
 
-#: D:\Translation\Mp3/mp3.php:29
+#: mp3.php:30
 msgid "Phar Extension is not loaded"
 msgstr "Phar Extension is not loaded"
 
-#: D:\Translation\Mp3/mp3.php:30
+#: mp3.php:31
 msgid ""
 "The search file is currently empty. Use the Import Tool to populate the "
 "Search Results"
@@ -136,10 +140,14 @@ msgstr ""
 "The search file is currently empty. Use the Import Tool to populate the "
 "Search Results"
 
-#: D:\Translation\Mp3/mp3.php:31
+#: mp3.php:32
 msgid "Cannot Open File"
 msgstr "Cannot Open File"
 
-#: D:\Translation\Mp3/mp3.php:32
+#: mp3.php:33
 msgid "File Is Not Writable"
 msgstr "File Is Not Writable"
+
+#: mp3.php:34
+msgid "could not be created"
+msgstr "could not be created"
