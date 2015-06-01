@@ -203,7 +203,7 @@ class Index extends ServiceProvider implements IndexInterface
                             );
                             $playlist .= "\n";
                             $playlist .= $serverUrl;
-                            $playlist .= rawurlencode($path . $value);
+                            $playlist .= $path . $value;
                             $playlist .= "\n\n";
                         }
 
@@ -250,7 +250,7 @@ class Index extends ServiceProvider implements IndexInterface
                             $playlist .= 'File';
                             $playlist .= $keyNum;
                             $playlist .= '=' . $serverUrl;
-                            $playlist .= rawurlencode($path . $value);
+                            $playlist .= $path . $value;
                             $playlist .= "\n";
                             $playlist .= 'Title' . $keyNum . '=' . $name . "\n";
                             $playlist .= 'Length' . $keyNum . '=' . $this->convertTime($length) . "\n";
@@ -322,7 +322,7 @@ class Index extends ServiceProvider implements IndexInterface
                     header("Content-Type: audio/mpegurl");
                     header("Content-Disposition: attachment; filename=playlist.m3u");
 
-                    echo $serverUrl . rawurlencode($file);
+                    echo $serverUrl . $file;
 
                     exit;
                 } elseif ($this->getConfig()['format'] == 'pls') {
@@ -332,9 +332,18 @@ class Index extends ServiceProvider implements IndexInterface
                     header("Content-Type: audio/x-scpls");
                     header("Content-Disposition: attachment; filename=playlist.pls");
 
+                    $ThisFileInfo = $this->getId3(basename($path));
+
+                    $name = !empty($ThisFileInfo['comments_html']['title'])
+                        ? implode(
+                            '<br>',
+                            $ThisFileInfo['comments_html']['title']
+                        )
+                        : basename($path);
+
                     $playlist = '[Playlist]' . "\n";
-                    $playlist .= 'File1=' . $serverUrl . rawurlencode($file) . "\n";
-                    $playlist .= 'Title1=' . basename($path) . "\n";
+                    $playlist .= 'File1=' . $serverUrl . $file . "\n";
+                    $playlist .= 'Title1=' . $name . "\n";
                     $playlist .= 'Length1=-1' . "\n";
                     $playlist .= 'Numberofentries=1' . "\n";
                     $playlist .= 'Version=2' . "\n";
