@@ -345,34 +345,38 @@ class Search extends ServiceProvider implements SearchInterface
     /**
      * Determines PHP's Memory Usage Overflow
      *
+     * Usage: Set memoryLimit in mp3.global.php to true in order to use this feature
+     *
      * @return void
      */
     public function memoryUsage()
     {
-        $remaining = (memory_get_peak_usage() - memory_get_usage());
+        if ($this->getConfig()['memoryLimit']) {
+            $remaining = (memory_get_peak_usage() - memory_get_usage());
 
-        $left = (memory_get_peak_usage() + $remaining);
+            $left = (memory_get_peak_usage() + $remaining);
 
-        if ($left < memory_get_peak_usage(true)) {
-            $errorString = 'PHP Ran Out of Memory. Please Try Again';
+            if ($left < memory_get_peak_usage(true)) {
+                $errorString = 'PHP Ran Out of Memory. Please Try Again';
 
-            $translateError = $this->translate->translate(
-                $errorString,
-                'mp3'
-            );
-
-            $location = $this->serverUrl
-                ->get('url')
-                ->__invoke(
-                    'mp3-search',
-                    [
-                        'flash' => $translateError
-                    ]
+                $translateError = $this->translate->translate(
+                    $errorString,
+                    'mp3'
                 );
 
-            header('Location: ' . $location);
+                $location = $this->serverUrl
+                    ->get('url')
+                    ->__invoke(
+                        'mp3-search',
+                        [
+                            'flash' => $translateError
+                        ]
+                    );
 
-            exit;
+                header('Location: ' . $location);
+
+                exit;
+            }
         }
     }
 }

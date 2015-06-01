@@ -19,14 +19,14 @@ return [
          *
          * Example: /music
          */
-        'baseDir'    => '/music',
+        'baseDir'     => '/music',
 
         /**
          * Format
          *
          * Support types are; pls, m3u
          */
-        'format'     => 'pls',
+        'format'      => 'pls',
 
         /**
          * Full Path to search.txt
@@ -37,13 +37,19 @@ return [
          * Warning: This may consume a lot of memory depending on how large your respository is
          *          You may need to increase the 'memory_limit' for PHP
          */
-        'searchFile' => '/backup/domains/mp3-devel/public/search.txt',
+        'searchFile'  => '/backup/domains/mp3-devel/public/search.txt',
 
         /**
          * Full Path to Search
          *
          * Define the base search path for your library
          */
-        'searchPath' => '/backup/domains/mp3-devel/public/music'
+        'searchPath'  => '/backup/domains/mp3-devel/public/music',
+
+        /**
+         * When set to true, this will check the runtime against your current PHP 'memory_limit' setting
+         * If the limit is reached, a warning will be produced and the process will exit
+         */
+        'memoryLimit' => false
     ]
 ];

@@ -114,11 +114,21 @@ abstract class ServiceProvider
             );
         }
 
+        if (!isset($config['mp3']['memoryLimit'])) {
+            throw new \Exception(
+                $this->translate->translate(
+                    'memoryLimit is not currently set',
+                    'mp3'
+                )
+            );
+        }
+
         return [
-            'baseDir'    => $config['mp3']['baseDir'],
-            'format'     => $config['mp3']['format'],
-            'searchFile' => $config['mp3']['searchFile'],
-            'searchPath' => $config['mp3']['searchPath']
+            'baseDir'     => $config['mp3']['baseDir'],
+            'format'      => $config['mp3']['format'],
+            'searchFile'  => $config['mp3']['searchFile'],
+            'searchPath'  => $config['mp3']['searchPath'],
+            'memoryLimit' => $config['mp3']['memoryLimit']
         ];
     }
 
@@ -132,8 +142,12 @@ abstract class ServiceProvider
      *
      * @return string
      */
-    protected function convertTime($length, $hours = '0', $minutes = '00', $seconds = '00')
-    {
+    protected function convertTime(
+        $length,
+        $hours = '0',
+        $minutes = '00',
+        $seconds = '00'
+    ) {
         $length = preg_replace(
             "/^([\d]{1,2})\:([\d]{2})$/",
             "00:$1:$2",
