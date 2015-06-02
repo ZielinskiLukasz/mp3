@@ -153,7 +153,7 @@ echo $this->doctype();
             </a>
             <?php
             if (isset($this->dir)):
-                foreach ($this->navigate(rawurldecode($this->dir)) as $key => $value): ?>
+                foreach ($this->navigate($this->dir) as $key => $value): ?>
                     ::
                     <a href="<?php
                     echo $this->url(
@@ -188,16 +188,19 @@ if ($this->search):
         <thead class="mp3_thead">
         <tr class="mp3_search">
             <td class="mp3_search"
-                style="width: 20%;"><?php
+                style="width: 20%;">
+                <?php
                 echo $this->formText(
                     $this->form->get('name')
                 ); ?>
+
                 <?php echo $this->formSubmit($this->form->get('submit')); ?>
             </td>
             <?php
             if ($this->flash != ''): ?>
                 <td class="mp3_search"
-                    style="width: 80%; color: #FBEC88; "><?php
+                    style="width: 80%; color: #FBEC88; ">
+                    <?php
                     echo $this->translate(
                         $this->flash,
                         'mp3'
@@ -246,39 +249,43 @@ endif; ?>
     foreach ($this->paginator as $item): $array[] = $item['type']; ?>
         <tr class="mp3_tr">
             <td class="mp3_border mp3_padding"><?php echo $item['name']; ?></td>
+
             <td class="mp3_border mp3_center mp3_padding">
                 <?php
                 if ($item['type'] == 'file'):
-                    echo $item['bit_rate'];
+                    echo $item['id3']['bitRate'];
                 else:
                     echo '-';
                 endif; ?>
             </td>
+
             <td class="mp3_border mp3_center mp3_padding">
                 <?php
                 if ($item['type'] == 'file'):
-                    echo $item['length'];
+                    echo $item['id3']['length'];
                 else:
                     echo '-';
                 endif; ?>
             </td>
+
             <td class="mp3_border mp3_center mp3_padding">
                 <?php
                 if ($item['type'] == 'file'):
                     echo $this->convert(
-                        $item['size']
+                        $item['id3']['fileSize']
                     );
                 else:
                     echo '-';
                 endif; ?>
             </td>
+
             <td class="mp3_border mp3_center mp3_padding">
                 <?php
                 if ($item['type'] == 'dir'): ?>
                     <a href="<?php
                     echo $this->url(
                         'mp3-index',
-                        ['dir' => $item['location']]
+                        ['dir' => $item['base64']]
                     ); ?>">
                         <?php
                         echo $this->translate(
@@ -294,7 +301,7 @@ endif; ?>
                     <a href="<?php
                     echo $this->url(
                         'mp3-play-single',
-                        ['dir' => $item['location']]
+                        ['dir' => $item['base64']]
                     ); ?>">
                         <?php
                         echo $this->translate(
@@ -308,7 +315,7 @@ endif; ?>
                     <a href="<?php
                     echo $this->url(
                         'mp3-download-single',
-                        ['dir' => $item['location']]
+                        ['dir' => $item['base64']]
                     ); ?>">
                         <?php
                         echo $this->translate(
@@ -332,9 +339,12 @@ endif; ?>
             : <?php
             echo $this->paginator->getCurrentItemCount(); ?>
         </td>
+
         <td>&nbsp;</td>
+
         <td class="mp3_border mp3_center"><?php echo $this->totalLength; ?></td>
-        <td class="mp3_border mp3_center"><?php echo $this->convert($this->totalSize); ?></td>
+
+        <td class="mp3_border mp3_center"><?php echo $this->convert($this->totalFileSize); ?></td>
         <?php
         if (count($array) > '0' && !in_array(
                 'dir',
@@ -361,7 +371,8 @@ endif; ?>
                         <label for="download"></label>
 
                         <select id="download">
-                            <option value="0"><?php
+                            <option value="0">
+                                <?php
                                 echo $this->translate(
                                     'Select Download',
                                     'mp3'
