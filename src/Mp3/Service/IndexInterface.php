@@ -1,16 +1,14 @@
 <?php
 /**
- * MP3 Player
+ * OTWebsoft Framework
  *
  * @author    Sammie S. Taunton <diemuzi@gmail.com>
- * @copyright 2014 Sammie S. Taunton
- * @license   https://github.com/diemuzi/mp3/blob/master/LICENSE License
- * @link      https://github.com/diemuzi/mp3 MP3 Player
+ * @copyright 2014 OTWebsoft Corporation
+ * @license   http://otwebsoft.com/license License
+ * @link      http://otwebsoft.com OTWebsoft
  */
 
 namespace Mp3\Service;
-
-use Zend\Paginator\Paginator;
 
 /**
  * Interface IndexInterface
@@ -20,11 +18,11 @@ use Zend\Paginator\Paginator;
 interface IndexInterface
 {
     /**
-     * Index
+     * Directory Listing
      *
      * @param array $params
      *
-     * @return array|Paginator
+     * @return array
      * @throws \Exception
      */
     public function index(array $params);
@@ -32,40 +30,40 @@ interface IndexInterface
     /**
      * Play All
      *
-     * @param string $dir
+     * @param string $base64
      *
      * @return null|string|void
      * @throws \Exception
      */
-    public function playAll($dir);
+    public function playAll($base64);
 
     /**
      * Play Single Song
      *
-     * @param string $dir
+     * @param string $base64
      *
      * @return null|string|void
      * @throws \Exception
      */
-    public function playSingle($dir);
-
-    /**
-     * Download Single
-     *
-     * @param string $dir
-     *
-     * @return null|string|void
-     * @throws \Exception
-     */
-    public function downloadSingle($dir);
+    public function playSingle($base64);
 
     /**
      * Download Folder
      *
      * @param array $params
      *
-     * @return null|string|void
+     * @return void
      * @throws \Exception
      */
     public function downloadFolder(array $params);
+
+    /**
+     * Download Single
+     *
+     * @param string $base64
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function downloadSingle($base64);
 }

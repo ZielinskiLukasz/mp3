@@ -21,146 +21,58 @@ use Zend\Paginator\Paginator;
 class Index extends ServiceProvider implements IndexInterface
 {
     /**
-     * Index
+     * Directory Listing
      *
      * @param array $params
      *
-     * @return array|Paginator
+     * @return array
      * @throws \Exception
      */
     public function index(array $params)
     {
         try {
-            if (array_key_exists(
-                'dir',
-                $params
-            )) {
-                $baseDir = preg_replace(
-                    '/(\/+)/',
-                    '/',
-                    $this->getBasePath() . rawurldecode($params['dir'])
-                );
+            $directoryListing = $this->directoryListing($params);
 
-                $dir = preg_replace(
-                    '/(\/+)/',
-                    '/',
-                    rawurldecode($params['dir'])
-                );
-            } else {
-                $baseDir = preg_replace(
-                    '/(\/+)/',
-                    '/',
-                    $this->getBasePath()
-                );
+            $count = count($directoryListing);
 
-                $dir = null;
-            }
+            /**
+             * Remove Last 2 arrays
+             */
+            $output = array_slice(
+                $directoryListing,
+                0,
+                $count - 2
+            );
 
-            $array = [];
+            /**
+             * Paginate or Error if nothing found
+             */
+            if (is_array($directoryListing) && $count > '0') {
+                $paginator = new Paginator(new ArrayAdapter($output));
 
-            $totalLength = null;
-
-            $totalSize = null;
-
-            clearstatcache();
-
-            if (is_dir($baseDir)) {
-                foreach ($this->directoryArray($baseDir) as $location) {
-                    clearstatcache();
-
-                    /**
-                     * Directory
-                     */
-                    if (is_dir($baseDir . $location)) {
-                        $array[] = [
-                            'name'     => ltrim(
-                                $location,
-                                '/'
-                            ),
-                            'location' => ($dir != null)
-                                ? $dir . $location
-                                : $location,
-                            'type'     => 'dir'
-                        ];
-                    }
-
-                    /**
-                     * File
-                     */
-                    if (is_file($baseDir . '/' . $location)) {
-                        $ThisFileInfo = $this->getId3($baseDir . '/' . $location);
-
-                        $name = !empty($ThisFileInfo['comments_html']['title'])
-                            ? implode(
-                                '<br>',
-                                $ThisFileInfo['comments_html']['title']
-                            )
-                            : ltrim(
-                                $location,
-                                '/'
-                            );
-
-                        $bitRate = !empty($ThisFileInfo['audio']['bitrate'])
-                            ? round($ThisFileInfo['audio']['bitrate'] / 1000)
-                            : '-';
-
-                        $length = !empty($ThisFileInfo['playtime_string'])
-                            ? $ThisFileInfo['playtime_string']
-                            : '-';
-
-                        $filesize = !empty($ThisFileInfo['filesize'])
-                            ? $ThisFileInfo['filesize']
-                            : '-';
-
-                        $array[] = [
-                            'name'     => $name,
-                            'bit_rate' => $bitRate,
-                            'length'   => $length,
-                            'size'     => $filesize,
-                            'location' => ($dir != null)
-                                ? $dir . $location
-                                : $location,
-                            'type'     => 'file',
-                        ];
-
-                        $totalLength += $this->convertTime($length);
-
-                        $totalSize += $filesize;
-                    }
-                }
+                $paginator->setDefaultItemCountPerPage($count);
             } else {
                 throw new \Exception(
-                    $baseDir . ' ' . $this->translate->translate(
+                    $directoryListing . ' ' . $this->translate->translate(
                         'was not found',
                         'mp3'
                     )
                 );
             }
 
-            $paginator = new Paginator(new ArrayAdapter($array));
-
-            $paginator->setDefaultItemCountPerPage(
-                (count($array) > '0')
-                    ? count($array)
-                    : '1'
-            );
-
-            if ($totalLength > '0') {
-                $totalLength = sprintf(
-                    "%d:%02d",
-                    ($totalLength / 60),
-                    $totalLength % 60
-                );
-            }
+            $path = (array_key_exists(
+                'dir',
+                $params
+            ))
+                ? $params['dir']
+                : null;
 
             return [
-                'paginator'    => $paginator,
-                'path'         => ($dir != null)
-                    ? $dir
-                    : null,
-                'total_length' => $totalLength,
-                'total_size'   => $totalSize,
-                'search'       => (is_file($this->getConfig()['searchFile']))
+                'paginator'     => $paginator,
+                'path'          => $path,
+                'totalLength'   => $directoryListing['totalLength'],
+                'totalFileSize' => $directoryListing['totalFileSize'],
+                'search'        => (is_file($this->getSearchFile()))
             ];
         } catch (\Exception $e) {
             throw $e;
@@ -170,191 +82,124 @@ class Index extends ServiceProvider implements IndexInterface
     /**
      * Play All
      *
-     * @param string $dir
+     * @param string $base64
      *
      * @return null|string|void
      * @throws \Exception
      */
-    public function playAll($dir)
+    public function playAll($base64)
     {
         try {
-            $path = $this->getConfig()['baseDir'] . rawurldecode($dir);
+            /**
+             * Decode Path
+             */
+            $base64 = base64_decode($base64);
 
+            /**
+             * Path to File on Disk
+             */
+            $path = $this->getSearchPath() . '/' . $base64;
+
+            /**
+             * Path to Web URL
+             */
+            $file = $this->getBaseDir() . '/' . $base64;
+
+            /**
+             * Server URL
+             */
             $serverUrl = $this->serverUrl->get('serverurl')
                                          ->__invoke('/');
 
             clearstatcache();
 
-            if (is_dir($this->getBasePath() . rawurldecode($dir))) {
-                $array = $this->directoryArray($this->getBasePath() . rawurldecode($dir));
+            if (is_dir($path)) {
+                $array = $this->directoryListing($base64);
 
-                if ($this->getConfig()['format'] == 'm3u') {
-                    /**
-                     * Windows Media Player
-                     */
-                    if (is_array($array) && count($array) > '0') {
-                        $playlist = '#EXTM3U' . "\n";
+                if (is_array($array) && count($array) > '0') {
+                    switch ($this->getFormat()) {
+                        /**
+                         * Windows Media Player
+                         */
+                        case 'm3u':
+                            $playlist = '#EXTM3U' . "\n";
 
-                        foreach ($array as $value) {
-                            $playlist .= '#EXTINF: ';
-                            $playlist .= ltrim(
-                                $value,
-                                '/'
-                            );
-                            $playlist .= "\n";
-                            $playlist .= $serverUrl;
-                            $playlist .= $path . $value;
-                            $playlist .= "\n\n";
-                        }
+                            foreach ($array as $value) {
+                                $playlist .= '#EXTINF: ';
+                                $playlist .= $value['name'];
+                                $playlist .= "\n";
+                                $playlist .= $serverUrl;
+                                $playlist .= $file . '/' . $value['name'];
+                                $playlist .= "\n\n";
+                            }
 
-                        header("Content-Type: audio/mpegurl");
-                        header("Content-Disposition: attachment; filename=playlist.m3u");
+                            header("Content-Type: audio/mpegurl");
+                            header("Content-Disposition: attachment; filename=mediaplayer.m3u");
 
-                        echo $playlist;
+                            echo $playlist;
 
-                        exit;
-                    } else {
-                        throw new \Exception(
-                            $this->translate->translate(
-                                'Format is not currently supported. Supported formats are: pls, m3u',
-                                'mp3'
-                            )
-                        );
-                    }
-                } elseif ($this->getConfig()['format'] == 'pls') {
-                    /**
-                     * Winamp
-                     */
-                    if (is_array($array) && count($array) > '0') {
-                        $playlist = '[Playlist]' . "\n";
+                            exit;
 
-                        foreach ($array as $key => $value) {
-                            $ThisFileInfo = $this->getId3($this->getBasePath() . rawurldecode($dir) . $value);
+                            break;
 
-                            $name = !empty($ThisFileInfo['comments_html']['title'])
-                                ? implode(
-                                    '<br>',
-                                    $ThisFileInfo['comments_html']['title']
+                        /**
+                         * Winamp
+                         */
+                        case 'pls':
+                            $playlist = '[Playlist]' . "\n";
+
+                            foreach ($array as $key => $value) {
+                                $id3 = $this->getId3($path . '/' . $value['name']);
+
+                                $name = !empty($id3['comments_html']['title'])
+                                    ? implode(
+                                        '<br>',
+                                        $id3['comments_html']['title']
+                                    )
+                                    : basename($value['name']);
+
+                                $length = !empty($id3['playtime_string'])
+                                    ? $id3['playtime_string']
+                                    : '-1';
+
+                                $keyNum = ($key + 1);
+
+                                $playlist .= 'File';
+                                $playlist .= $keyNum;
+                                $playlist .= '=' . $serverUrl;
+                                $playlist .= $file . '/' . $value['name'];
+                                $playlist .= "\n";
+                                $playlist .= 'Title' . $keyNum . '=' . $name . "\n";
+                                $playlist .= 'Length' . $keyNum . '=' . $this->convertTime($length) . "\n";
+                            }
+
+                            $playlist .= 'Numberofentries=' . count($array) . "\n";
+                            $playlist .= 'Version=2' . "\n";
+
+                            header("Content-Type: audio/x-scpls");
+                            header("Content-Disposition: attachment; filename=winamp.pls");
+
+                            echo $playlist;
+
+                            exit;
+
+                            break;
+
+                        /**
+                         * Error
+                         */
+                        default:
+                            throw new \Exception(
+                                $this->translate->translate(
+                                    'Format is not currently supported. Supported formats are: pls, m3u',
+                                    'mp3'
                                 )
-                                : ltrim(
-                                    $dir,
-                                    '/'
-                                );
-
-                            $length = !empty($ThisFileInfo['playtime_string'])
-                                ? $ThisFileInfo['playtime_string']
-                                : '-1';
-
-                            $keyNum = ($key + 1);
-
-                            $playlist .= 'File';
-                            $playlist .= $keyNum;
-                            $playlist .= '=' . $serverUrl;
-                            $playlist .= $path . $value;
-                            $playlist .= "\n";
-                            $playlist .= 'Title' . $keyNum . '=' . $name . "\n";
-                            $playlist .= 'Length' . $keyNum . '=' . $this->convertTime($length) . "\n";
-                        }
-
-                        $playlist .= 'Numberofentries=' . count($array) . "\n";
-                        $playlist .= 'Version=2' . "\n";
-
-                        header("Content-Type: audio/x-scpls");
-                        header("Content-Disposition: attachment; filename=playlist.pls");
-
-                        echo $playlist;
-
-                        exit;
-                    } else {
-                        throw new \Exception(
-                            $this->translate->translate(
-                                'Something went wrong and we cannot play this folder',
-                                'mp3'
-                            )
-                        );
+                            );
                     }
                 } else {
                     throw new \Exception(
                         $this->translate->translate(
-                            'Format is not currently supported. Supported formats are: pls, m3u',
-                            'mp3'
-                        )
-                    );
-                }
-            } else {
-                throw new \Exception(
-                    $this->getBasePath() . rawurldecode($dir) . ' ' . $this->translate->translate(
-                        'was not found',
-                        'mp3'
-                    )
-                );
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-
-    /**
-     * Play Single Song
-     *
-     * @param string $dir
-     *
-     * @return null|string|void
-     * @throws \Exception
-     */
-    public function playSingle($dir)
-    {
-        try {
-            $path = $this->getBasePath() . rawurldecode($dir);
-
-            $file = $this->getConfig()['baseDir'] . rawurldecode($dir);
-
-            $serverUrl = $this->serverUrl->get('serverurl')
-                                         ->__invoke('/');
-
-            clearstatcache();
-
-            if (is_file($path)) {
-                if ($this->getConfig()['format'] == 'm3u') {
-                    /**
-                     * Windows Media Player
-                     */
-                    header("Content-Type: audio/mpegurl");
-                    header("Content-Disposition: attachment; filename=playlist.m3u");
-
-                    echo $serverUrl . $file;
-
-                    exit;
-                } elseif ($this->getConfig()['format'] == 'pls') {
-                    /**
-                     * Winamp
-                     */
-                    header("Content-Type: audio/x-scpls");
-                    header("Content-Disposition: attachment; filename=playlist.pls");
-
-                    $ThisFileInfo = $this->getId3(basename($path));
-
-                    $name = !empty($ThisFileInfo['comments_html']['title'])
-                        ? implode(
-                            '<br>',
-                            $ThisFileInfo['comments_html']['title']
-                        )
-                        : basename($path);
-
-                    $playlist = '[Playlist]' . "\n";
-                    $playlist .= 'File1=' . $serverUrl . $file . "\n";
-                    $playlist .= 'Title1=' . $name . "\n";
-                    $playlist .= 'Length1=-1' . "\n";
-                    $playlist .= 'Numberofentries=1' . "\n";
-                    $playlist .= 'Version=2' . "\n";
-
-                    echo $playlist;
-
-                    exit;
-                } else {
-                    throw new \Exception(
-                        $this->translate->translate(
-                            'Format is not currently supported. Supported formats are: pls, m3u',
+                            'Something went wrong and we cannot play this folder',
                             'mp3'
                         )
                     );
@@ -373,23 +218,222 @@ class Index extends ServiceProvider implements IndexInterface
     }
 
     /**
-     * Download Single
+     * Play Single Song
      *
-     * @param string $dir
+     * @param string $base64
      *
      * @return null|string|void
      * @throws \Exception
      */
-    public function downloadSingle($dir)
+    public function playSingle($base64)
     {
         try {
-            $path = $this->getBasePath() . rawurldecode($dir);
+            /**
+             * Decode Path
+             */
+            $base64 = base64_decode($base64);
+
+            /**
+             * Path to File on Disk
+             */
+            $path = $this->getSearchPath() . '/' . $base64;
+
+            /**
+             * Path to Web URL
+             */
+            $file = $this->getBaseDir() . '/' . $base64;
+
+            /**
+             * Server URL
+             */
+            $serverUrl = $this->serverUrl->get('serverurl')
+                                         ->__invoke('/');
+
+            clearstatcache();
+
+            if (is_file($path)) {
+                switch ($this->getFormat()) {
+                    /**
+                     * Windows Media Player
+                     */
+                    case 'm3u':
+                        header("Content-Type: audio/mpegurl");
+                        header("Content-Disposition: attachment; filename=mediaplayer.m3u");
+
+                        echo $serverUrl . $file;
+
+                        exit;
+
+                        break;
+
+                    /**
+                     * Winamp
+                     */
+                    case 'pls':
+                        header("Content-Type: audio/x-scpls");
+                        header("Content-Disposition: attachment; filename=winamp.pls");
+
+                        $id3 = $this->getId3($path);
+
+                        $name = !empty($id3['comments_html']['title'])
+                            ? implode(
+                                '<br>',
+                                $id3['comments_html']['title']
+                            )
+                            : basename($path);
+
+                        $playlist = '[Playlist]' . "\n";
+                        $playlist .= 'File1=' . $serverUrl . $file . "\n";
+                        $playlist .= 'Title1=' . $name . "\n";
+                        $playlist .= 'Length1=-1' . "\n";
+                        $playlist .= 'Numberofentries=1' . "\n";
+                        $playlist .= 'Version=2' . "\n";
+
+                        echo $playlist;
+
+                        exit;
+
+                        break;
+
+                    /**
+                     * Error
+                     */
+                    default:
+                        throw new \Exception(
+                            $this->translate->translate(
+                                'Format is not currently supported. Supported formats are: pls, m3u',
+                                'mp3'
+                            )
+                        );
+                }
+            } else {
+                throw new \Exception(
+                    $path . ' ' . $this->translate->translate(
+                        'was not found',
+                        'mp3'
+                    )
+                );
+            }
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Download Folder
+     *
+     * @param array $params
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function downloadFolder(array $params)
+    {
+        try {
+            if (extension_loaded('Phar')) {
+                /**
+                 * Decode Path
+                 */
+                $base64 = base64_decode($params['dir']);
+
+                /**
+                 * Path to File on Disk
+                 */
+                $path = $this->getSearchPath() . '/' . $base64;
+
+                clearstatcache();
+
+                if (is_dir($path)) {
+                    $array = $this->directoryListing($base64);
+
+                    if (is_array($array) && count($array) > '0') {
+                        unset($array['totalLength']);
+                        unset($array['totalFileSize']);
+
+                        $filename = $path . '.' . $params['format'];
+
+                        $phar = new \PharData($filename);
+
+                        foreach ($array as $value) {
+                            $phar->addFile(
+                                $value['fullPath'],
+                                $value['name']
+                            );
+                        }
+
+                        switch ($params['format']) {
+                            case 'tar':
+                                header('Content-Type: application/x-tar');
+                                break;
+
+                            case 'zip':
+                                header('Content-Type: application/zip');
+                                break;
+
+                            case 'bz2':
+                                header('Content-Type: application/x-bzip2');
+                                break;
+
+                            case 'rar':
+                                header('Content-Type: x-rar-compressed');
+                                break;
+                        }
+
+                        header('Content-disposition: attachment; filename=' . basename($filename));
+                        header('Content-Length: ' . filesize($filename));
+
+                        readfile($filename);
+
+                        unlink($filename);
+
+                        exit;
+                    } else {
+                        throw new \Exception(
+                            $this->translate->translate(
+                                'Something went wrong and we cannot download this folder',
+                                'mp3'
+                            )
+                        );
+                    }
+                } else {
+                    throw new \Exception(
+                        $path . ' ' . $this->translate->translate(
+                            'was not found',
+                            'mp3'
+                        )
+                    );
+                }
+            } else {
+                throw new \Exception(
+                    $this->translate->translate('Phar Extension is not loaded')
+                );
+            }
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Download Single
+     *
+     * @param string $base64
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function downloadSingle($base64)
+    {
+        try {
+            /**
+             * Path to File on Disk
+             */
+            $path = $this->getSearchPath() . '/' . base64_decode($base64);
 
             clearstatcache();
 
             if (is_file($path)) {
                 header("Content-Type: audio/mpeg");
-                header("Content-Disposition: attachment; filename=" . basename($path));
+                header("Content-Disposition: attachment; filename=" . basename($this->cleanPath($path)));
                 header("Content-Length: " . filesize($path));
 
                 $handle = fopen(
@@ -421,142 +465,150 @@ class Index extends ServiceProvider implements IndexInterface
     }
 
     /**
-     * Download Folder
+     * Directory Listing
      *
      * @param array $params
-     *
-     * @return null|string|void
-     * @throws \Exception
-     */
-    public function downloadFolder(array $params)
-    {
-        try {
-            if (extension_loaded('Phar')) {
-                $dir = rawurldecode($params['dir']);
-
-                clearstatcache();
-
-                if (is_dir($this->getBasePath() . $dir)) {
-                    $array = $this->directoryArray($this->getBasePath() . $dir);
-
-                    if (is_array($array) && count($array) > '0') {
-                        $filename = basename($dir) . '.' . $params['format'];
-
-                        $tar = new \PharData($filename);
-
-                        foreach ($array as $value) {
-                            $tar->addFile(
-                                $this->getBasePath() . $dir . $value,
-                                basename($value)
-                            );
-                        }
-
-                        if ($params['format'] == 'tar') {
-                            header('Content-Type: application/x-tar');
-                        } elseif ($params['format'] == 'zip') {
-                            header('Content-Type: application/zip');
-                        } elseif ($params['format'] == 'bz2') {
-                            header('Content-Type: application/x-bzip2');
-                        } elseif ($params['format'] == 'rar') {
-                            header('Content-Type: x-rar-compressed');
-                        }
-
-                        header('Content-disposition: attachment; filename=' . $filename);
-                        header('Content-Length: ' . filesize($filename));
-
-                        readfile($filename);
-
-                        unlink($filename);
-
-                        exit;
-                    } else {
-                        throw new \Exception(
-                            $this->translate->translate(
-                                'Something went wrong and we cannot download this folder',
-                                'mp3'
-                            )
-                        );
-                    }
-                } else {
-                    throw new \Exception(
-                        $this->getBasePath() . $dir . ' ' . $this->translate->translate(
-                            'was not found',
-                            'mp3'
-                        )
-                    );
-                }
-            } else {
-                throw new \Exception(
-                    $this->translate->translate('Phar Extension is not loaded')
-                );
-            }
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-
-    /**
-     * Directory Array
-     *
-     * @param string $dir
      *
      * @return array
      * @throws \Exception
      */
-    private function directoryArray($dir)
+    private function directoryListing($params)
     {
         try {
-            $result_array = [];
+            /**
+             * Which path are we scanning?
+             *
+             * 1) Array
+             * 2) String
+             * 3) Default
+             */
+            if (is_array($params) && !empty($params['dir'])) {
+                $path = scandir($this->getSearchPath() . '/' . base64_decode($params['dir']));
+            } elseif (!is_array($params) && !empty($params)) {
+                $path = scandir($this->getSearchPath() . '/' . $params);
+            } else {
+                $path = scandir($this->getSearchPath());
+            }
 
-            $handle = opendir($dir);
+            $array = [];
 
-            if ($handle) {
-                while (false !== ($file = readdir($handle))) {
-                    if ($file != '.' && $file != '..') {
+            $totalLength = null;
+
+            $totalFileSize = null;
+
+            if (is_array($path) && count($path) > '0') {
+                foreach ($path as $name) {
+                    if ($name != '.' && $name != '..') {
+                        $fileExtension = substr(
+                            strrchr(
+                                $name,
+                                '.'
+                            ),
+                            1
+                        );
+
+                        /**
+                         * Set Paths
+                         *
+                         * 1) Array
+                         * 2) String
+                         * 3) Default
+                         */
+                        if (is_array($params) && !empty($params['dir'])) {
+                            $basePath = base64_decode($params['dir']) . '/' . $name;
+
+                            $fullPath = $this->getSearchPath() . '/' . base64_decode($params['dir']) . '/' . $name;
+                        } elseif (!is_array($params) && !empty($params)) {
+                            $basePath = $params . '/' . $name;
+
+                            $fullPath = $this->getSearchPath() . '/' . $params . '/' . $name;
+                        } else {
+                            $basePath = $name;
+
+                            $fullPath = $this->getSearchPath() . '/' . $name;
+                        }
+
                         clearstatcache();
 
-                        if (is_dir($dir . '/' . $file) && false) {
-                            $list = $this->directoryArray(
-                                $dir . '/' . $file
-                            );
+                        /**
+                         * Directory
+                         */
+                        if (is_dir($fullPath)) {
+                            $array[] = [
+                                'name'     => $name,
+                                'basePath' => $basePath,
+                                'base64'   => base64_encode($basePath),
+                                'fullPath' => $fullPath,
+                                'type'     => 'dir'
+                            ];
+                        }
 
-                            $count = 0;
+                        /**
+                         * File
+                         */
+                        if (is_file($fullPath) && in_array(
+                                '.' . $fileExtension,
+                                $this->getExtensions()
+                            )
+                        ) {
+                            $id3 = $this->getId3($fullPath);
 
-                            while ($list[$count]) {
-                                $result_array[] = $list[$count];
+                            $title = !empty($id3['comments_html']['title'])
+                                ? implode(
+                                    '<br>',
+                                    $id3['comments_html']['title']
+                                )
+                                : $name;
 
-                                $count++;
-                            }
-                        } else {
-                            clearstatcache();
+                            $bitRate = !empty($id3['audio']['bitrate'])
+                                ? round($id3['audio']['bitrate'] / '1000')
+                                : '-';
 
-                            if (is_dir($dir . '/' . $file)) {
-                                $result_array[] = '/' . $file;
-                            }
+                            $length = !empty($id3['playtime_string'])
+                                ? $id3['playtime_string']
+                                : '-';
 
-                            $fileExt = substr(
-                                $file,
-                                -4
-                            );
+                            $fileSize = !empty($id3['filesize'])
+                                ? $id3['filesize']
+                                : '-';
 
-                            /**
-                             * Supported Audio Formats
-                             */
-                            foreach ($this->getExtensions() as $ext) {
-                                if (is_file($dir . '/' . $file) && $fileExt == $ext) {
-                                    $result_array[] = '/' . $file;
-                                }
-                            }
+                            $totalLength += $this->convertTime($length);
+
+                            $totalFileSize += $fileSize;
+
+                            $array[] = [
+                                'name'     => $name,
+                                'basePath' => $basePath,
+                                'base64'   => base64_encode($basePath),
+                                'fullPath' => $fullPath,
+                                'type'     => 'file',
+                                'id3'      => [
+                                    'title'    => $title,
+                                    'bitRate'  => $bitRate,
+                                    'length'   => $length,
+                                    'fileSize' => $fileSize
+                                ]
+                            ];
                         }
                     }
                 }
 
-                closedir($handle);
+                sort($array);
 
-                sort($result_array);
+                if ($totalLength > '0') {
+                    $totalLength = sprintf(
+                        "%d:%02d",
+                        ($totalLength / '60'),
+                        $totalLength % '60'
+                    );
+                }
 
-                return $result_array;
+                $array['totalLength'] = $totalLength;
+
+                $array['totalFileSize'] = $totalFileSize;
             }
+
+            return $array;
         } catch (\Exception $e) {
             throw $e;
         }
