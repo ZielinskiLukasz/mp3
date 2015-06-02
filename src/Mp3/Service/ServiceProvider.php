@@ -20,6 +20,8 @@ use Zend\View\HelperPluginManager;
  */
 abstract class ServiceProvider
 {
+    use FunctionTrait;
+
     /**
      * @var array $config
      */
@@ -55,57 +57,14 @@ abstract class ServiceProvider
     }
 
     /**
-     * Get Base Path
+     * Get Search Path
      *
      * @return string
-     */
-    protected function getBasePath()
-    {
-        if (php_sapi_name() == 'cli') {
-            return $this->getConfig()['searchPath'];
-        } else {
-            return $_SERVER['DOCUMENT_ROOT'] . $this->getConfig()['baseDir'];
-        }
-    }
-
-    /**
-     * Get Config
-     *
-     * @return array
      * @throws \Exception
      */
-    protected function getConfig()
+    protected function getSearchPath()
     {
-        $config = $this->config;
-
-        if (!isset($config['mp3']['baseDir'])) {
-            throw new \Exception(
-                $this->translate->translate(
-                    'baseDir is not currently set',
-                    'mp3'
-                )
-            );
-        }
-
-        if (!isset($config['mp3']['format'])) {
-            throw new \Exception(
-                $this->translate->translate(
-                    'format is not currently set',
-                    'mp3'
-                )
-            );
-        }
-
-        if (!isset($config['mp3']['searchFile'])) {
-            throw new \Exception(
-                $this->translate->translate(
-                    'searchFile is not currently set',
-                    'mp3'
-                )
-            );
-        }
-
-        if (!isset($config['mp3']['searchPath'])) {
+        if (!isset($this->config['mp3']['searchPath'])) {
             throw new \Exception(
                 $this->translate->translate(
                     'searchPath is not currently set',
@@ -114,7 +73,78 @@ abstract class ServiceProvider
             );
         }
 
-        if (!isset($config['mp3']['memoryLimit'])) {
+        return $this->config['mp3']['searchPath'];
+    }
+
+    /**
+     * Get Base Directory
+     *
+     * @return string
+     * @throws \Exception
+     */
+    protected function getBaseDir()
+    {
+        if (!isset($this->config['mp3']['baseDir'])) {
+            throw new \Exception(
+                $this->translate->translate(
+                    'baseDir is not currently set',
+                    'mp3'
+                )
+            );
+        }
+
+        return $this->config['mp3']['baseDir'];
+    }
+
+    /**
+     * Get Format
+     *
+     * @return string
+     * @throws \Exception
+     */
+    protected function getFormat()
+    {
+        if (!isset($this->config['mp3']['format'])) {
+            throw new \Exception(
+                $this->translate->translate(
+                    'format is not currently set',
+                    'mp3'
+                )
+            );
+        }
+
+        return $this->config['mp3']['format'];
+    }
+
+    /**
+     * Get Search File
+     *
+     * @return string
+     * @throws \Exception
+     */
+    protected function getSearchFile()
+    {
+        if (!isset($this->config['mp3']['searchFile'])) {
+            throw new \Exception(
+                $this->translate->translate(
+                    'searchFile is not currently set',
+                    'mp3'
+                )
+            );
+        }
+
+        return $this->config['mp3']['searchFile'];
+    }
+
+    /**
+     * Get Memory Limit
+     *
+     * @return string
+     * @throws \Exception
+     */
+    protected function getMemoryLimit()
+    {
+        if (!isset($this->config['mp3']['memoryLimit'])) {
             throw new \Exception(
                 $this->translate->translate(
                     'memoryLimit is not currently set',
@@ -123,107 +153,6 @@ abstract class ServiceProvider
             );
         }
 
-        return [
-            'baseDir'     => $config['mp3']['baseDir'],
-            'format'      => $config['mp3']['format'],
-            'searchFile'  => $config['mp3']['searchFile'],
-            'searchPath'  => $config['mp3']['searchPath'],
-            'memoryLimit' => $config['mp3']['memoryLimit']
-        ];
-    }
-
-    /**
-     * Converts Timestamp from HH:MM:SS to Seconds
-     *
-     * @param string $length
-     * @param string $hours
-     * @param string $minutes
-     * @param string $seconds
-     *
-     * @return string
-     */
-    protected function convertTime(
-        $length,
-        $hours = '0',
-        $minutes = '00',
-        $seconds = '00'
-    ) {
-        $length = preg_replace(
-            "/^([\d]{1,2})\:([\d]{2})$/",
-            "00:$1:$2",
-            $length
-        );
-
-        sscanf(
-            $length,
-            "%d:%d:%d",
-            $hours,
-            $minutes,
-            $seconds
-        );
-
-        return $hours * 3600 + $minutes * 60 + $seconds;
-    }
-
-    /**
-     * Get ID3 Details
-     *
-     * @param string $path
-     *
-     * @return array
-     */
-    protected function getId3($path)
-    {
-        $getID3 = new \getID3();
-
-        $analyze = $getID3->analyze($path);
-
-        \getid3_lib::CopyTagsToComments($analyze);
-
-        return $analyze;
-    }
-
-    /**
-     * Extensions
-     *
-     * @return array
-     */
-    protected function getExtensions()
-    {
-        return [
-            '.3gp',
-            '.act',
-            '.aiff',
-            '.aac',
-            '.aac',
-            '.au',
-            '.awb',
-            '.dct',
-            '.dss',
-            '.dvf',
-            '.flac',
-            '.gsm',
-            '.iklax',
-            '.ivs',
-            '.m4a',
-            '.m4p',
-            '.mmf',
-            '.mp3',
-            '.mpc',
-            '.msv',
-            '.ogg',
-            '.oga',
-            '.opus',
-            '.ra',
-            '.rm',
-            '.raw',
-            '.sln',
-            '.tta',
-            '.vox',
-            '.wav',
-            '.wma',
-            '.wv',
-            '.webm'
-        ];
+        return $this->config['mp3']['memoryLimit'];
     }
 }
