@@ -46,7 +46,7 @@ return [
             'mp3-index'           => [
                 'type'    => 'segment',
                 'options' => [
-                    'route'    => '/mp3/index[:dir]',
+                    'route'    => '/mp3/index[/:dir]',
                     'defaults' => [
                         'controller' => 'Mp3\Controller\Index',
                         'action'     => 'index'
@@ -56,7 +56,7 @@ return [
             'mp3-play-all'        => [
                 'type'    => 'segment',
                 'options' => [
-                    'route'    => '/mp3/play/all[:dir]',
+                    'route'    => '/mp3/play/all[/:dir]',
                     'defaults' => [
                         'controller' => 'Mp3\Controller\Index',
                         'action'     => 'playall'
@@ -66,7 +66,7 @@ return [
             'mp3-play-single'     => [
                 'type'    => 'segment',
                 'options' => [
-                    'route'    => '/mp3/play/single[:dir]',
+                    'route'    => '/mp3/play/single[/:dir]',
                     'defaults' => [
                         'controller' => 'Mp3\Controller\Index',
                         'action'     => 'playsingle'
@@ -76,7 +76,7 @@ return [
             'mp3-download-folder' => [
                 'type'    => 'segment',
                 'options' => [
-                    'route'    => '/mp3/download/folder[:dir][/format/:format]',
+                    'route'    => '/mp3/download/folder[/:dir][/format/:format]',
                     'defaults' => [
                         'controller' => 'Mp3\Controller\Index',
                         'action'     => 'downloadfolder'
@@ -86,7 +86,7 @@ return [
             'mp3-download-single' => [
                 'type'    => 'segment',
                 'options' => [
-                    'route'    => '/mp3/download/single[:dir]',
+                    'route'    => '/mp3/download/single[/:dir]',
                     'defaults' => [
                         'controller' => 'Mp3\Controller\Index',
                         'action'     => 'downloadsingle'
@@ -107,9 +107,6 @@ return [
         ]
     ],
     'service_manager' => [
-        'invokables' => [
-            'Mp3\Service\Calculate' => 'Mp3\Service\Calculate'
-        ],
         'factories'  => [
             'Mp3\Service\Index'  => 'Mp3\Service\Factory\IndexFactory',
             'Mp3\Service\Search' => 'Mp3\Service\Factory\SearchFactory'
