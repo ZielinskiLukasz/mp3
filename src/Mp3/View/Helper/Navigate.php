@@ -32,16 +32,20 @@ class Navigate extends AbstractHelper
 
         $explode = explode(
             '/',
-            $path
+            base64_decode($path)
         );
 
         $res = null;
 
-        for ($i = 1; $i < count($explode); $i++) {
-            $res .= '/' . $explode[$i];
+        for ($i = 0; $i < count($explode); $i++) {
+            if ($i == 0) {
+                $res .= $explode[$i];
+            } else {
+                $res .= '/' . $explode[$i];
+            }
 
             $navigate[] = [
-                'url'  => $res,
+                'url'  => base64_encode($res),
                 'text' => $explode[$i]
             ];
         }
