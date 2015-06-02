@@ -518,7 +518,7 @@ class Index extends ServiceProvider implements IndexInterface
                             $basePath = base64_decode($params['dir']) . '/' . $name;
 
                             $fullPath = $this->getSearchPath() . '/' . base64_decode($params['dir']) . '/' . $name;
-                        } elseif (!is_array($params) && !empty($params)) {
+                        } elseif (is_string($params) && !empty($params)) {
                             $basePath = $params . '/' . $name;
 
                             $fullPath = $this->getSearchPath() . '/' . $params . '/' . $name;
