@@ -89,14 +89,14 @@ class IndexController extends AbstractActionController
             ->setTemplate('mp3/mp3/search')
             ->setVariables(
                 [
-                    'form'        => $form,
-                    'paginator'   => $service['paginator'],
-                    'path'        => $service['path'],
-                    'totalLength' => $service['total_length'],
-                    'totalSize'   => $service['total_size'],
-                    'search'      => $service['search'],
-                    'dir'         => $this->params()
-                                          ->fromRoute('dir')
+                    'form'          => $form,
+                    'paginator'     => $service['paginator'],
+                    'path'          => $service['path'],
+                    'totalLength'   => $service['totalLength'],
+                    'totalFileSize' => $service['totalFileSize'],
+                    'search'        => $service['search'],
+                    'dir'           => $this->params()
+                                            ->fromRoute('dir')
                 ]
             );
     }
