@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.2.1 (2015-06-02)
+
+- Performance Enhancements
+
+- Refactored many functions
+
 ## 1.2.0 (2015-05-25)
 
 - Removed PHP 5.3 Support

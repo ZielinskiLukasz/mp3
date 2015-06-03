@@ -1,7 +1,7 @@
 MP3 Player
 ==========
 
-**Version 1.2.0** (Last Updated on 05-25-2015)
+**Version 1.2.1** (Last Updated on 06-02-2015)
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
@@ -22,39 +22,11 @@ Supported playlist formats are currently:
 
 Supported File Extensions:
 
-  * .3gp
-  * .act
-  * .aiff
-  * .aac
-  * .aac
-  * .au
-  * .awb
-  * .dct
-  * .dss
-  * .dvf
   * .flac
-  * .gsm
-  * .iklax
-  * .ivs
   * .m4a
-  * .m4p
-  * .mmf
   * .mp3
-  * .mpc
-  * .msv
-  * .ogg
-  * .oga
-  * .opus
-  * .ra
-  * .rm
-  * .raw
-  * .sln
-  * .tta
-  * .vox
   * .wav
   * .wma
-  * .wv
-  * .webm
 
 Support
 -------
