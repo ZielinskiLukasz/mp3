@@ -23,26 +23,30 @@ class Search extends ServiceProvider implements SearchInterface
     /**
      * Search
      *
-     * @param string $name
+     * @param string $string
      *
      * @return array|Paginator
      * @throws \Exception
      */
-    public function find($name)
+    public function find($string)
     {
         try {
             $array = [];
 
             $totalLength = null;
-            $totalSize = null;
 
-            if ($name != null) {
-                $filename = $this->getConfig()['searchFile'];
+            $totalFileSize = null;
+
+            if ($string != null) {
+                $searchFile = $this->getSearchFile();
 
                 clearstatcache();
 
-                if (is_file($filename)) {
-                    if (filesize($filename) <= '0') {
+                if (is_file($searchFile)) {
+                    /**
+                     * Error: Search File is Empty
+                     */
+                    if (filesize($searchFile) <= '0') {
                         $errorString = 'The search file is currently empty. ';
                         $errorString .= 'Use the Import Tool to populate the Search Results';
 
@@ -66,88 +70,100 @@ class Search extends ServiceProvider implements SearchInterface
                     }
 
                     $handle = fopen(
-                        $filename,
+                        $searchFile,
                         'r'
                     );
 
                     $contents = fread(
                         $handle,
-                        filesize($filename)
+                        filesize($searchFile)
                     );
 
                     $unserialize = preg_grep(
-                        '/' . $name . '/i',
+                        '/' . $string . '/i',
                         unserialize($contents)
                     );
 
                     fclose($handle);
 
                     if (count($unserialize) > '0') {
-                        foreach ($unserialize as $search) {
+                        foreach ($unserialize as $path) {
                             $this->memoryUsage();
+
+                            /**
+                             * Set Paths
+                             */
+                            $basePath = $path;
+
+                            $fullPath = $this->getSearchPath() . '/' . $path;
 
                             clearstatcache();
 
-                            $dir = preg_replace(
-                                '/(\/+)/',
-                                '/',
-                                $search
-                            );
-
-                            if (is_dir($this->getBasePath() . $search)) {
+                            if (is_dir($fullPath)) {
                                 $array[] = [
-                                    'name'     => ltrim(
-                                        $dir,
-                                        '/'
+                                    'name'     => $path,
+                                    'basePath' => $basePath,
+                                    'base64'   => base64_encode(
+                                        ltrim(
+                                            $basePath,
+                                            '/'
+                                        )
                                     ),
-                                    'location' => $dir,
+                                    'fullPath' => $fullPath,
                                     'type'     => 'dir'
                                 ];
                             }
 
-                            if (is_file($this->getBasePath() . $search)) {
-                                $ThisFileInfo = $this->getId3($this->getBasePath() . $dir);
+                            if (is_file($fullPath)) {
+                                $id3 = $this->getId3($fullPath);
 
-                                $name = !empty($ThisFileInfo['comments_html']['title'])
+                                $title = !empty($id3['comments_html']['title'])
                                     ? implode(
                                         '<br>',
-                                        $ThisFileInfo['comments_html']['title']
+                                        $id3['comments_html']['title']
                                     )
-                                    : ltrim(
-                                        $dir,
-                                        '/'
-                                    );
+                                    : basename($fullPath);
 
-                                $bitRate = !empty($ThisFileInfo['audio']['bitrate'])
-                                    ? round($ThisFileInfo['audio']['bitrate'] / 1000)
+                                $bitRate = !empty($id3['audio']['bitrate'])
+                                    ? round($id3['audio']['bitrate'] / '1000')
                                     : '-';
 
-                                $length = !empty($ThisFileInfo['playtime_string'])
-                                    ? $ThisFileInfo['playtime_string']
+                                $length = !empty($id3['playtime_string'])
+                                    ? $id3['playtime_string']
                                     : '-';
 
-                                $filesize = !empty($ThisFileInfo['filesize'])
-                                    ? $ThisFileInfo['filesize']
+                                $fileSize = !empty($id3['filesize'])
+                                    ? $id3['filesize']
                                     : '-';
-
-                                $array[] = [
-                                    'name'     => $name,
-                                    'bit_rate' => $bitRate,
-                                    'length'   => $length,
-                                    'size'     => $filesize,
-                                    'location' => $dir,
-                                    'type'     => 'file',
-                                ];
 
                                 $totalLength += $this->convertTime($length);
 
-                                $totalSize += $filesize;
+                                $totalFileSize += $fileSize;
+
+                                $array[] = [
+                                    'name'     => $path,
+                                    'basePath' => $basePath,
+                                    'base64'   => base64_encode(
+                                        ltrim(
+                                            $basePath,
+                                            '/'
+                                        )
+                                    ),
+                                    'fullPath' => $fullPath,
+                                    'type'     => 'file',
+                                    'id3'      => [
+                                        'title'    => $title,
+                                        'bitRate'  => $bitRate,
+                                        'length'   => $length,
+                                        'fileSize' => $fileSize
+                                    ]
+                                ];
                             }
                         }
                     }
                 } else {
                     throw new \Exception(
-                        $filename . ' ' . $this->translate->translate(
+                        $searchFile . ' ' . $this->translate->translate(
                             'was not found',
                             'mp3'
                         )
@@ -166,16 +182,16 @@ class Search extends ServiceProvider implements SearchInterface
             if ($totalLength > '0') {
                 $totalLength = sprintf(
                     "%d:%02d",
-                    ($totalLength / 60),
-                    $totalLength % 60
+                    ($totalLength / '60'),
+                    $totalLength % '60'
                 );
             }
 
             return [
-                'paginator'    => $paginator,
-                'total_length' => $totalLength,
-                'total_size'   => $totalSize,
-                'search'       => (is_file($this->getConfig()['searchFile']))
+                'paginator'     => $paginator,
+                'totalLength'   => $totalLength,
+                'totalFileSize' => $totalFileSize,
+                'search'        => (is_file($this->getSearchFile()))
             ];
         } catch (\Exception $e) {
             throw $e;
@@ -197,40 +213,40 @@ class Search extends ServiceProvider implements SearchInterface
 
             clearstatcache();
 
-            if (is_dir($this->getBasePath())) {
-                $directory = new \RecursiveDirectoryIterator(
-                    $this->getBasePath(),
+            if (is_dir($this->getSearchPath())) {
+                $searchPath = new \RecursiveDirectoryIterator(
+                    $this->getSearchPath(),
                     \FilesystemIterator::FOLLOW_SYMLINKS
                 );
 
-                $filename = $this->getConfig()['searchFile'];
+                $searchFile = $this->getSearchFile();
 
                 clearstatcache();
 
-                if (!touch($filename)) {
+                if (!touch($searchFile)) {
                     throw new \Exception(
-                        $filename . ' ' . $this->translate->translate(
+                        $searchFile . ' ' . $this->translate->translate(
                             'could not be created',
                             'mp3'
                         )
                     );
                 }
 
-                if (is_file($filename)) {
+                if (is_file($searchFile)) {
                     $handle = fopen(
-                        $filename,
+                        $searchFile,
                         'w'
                     );
 
-                    if (is_writable($filename)) {
+                    if (is_writable($searchFile)) {
                         if (!$handle) {
                             throw new \Exception(
-                                $this->translate->translate('Cannot Open File') . ': ' . $filename
+                                $this->translate->translate('Cannot Open File') . ': ' . $searchFile
                             );
                         }
                     } else {
                         throw new \Exception(
-                            $this->translate->translate('File Is Not Writable') . ': ' . $filename
+                            $this->translate->translate('File Is Not Writable') . ': ' . $searchFile
                         );
                     }
 
@@ -239,62 +255,83 @@ class Search extends ServiceProvider implements SearchInterface
                     /**
                      * @var \RecursiveDirectoryIterator $current
                      */
-                    foreach (new \RecursiveIteratorIterator($directory) as $current) {
-                        $mainFolder = substr(
-                            $current->getPathName(),
-                            0,
-                            -2
-                        );
+                    foreach (new \RecursiveIteratorIterator($searchPath) as $current) {
+                        $basePathName = basename($current->getPathname());
 
-                        $mainFile = substr(
-                            $current->getPathName(),
-                            -4
-                        );
+                        if ($basePathName != '..') {
+                            $fileExtension = substr(
+                                strrchr(
+                                    $basePathName,
+                                    '.'
+                                ),
+                                1
+                            );
 
-                        /**
-                         * Do not index the main folder
-                         */
-                        if ($mainFolder != $this->getBasePath()
-                        ) {
+                            clearstatcache();
+
                             /**
-                             * Remove . and .. but translate the path into the base folder name
+                             * Directory
                              */
-                            if (basename($current->getPathName()) == '.') {
-                                $array[] = str_replace(
-                                    $this->getBasePath(),
-                                    '',
-                                    substr(
-                                        $current->getPathName(),
-                                        0,
-                                        -2
-                                    )
+                            if (is_dir($current->getPathname())) {
+                                $directoryName = substr(
+                                    $current->getPathName(),
+                                    0,
+                                    -2
                                 );
-                            } elseif (
-                                basename($current->getPathName()) != '..' && in_array(
-                                    $mainFile,
+
+                                $replaceDirectory = str_replace(
+                                    $this->getSearchPath(),
+                                    '',
+                                    $directoryName
+                                );
+
+                                $directoryTrim = ltrim(
+                                    $replaceDirectory,
+                                    '/'
+                                );
+
+                                $array[] = $directoryTrim;
+                            }
+
+                            /**
+                             * File
+                             */
+                            if (is_file($current->getPathname()) && in_array(
+                                    '.' . $fileExtension,
                                     $this->getExtensions()
                                 )
                             ) {
-                                $array[] = str_replace(
-                                    $this->getBasePath(),
+                                $fileName = $current->getPathname();
+
+                                $replaceFileName = str_replace(
+                                    $this->getSearchPath(),
                                     '',
-                                    $current->getPathName()
+                                    $fileName
                                 );
+
+                                $fileNameTrim = ltrim(
+                                    $replaceFileName,
+                                    '/'
+                                );
+
+                                $array[] = $fileNameTrim;
                             }
                         }
                     }
 
-                    sort($array);
+                    $result = array_unique($array);
+
+                    sort($result);
 
                     fwrite(
                         $handle,
-                        serialize($array)
+                        serialize($result)
                     );
 
                     fclose($handle);
                 } else {
                     throw new \Exception(
-                        $filename . ' ' . $this->translate->translate(
+                        $searchFile . ' ' . $this->translate->translate(
                             'was not found',
                             'mp3'
                         )
@@ -302,7 +339,7 @@ class Search extends ServiceProvider implements SearchInterface
                 }
             } else {
                 throw new \Exception(
-                    $this->getBasePath() . ' ' . $this->translate->translate(
+                    $this->getBaseDir() . ' ' . $this->translate->translate(
                         'was not found',
                         'mp3'
                     )
@@ -351,16 +388,14 @@ class Search extends ServiceProvider implements SearchInterface
      */
     public function memoryUsage()
     {
-        if ($this->getConfig()['memoryLimit']) {
+        if ($this->getMemoryLimit()) {
             $remaining = (memory_get_peak_usage() - memory_get_usage());
 
             $left = (memory_get_peak_usage() + $remaining);
 
             if ($left < memory_get_peak_usage(true)) {
-                $errorString = 'PHP Ran Out of Memory. Please Try Again';
-
                 $translateError = $this->translate->translate(
-                    $errorString,
+                    'PHP Ran Out of Memory. Please Try Again',
                     'mp3'
                 );
 

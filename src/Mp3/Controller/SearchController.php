@@ -101,13 +101,13 @@ class SearchController extends AbstractActionController
             ->setTemplate('mp3/mp3/search')
             ->setVariables(
                 [
-                    'form'         => $form,
-                    'paginator'    => $service['paginator'],
-                    'total_length' => $service['total_length'],
-                    'total_size'   => $service['total_size'],
-                    'search'       => $service['search'],
-                    'flash'        => $this->params()
-                                           ->fromRoute('flash')
+                    'form'          => $form,
+                    'paginator'     => $service['paginator'],
+                    'totalLength'   => $service['totalLength'],
+                    'totalFileSize' => $service['totalFileSize'],
+                    'search'        => $service['search'],
+                    'flash'         => $this->params()
+                                            ->fromRoute('flash')
                 ]
             );
     }

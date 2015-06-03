@@ -1,11 +1,11 @@
 <?php
 /**
- * MP3 Player
+ * OTWebsoft Framework
  *
  * @author    Sammie S. Taunton <diemuzi@gmail.com>
- * @copyright 2014 Sammie S. Taunton
- * @license   https://github.com/diemuzi/mp3/blob/master/LICENSE License
- * @link      https://github.com/diemuzi/mp3 MP3 Player
+ * @copyright 2014 OTWebsoft Corporation
+ * @license   http://otwebsoft.com/license License
+ * @link      http://otwebsoft.com OTWebsoft
  */
 
 namespace Mp3\Service;
@@ -22,12 +22,12 @@ interface SearchInterface
     /**
      * Search
      *
-     * @param string $name
+     * @param string $string
      *
      * @return array|Paginator
      * @throws \Exception
      */
-    public function find($name);
+    public function find($string);
 
     /**
      * Import Search Results
@@ -47,6 +47,8 @@ interface SearchInterface
 
     /**
      * Determines PHP's Memory Usage Overflow
+     *
+     * Usage: Set memoryLimit in mp3.global.php to true in order to use this feature
      *
      * @return void
      */
