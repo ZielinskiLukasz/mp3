@@ -103,7 +103,7 @@ class Index extends ServiceProvider implements IndexInterface
             /**
              * Path to Web URL
              */
-            $file = $this->getBaseDir() . '/' . $base64;
+            $file = ltrim($this->getBaseDir() . '/' . $base64, '/');
 
             /**
              * Server URL
@@ -241,7 +241,7 @@ class Index extends ServiceProvider implements IndexInterface
             /**
              * Path to Web URL
              */
-            $file = $this->getBaseDir() . '/' . $base64;
+            $file = ltrim($this->getBaseDir() . '/' . $base64, '/');
 
             /**
              * Server URL
