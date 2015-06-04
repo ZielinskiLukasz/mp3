@@ -129,7 +129,7 @@ class Index extends ServiceProvider implements IndexInterface
                                 $playlist .= $value['name'];
                                 $playlist .= "\n";
                                 $playlist .= $serverUrl;
-                                $playlist .= $file . '/' . $value['name'];
+                                $playlist .= rawurlencode($file . '/' . $value['name']);
                                 $playlist .= "\n\n";
                             }
 
@@ -167,7 +167,7 @@ class Index extends ServiceProvider implements IndexInterface
                                 $playlist .= 'File';
                                 $playlist .= $keyNum;
                                 $playlist .= '=' . $serverUrl;
-                                $playlist .= $file . '/' . $value['name'];
+                                $playlist .= rawurlencode($file . '/' . $value['name']);
                                 $playlist .= "\n";
                                 $playlist .= 'Title' . $keyNum . '=' . $name . "\n";
                                 $playlist .= 'Length' . $keyNum . '=' . $this->convertTime($length) . "\n";
@@ -260,7 +260,7 @@ class Index extends ServiceProvider implements IndexInterface
                         header("Content-Type: audio/mpegurl");
                         header("Content-Disposition: attachment; filename=mediaplayer.m3u");
 
-                        echo $serverUrl . $file;
+                        echo $serverUrl . rawurlencode($file);
 
                         exit;
 
@@ -283,7 +283,7 @@ class Index extends ServiceProvider implements IndexInterface
                             : basename($path);
 
                         $playlist = '[Playlist]' . "\n";
-                        $playlist .= 'File1=' . $serverUrl . $file . "\n";
+                        $playlist .= 'File1=' . $serverUrl . rawurlencode($file) . "\n";
                         $playlist .= 'Title1=' . $name . "\n";
                         $playlist .= 'Length1=-1' . "\n";
                         $playlist .= 'Numberofentries=1' . "\n";
