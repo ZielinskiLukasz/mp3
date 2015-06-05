@@ -129,12 +129,12 @@ class Index extends ServiceProvider implements IndexInterface
                                 $playlist .= $value['name'];
                                 $playlist .= "\n";
                                 $playlist .= $serverUrl;
-                                $playlist .= rawurlencode($file . '/' . $value['name']);
+                                $playlist .= str_replace(' ', '%20', $file . '/' . $value['name']);
                                 $playlist .= "\n\n";
                             }
 
                             header("Content-Type: audio/mpegurl");
-                            header("Content-Disposition: attachment; filename=mediaplayer.m3u");
+                            header("Content-Disposition: attachment; filename=" . basename($path) . ".m3u");
 
                             echo $playlist;
 
@@ -167,7 +167,7 @@ class Index extends ServiceProvider implements IndexInterface
                                 $playlist .= 'File';
                                 $playlist .= $keyNum;
                                 $playlist .= '=' . $serverUrl;
-                                $playlist .= rawurlencode($file . '/' . $value['name']);
+                                $playlist .= str_replace(' ', '%20', $file . '/' . $value['name']);
                                 $playlist .= "\n";
                                 $playlist .= 'Title' . $keyNum . '=' . $name . "\n";
                                 $playlist .= 'Length' . $keyNum . '=' . $this->convertTime($length) . "\n";
@@ -177,7 +177,7 @@ class Index extends ServiceProvider implements IndexInterface
                             $playlist .= 'Version=2' . "\n";
 
                             header("Content-Type: audio/x-scpls");
-                            header("Content-Disposition: attachment; filename=winamp.pls");
+                            header("Content-Disposition: attachment; filename=" . basename($path) . ".pls");
 
                             echo $playlist;
 
@@ -254,24 +254,24 @@ class Index extends ServiceProvider implements IndexInterface
             if (is_file($path)) {
                 switch ($this->getFormat()) {
                     /**
-                     * Windows Media Player
+                     * The most common playlist format
                      */
                     case 'm3u':
                         header("Content-Type: audio/mpegurl");
-                        header("Content-Disposition: attachment; filename=mediaplayer.m3u");
+                        header("Content-Disposition: attachment; filename=" . basename($file) . ".m3u");
 
-                        echo $serverUrl . rawurlencode($file);
+                        echo $serverUrl . str_replace(' ', '%20', $file);
 
                         exit;
 
                         break;
 
                     /**
-                     * Winamp
+                     * Shoutcast / Icecast / Winamp
                      */
                     case 'pls':
                         header("Content-Type: audio/x-scpls");
-                        header("Content-Disposition: attachment; filename=winamp.pls");
+                        header("Content-Disposition: attachment; filename=" . basename($file) . ".pls");
 
                         $id3 = $this->getId3($path);
 
@@ -283,7 +283,7 @@ class Index extends ServiceProvider implements IndexInterface
                             : basename($path);
 
                         $playlist = '[Playlist]' . "\n";
-                        $playlist .= 'File1=' . $serverUrl . rawurlencode($file) . "\n";
+                        $playlist .= 'File1=' . $serverUrl . str_replace(' ', '%20', $file) . "\n";
                         $playlist .= 'Title1=' . $name . "\n";
                         $playlist .= 'Length1=-1' . "\n";
                         $playlist .= 'Numberofentries=1' . "\n";
