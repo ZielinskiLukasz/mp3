@@ -22,7 +22,7 @@ return [
         'baseDir'     => '/music',
 
         /**
-         * Format
+         * Playlist File Format
          *
          * Support types are; pls, m3u
          */
@@ -48,7 +48,11 @@ return [
 
         /**
          * When set to true, this will check the runtime against your current PHP 'memory_limit' setting
+         *
          * If the limit is reached, a warning will be produced and the process will exit
+         *
+         * When set to false, a pretty error will be replaced by PHP's error handler
+         * May be useful for debugging purposes
          */
         'memoryLimit' => false
     ]
