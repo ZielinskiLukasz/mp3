@@ -1,7 +1,7 @@
 MP3 Player
 ==========
 
-**Version 1.2.2** (Last Updated on 06-05-2015)
+**Version 1.3.0** (Last Updated on 06-05-2015)
 
 Review the latest changes from the [CHANGELOG.md](CHANGELOG.md).
 
