@@ -1,10 +1,12 @@
 # CHANGELOG
 
-## 1.2.2 (2015-06-05)
+## 1.3.0 (2015-06-05)
 
 - Fixed 400 Bad Request errors
 
 - Added additional text to autoload configuration
+
+- PHP >= 5.5 is now required
 
 ## 1.2.1 (2015-06-02)
 
